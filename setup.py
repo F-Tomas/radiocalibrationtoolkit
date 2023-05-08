@@ -100,4 +100,6 @@ setup(
             "skymapwrappers/tabulated/*",
         ]
     },
+    egg_base='.',
+    zip_safe=False,
 )

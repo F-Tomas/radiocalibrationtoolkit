@@ -73,7 +73,7 @@ required = [
     "wget",
     "pygdsm",
     "pylfmap",
-    "sklearn"
+    "scikit-learn"
 ]
 
 

@@ -1,1 +1,8 @@
+doc/examples/antenna_setup_files/HardwareProfileList_realistic.xml filter=lfs diff=lfs merge=lfs -text
+doc/examples/antenna_setup_files/SALLA_EW.xml filter=lfs diff=lfs merge=lfs -text
+doc/examples/antenna_setup_files/ filter=lfs diff=lfs merge=lfs -text
+radiocalibrationtoolkit/skymapwrappers/tabulated/gmoss_spectra_1-125MHz.h5 filter=lfs diff=lfs merge=lfs -text
+radiocalibrationtoolkit/skymapwrappers/tabulated/ulsa_constant_index.h5 filter=lfs diff=lfs merge=lfs -text
+radiocalibrationtoolkit/skymapwrappers/tabulated/ulsa_direction_dependent_index.h5 filter=lfs diff=lfs merge=lfs -text
+radiocalibrationtoolkit/skymapwrappers/tabulated/ulsa_freq_dependent_index.h5 filter=lfs diff=lfs merge=lfs -text
 radiocalibrationtoolkit/skymapwrappers/tabulated/gmoss_spectra_1-400MHz.h5 filter=lfs diff=lfs merge=lfs -text

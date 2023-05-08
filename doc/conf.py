@@ -80,7 +80,6 @@ cmd_line_template = "sphinx-apidoc --module-first -f -o {outputdir} {moduledir}"
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../radiocalibrationtoolkit/'))
 from radiocalibrationtoolkit import *
 #nbsphinx_execute = 'never'
 add_module_names = False

@@ -73,6 +73,7 @@ required = [
     "wget",
     "pygdsm",
     "pylfmap",
+    "sklearn"
 ]
 
 
@@ -83,7 +84,7 @@ setup(
     long_description=readme(),
     author="T. Fodran",
     author_email="t.fodran@astro.ru.nl",
-    url="https://gitlab.iap.kit.edu/auger-observatory/sandboxes/t.fodran/radiocalibrationtoolkit",
+    url="https://github.com/F-Tomas/radiocalibrationtoolkit.git",
     packages=find_packages(),
     install_requires=required,
     setup_requires=required,

@@ -8,7 +8,7 @@ build:
 python:
   install:
     - requirements: requirements.txt
-    - method: pip
+    - method: setuptools
       path: .
 
 submodules:

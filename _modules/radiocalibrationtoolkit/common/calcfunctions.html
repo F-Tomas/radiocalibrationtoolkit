@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>radiocalibrationtoolkit.common.calcfunctions &mdash; Radio calibration toolkit 0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/sphinx_rtd_size.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="../../../_static/custom.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Radio calibration toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#install">Install</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Galactic models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#antenna-model">Antenna model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#antenna-galaxy-response">Antenna-galaxy response</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#mocktraces">Mocktraces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#calibration">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.skymapwrappers.html">skymapwrappers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.antennareader.html">antennareader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.mocktracegenerator.html">mocktracegenerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.common.html">common</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Radio calibration toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">radiocalibrationtoolkit.common.calcfunctions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for radiocalibrationtoolkit.common.calcfunctions</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">## import sys</span>
+<span class="c1">## import os</span>
+<span class="c1">## _path = os.path.dirname(os.path.abspath(__file__))</span>
+<span class="c1">## sys.path.append(os.path.join(_path, &#39;../../..&#39;)</span>
+<span class="c1">## from radiocalibrationtoolkit import *</span>
+
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">..antennareader</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..skymapwrappers</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">NSIDE</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">NSIDE</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="n">NSIDE</span><span class="p">)))</span>
+<span class="n">ANGULAR_FACTOR</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">nside2pixarea</span><span class="p">(</span><span class="n">NSIDE</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pixel_theta</span><span class="p">)</span>
+<span class="n">CONSTANT_FACTOR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">k</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">c</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">physical_constants</span><span class="p">[</span>
+    <span class="s2">&quot;characteristic impedance of vacuum&quot;</span>
+<span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="voltage_squared_spectral_density"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.voltage_squared_spectral_density">[docs]</a><span class="k">def</span> <span class="nf">voltage_squared_spectral_density</span><span class="p">(</span><span class="n">antenna_map</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">galactic_map</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">frequency_MHz</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the voltage squared spectral density.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        antenna_map (np.array): Array of antenna data.</span>
+<span class="sd">        galactic_map (np.array): Array of galactic data.</span>
+<span class="sd">        frequency_MHz (float): Frequency in MHz.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Voltage squared spectral density.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">frequency_MHz</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">CONSTANT_FACTOR</span> <span class="o">*</span> <span class="n">integrate_hpmap</span><span class="p">(</span><span class="n">galactic_map</span> <span class="o">*</span> <span class="n">antenna_map</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_integral_edges_to_x_axis"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.add_integral_edges_to_x_axis">[docs]</a><span class="k">def</span> <span class="nf">add_integral_edges_to_x_axis</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">integral_edges</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds integral edges to the x-axis.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: List or NumPy array of x-axis values.</span>
+<span class="sd">        integral_edges: List or NumPy array of integral edges.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        NumPy array with the x-axis values including the integral edges.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">integral_edges</span><span class="p">))</span>
+    <span class="n">x_new</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">x_new</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">x_new</span></div>
+
+
+<div class="viewcode-block" id="integrate_on_a_part_of_an_array"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.integrate_on_a_part_of_an_array">[docs]</a><span class="k">def</span> <span class="nf">integrate_on_a_part_of_an_array</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">interp_func</span><span class="p">:</span> <span class="n">interp1d</span><span class="p">,</span>
+    <span class="n">lower_integral_boundary</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">upper_integral_boundary</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Integrates a function over a part of the array.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: List or NumPy array of x-axis values.</span>
+<span class="sd">        interp_func: Interpolating function.</span>
+<span class="sd">        lower_integral_boundary: Lower boundary of the integration interval.</span>
+<span class="sd">        upper_integral_boundary: Upper boundary of the integration interval.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The value of the integral of the function over the specified interval.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">value_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">lower_integral_boundary</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upper_integral_boundary</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">interp_func</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">value_filter</span><span class="p">]),</span> <span class="n">x</span><span class="p">[</span><span class="n">value_filter</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="integrate_spectral_density"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.integrate_spectral_density">[docs]</a><span class="k">def</span> <span class="nf">integrate_spectral_density</span><span class="p">(</span><span class="n">sd_DF</span><span class="p">,</span> <span class="n">integrated_MHz_bands</span><span class="p">,</span> <span class="n">integrating_method</span><span class="o">=</span><span class="s2">&quot;quad&quot;</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the integrated spectral density for each row of a given pandas DataFrame across specified frequency bands.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sd_DF : pandas DataFrame</span>
+<span class="sd">        DataFrame with spectral density values as the data and frequency bins as the columns.</span>
+<span class="sd">    integrated_MHz_bands : list or numpy.ndarray</span>
+<span class="sd">        List or array of floats representing the edges of the frequency bands to integrate over, in units of MHz.</span>
+<span class="sd">    integrating_method : str, optional</span>
+<span class="sd">        Integration method to use. Options are &quot;quad&quot; (default) or &quot;on_discontinuous_function&quot;.</span>
+<span class="sd">    point : list, numpy.ndarray or None, optional</span>
+<span class="sd">        Points to use in the integration method if &quot;quad&quot; is chosen. Defaults to None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas DataFrame</span>
+<span class="sd">        DataFrame with the integrated spectral density for each row of the input DataFrame across each frequency band</span>
+<span class="sd">        specified by the `integrated_MHz_bands` parameter.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the input DataFrame has fewer than 2 frequency bins.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({&#39;f1&#39;: [1, 2, 3], &#39;f2&#39;: [4, 5, 6]})</span>
+<span class="sd">    &gt;&gt;&gt; integrate_spectral_density(df, [1.5, 4.5])</span>
+<span class="sd">           1.5       4.5</span>
+<span class="sd">    0  2.621005  9.453482</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sd_DF</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Not enough frequencies to integrate, calculate at least two frequency bins.&quot;</span><span class="p">)</span>
+    <span class="n">mega</span> <span class="o">=</span> <span class="mf">1e6</span>
+    <span class="n">freq_Hz</span> <span class="o">=</span> <span class="n">sd_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">mega</span>
+    <span class="n">freq_new_Hz</span> <span class="o">=</span> <span class="n">add_integral_edges_to_x_axis</span><span class="p">(</span><span class="n">freq_Hz</span><span class="p">,</span> <span class="n">integrated_MHz_bands</span> <span class="o">*</span> <span class="n">mega</span><span class="p">)</span>
+
+    <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sd_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="n">density_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">freq_Hz</span><span class="p">,</span> <span class="n">sd_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">temp_nested</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">integrated_MHz_bands</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">integrating_method</span> <span class="o">==</span> <span class="s2">&quot;on_discontinuous_function&quot;</span><span class="p">:</span>
+                <span class="n">temp_nested</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">integrate_on_a_part_of_an_array</span><span class="p">(</span>
+                        <span class="n">freq_new_Hz</span><span class="p">,</span>
+                        <span class="n">density_func</span><span class="p">,</span>
+                        <span class="n">integrated_MHz_bands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">mega</span><span class="p">,</span>
+                        <span class="n">integrated_MHz_bands</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">mega</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">integrating_method</span> <span class="o">==</span> <span class="s2">&quot;quad&quot;</span><span class="p">:</span>
+                <span class="c1"># this method is super slow on discontinuous function with &#39;points&#39;</span>
+                <span class="n">temp_nested</span> <span class="o">=</span> <span class="n">temp_nested</span> <span class="o">+</span> <span class="p">[</span>
+                    <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span>
+                        <span class="n">density_func</span><span class="p">,</span>
+                        <span class="n">integrated_MHz_bands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">mega</span><span class="p">,</span>
+                        <span class="n">integrated_MHz_bands</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">mega</span><span class="p">,</span>
+                        <span class="n">points</span><span class="o">=</span><span class="n">point</span><span class="p">,</span>
+                    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">]</span>
+        <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">temp_nested</span><span class="p">))</span>
+    <span class="n">integrated_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">temp</span><span class="p">),</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">sd_DF</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">integrated_MHz_bands</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">integrated_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">sd_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">integrated_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;freq_MHz_band&quot;</span>
+    <span class="k">return</span> <span class="n">integrated_DF</span></div>
+
+
+<div class="viewcode-block" id="calculate_power_spectral_density"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.calculate_power_spectral_density">[docs]</a><span class="k">def</span> <span class="nf">calculate_power_spectral_density</span><span class="p">(</span>
+    <span class="n">antenna_inst</span><span class="p">,</span>
+    <span class="n">galactic_map_inst</span><span class="p">,</span>
+    <span class="n">lst_range</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">freq_Mhz_range</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">impedance_func</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">interp1d</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">update_antenna_conventions</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+    <span class="n">transform_hpmaps2_local_cs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">nside_transform</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the power spectral density of the sky signal as received by an antenna.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    antenna_inst : Antenna</span>
+<span class="sd">        Instance of the antenna model used to receive the signal.</span>
+<span class="sd">    galactic_map_inst : GalacticMap</span>
+<span class="sd">        Instance of the galactic map model used to generate the sky signal.</span>
+<span class="sd">    lst_range : List[float]</span>
+<span class="sd">        List of local sidereal times (in hours) at which to calculate the power spectral density.</span>
+<span class="sd">    freq_Mhz_range : List[float]</span>
+<span class="sd">        List of frequencies (in MHz) at which to calculate the power spectral density.</span>
+<span class="sd">    latitude : float</span>
+<span class="sd">        Latitude of the observer in degrees.</span>
+<span class="sd">    impedance_func : Optional[interp1d], default None</span>
+<span class="sd">        Interpolation function representing the antenna&#39;s impedance as a function of frequency.</span>
+<span class="sd">        If not provided, a unity impedance function is assumed.</span>
+<span class="sd">    update_antenna_conventions : Dict[str, Union[str, float]], default {}</span>
+<span class="sd">        Dictionary of update arguments to pass to the `Data2hpmap` constructor when creating the</span>
+<span class="sd">        antenna map instance. See the `Data2hpmap` documentation for details.</span>
+<span class="sd">    transform_hpmaps2_local_cs : bool, default False</span>
+<span class="sd">        If True, transform the galactic map and antenna map to the local coordinate system</span>
+<span class="sd">        defined by the observer&#39;s latitude and the local sidereal time. This approach is not</span>
+<span class="sd">        recommended due to the high computational cost of transforming the galactic map.</span>
+<span class="sd">        The default is to use the galactic coordinate system and create a static antenna map.</span>
+<span class="sd">    nside_transform : int, default 512</span>
+<span class="sd">        Temporary NSIDE upgrade of the galactic map when using `transform_hpmaps2_local_cs=True`.</span>
+<span class="sd">        A lower value will increase speed, but the galactic map in local coordinates will have</span>
+<span class="sd">        higher numerical errors.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        Dataframe with the calculated power spectral density values. The columns correspond to</span>
+<span class="sd">        frequencies, and the rows correspond to local sidereal times.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">impedance_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] No impedance function, assuming it is equal to &#39;1&#39;&quot;</span><span class="p">)</span>
+        <span class="n">impedance_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">freq_Mhz_range</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">freq_Mhz_range</span><span class="p">)))</span>
+
+    <span class="n">power_density_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">lst_range</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">freq_Mhz_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+    <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">frequency_MHz</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">freq_Mhz_range</span><span class="p">):</span>
+
+        <span class="n">galactic_map</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ma</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">galactic_map_inst</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">frequency_MHz</span><span class="p">),</span> <span class="n">NSIDE</span><span class="p">))</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># these to two aproaches are equivalent, but the second is ~25% faster</span>
+        <span class="c1"># antenna_map_inst = antenna_inst.convert2hp(frequency=frequency_MHz, quantity=&#39;absolute&#39;, **update_antenna_conventions)</span>
+        <span class="n">antenna_map_inst</span> <span class="o">=</span> <span class="n">Data2hpmap</span><span class="p">(</span>
+            <span class="n">antenna_inst</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=</span><span class="s2">&quot;absolute&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">update_antenna_conventions</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">transform_hpmaps2_local_cs</span><span class="p">:</span>
+            <span class="c1"># create the antenna hp map array in local coordinates (not recommened, all maps should be by default in galactic coordinates)</span>
+            <span class="c1"># now, it this map is NOT a function of LST!</span>
+            <span class="n">antenna_map</span> <span class="o">=</span> <span class="n">antenna_map_inst</span><span class="o">.</span><span class="n">get_map</span><span class="p">()</span>
+            <span class="n">galactic_map_in_galactic_cs</span> <span class="o">=</span> <span class="n">galactic_map</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">temp_row</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">lst</span> <span class="ow">in</span> <span class="n">lst_range</span><span class="p">:</span>
+            <span class="n">rotation_parameters</span> <span class="o">=</span> <span class="n">create_rotation_parameters</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">latitude</span><span class="p">)</span>
+            <span class="n">rotator</span> <span class="o">=</span> <span class="n">create_rotator</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">transform_hpmaps2_local_cs</span><span class="p">:</span>
+                <span class="c1"># permanently alter galactic map array to local coordinates</span>
+                <span class="c1"># now, it this map is a function of LST!</span>
+                <span class="n">galactic_map</span> <span class="o">=</span> <span class="n">rotate_default_hpmap_array_from_galactic2local_coordinates</span><span class="p">(</span>
+                    <span class="n">galactic_map_in_galactic_cs</span><span class="p">,</span>
+                    <span class="n">lst</span><span class="p">,</span>
+                    <span class="n">latitude</span><span class="p">,</span>
+                    <span class="n">nside_transform</span><span class="o">=</span><span class="n">nside_transform</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">galactic_map</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">create_local_mask</span><span class="p">(</span><span class="n">NSIDE</span><span class="p">,</span> <span class="n">rotation_parameters</span><span class="p">)</span>
+                <span class="n">antenna_map</span> <span class="o">=</span> <span class="n">antenna_map_inst</span><span class="o">.</span><span class="n">get_map</span><span class="p">(</span><span class="n">rotator</span><span class="o">=</span><span class="n">rotator</span><span class="p">)</span>
+            <span class="c1"># todo fragmentation warn</span>
+            <span class="c1">#  power_density_DF.loc[lst, frequency_MHz] =</span>
+            <span class="n">temp_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">voltage_squared_spectral_density</span><span class="p">(</span>
+                    <span class="n">antenna_map</span><span class="o">=</span><span class="n">antenna_map</span><span class="p">,</span>
+                    <span class="n">galactic_map</span><span class="o">=</span><span class="n">galactic_map</span><span class="p">,</span>
+                    <span class="n">frequency_MHz</span><span class="o">=</span><span class="n">frequency_MHz</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="o">/</span> <span class="n">impedance_func</span><span class="p">(</span><span class="n">frequency_MHz</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">temp_row</span><span class="p">))</span>
+    <span class="n">power_density_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">power_density_DF</span></div>
+
+
+<div class="viewcode-block" id="time_trace_df_2_spectra_df"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.time_trace_df_2_spectra_df">[docs]</a><span class="k">def</span> <span class="nf">time_trace_df_2_spectra_df</span><span class="p">(</span><span class="n">time_trace_df</span><span class="p">,</span> <span class="n">DSC</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sampling_frequency_MHz</span><span class="o">=</span><span class="mi">250</span><span class="p">):</span>
+    <span class="c1"># DSC - data start column, at which column the time trace starts</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a time trace DataFrame to a spectral density DataFrame using FFT.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    time_trace_df : pandas.DataFrame</span>
+<span class="sd">        DataFrame containing the time trace data. The signal should be stored in columns.</span>
+<span class="sd">    DSC : int, optional (default = 0)</span>
+<span class="sd">        The data start column, i.e., the index of the first column containing the signal.</span>
+<span class="sd">    sampling_frequency_MHz : float, optional (default = 250)</span>
+<span class="sd">        Sampling frequency of the signal in MHz.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame containing the spectral density of the signal. The frequency values are stored in the columns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">time_trace_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">DSC</span><span class="p">:]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">spectra_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">time_trace_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">DSC</span><span class="p">:]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">abs_fft</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="n">spectra_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sampling_frequency_MHz</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">spectra_df</span></div>
+
+
+<div class="viewcode-block" id="get_bootstrap_CI"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.get_bootstrap_CI">[docs]</a><span class="k">def</span> <span class="nf">get_bootstrap_CI</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.6826</span><span class="p">,</span> <span class="n">statistic_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the bootstrap confidence interval for the median of the given data.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    data : numpy.ndarray</span>
+<span class="sd">        One-dimensional array containing the data.</span>
+<span class="sd">    B : int, optional (default = 1000)</span>
+<span class="sd">        The number of bootstrap samples.</span>
+<span class="sd">    alpha : float, optional (default = 0.32)</span>
+<span class="sd">        The level of significance, i.e., the proportion of the confidence interval to be calculated.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Lower and upper bounds of the confidence interval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">median_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">central_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">statistic_func</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+
+    <span class="c1"># Calculate confidence interval</span>
+    <span class="n">lower_percentile</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">upper_percentile</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">lower_percentile</span>
+    <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">central_values</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">lower_percentile</span><span class="p">)</span>
+    <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">central_values</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">upper_percentile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span></div>
+
+
+<div class="viewcode-block" id="robust_regression"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.robust_regression">[docs]</a><span class="k">def</span> <span class="nf">robust_regression</span><span class="p">(</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the robust regression coefficients for the given data using the HuberT norm.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    x_arr : numpy.ndarray</span>
+<span class="sd">        One-dimensional array containing the predictor data.</span>
+<span class="sd">    y_arr : numpy.ndarray</span>
+<span class="sd">        One-dimensional array containing the response data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Array containing the intercept and slope of the regression model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rlm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">RLM</span><span class="p">(</span><span class="n">y_arr</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x_arr</span><span class="p">),</span> <span class="n">M</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">robust</span><span class="o">.</span><span class="n">norms</span><span class="o">.</span><span class="n">HuberT</span><span class="p">())</span>
+    <span class="n">rlm_results</span> <span class="o">=</span> <span class="n">rlm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">rlm_results</span><span class="o">.</span><span class="n">params</span>  <span class="c1"># intercept, slope</span></div>
+
+
+<div class="viewcode-block" id="dB2PowerAmp"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.dB2PowerAmp">[docs]</a><span class="k">def</span> <span class="nf">dB2PowerAmp</span><span class="p">(</span><span class="n">dB</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the given value from decibel scale to power amplitude scale.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    dB : float</span>
+<span class="sd">        Value to be converted in decibel scale.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    float</span>
+<span class="sd">        Value converted to power amplitude scale.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">dB</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="dB2VoltageAmp"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.dB2VoltageAmp">[docs]</a><span class="k">def</span> <span class="nf">dB2VoltageAmp</span><span class="p">(</span><span class="n">dB</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the given value from decibel scale to voltage amplitude scale.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    dB : float</span>
+<span class="sd">        Value to be converted in decibel scale.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    float</span>
+<span class="sd">        Value converted to voltage amplitude scale.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">dB</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="powerAmp2dB"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.calcfunctions.powerAmp2dB">[docs]</a><span class="k">def</span> <span class="nf">powerAmp2dB</span><span class="p">(</span><span class="n">powerAmp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the given value from power amplitude scale to decibel scale.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    powerAmp : float</span>
+<span class="sd">        Value to be converted in power amplitude scale.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    float</span>
+<span class="sd">        Value converted to decibel scale.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">powerAmp</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tomas Fodran.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

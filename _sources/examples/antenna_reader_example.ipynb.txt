@@ -1,0 +1,247 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Antenna reader example"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from radiocalibrationtoolkit import *\n",
+    "from healpy.newvisufunc import projview\n",
+    "\n",
+    "# This ensures Plotly output works in multiple places:\n",
+    "# plotly_mimetype: VS Code notebook UI\n",
+    "# notebook: \"Jupyter: Export to HTML\" command in VS Code\n",
+    "# See https://plotly.com/python/renderers/#multiple-renderers\n",
+    "import plotly.io as pio\n",
+    "pio.renderers.default = \"plotly_mimetype+notebook\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# create antenna instance\n",
+    "antenna_inst = AntennaPattern(\"./antenna_setup_files/SALLA_EW.xml\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# XML values in dictionary\n",
+    "# antenna_inst.get_raw()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# get antenna gain for unpolarized emission\n",
+    "df = antenna_inst.get(frequency=45, quantity=\"absolute\")\n",
+    "\n",
+    "# plot\n",
+    "fig = px.imshow(df.T.iloc[::-1, :], width=600, aspect=\"cube\")\n",
+    "fig.update_layout(\n",
+    "    xaxis=dict(title=\"<b>azimuth</b>\", tickprefix=\"<b>\", ticksuffix=\"</b>\", dtick=30),\n",
+    "    yaxis=dict(\n",
+    "        title=\"<b>zenith angle</b>\",\n",
+    "        tickprefix=\"<b>\",\n",
+    "        ticksuffix=\"</b>\",\n",
+    "        range=(0, 90),\n",
+    "        tick0=0,\n",
+    "        dtick=10,\n",
+    "        autorange=False,\n",
+    "    ),\n",
+    "    coloraxis=dict(\n",
+    "        colorbar=dict(\n",
+    "            title=dict(\n",
+    "                text=\"<b>VEL</b>\",\n",
+    "                side=\"right\",\n",
+    "            ),\n",
+    "        tickprefix=\"<b>\",\n",
+    "        ticksuffix=\"</b>\",\n",
+    "        ),\n",
+    "    ),\n",
+    "    font=dict(\n",
+    "        size=15,\n",
+    "        color=\"black\",\n",
+    "    ),\n",
+    ")\n",
+    "\n",
+    "fig.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# interpolate\n",
+    "df = antenna_inst.get(frequency=45, quantity='absolute', interp_phi=np.linspace(0, 360, 200), interp_theta=np.linspace(0,90, 100))\n",
+    "\n",
+    "# plot\n",
+    "fig = px.imshow(df.T.iloc[::-1, :], width=600, aspect=\"cube\")\n",
+    "fig.update_layout(\n",
+    "    xaxis=dict(title=\"<b>azimuth</b>\", tickprefix=\"<b>\", ticksuffix=\"</b>\", dtick=30),\n",
+    "    yaxis=dict(\n",
+    "        title=\"<b>zenith angle</b>\",\n",
+    "        tickprefix=\"<b>\",\n",
+    "        ticksuffix=\"</b>\",\n",
+    "        range=(0, 90),\n",
+    "        tick0=0,\n",
+    "        dtick=10,\n",
+    "        autorange=False,\n",
+    "    ),\n",
+    "    coloraxis=dict(\n",
+    "        colorbar=dict(\n",
+    "            title=dict(\n",
+    "                text=\"<b>VEL</b>\",\n",
+    "                side=\"right\",\n",
+    "            ),\n",
+    "        tickprefix=\"<b>\",\n",
+    "        ticksuffix=\"</b>\",\n",
+    "        ),\n",
+    "    ),\n",
+    "    font=dict(\n",
+    "        size=15,\n",
+    "        color=\"black\",\n",
+    "    ),\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# to healpy\n",
+    "update_antenna_conventions={\n",
+    "        'shift_phi':-90, \n",
+    "        'flip_theta':True, \n",
+    "        'flip_phi':False,\n",
+    "        'in_degrees':True,\n",
+    "        'add_invisible_sky':True\n",
+    "    }\n",
+    "\n",
+    "antenna_hpmap_inst = antenna_inst.convert2hp(frequency=45, **update_antenna_conventions)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# hp maps are by default in galactic coordinates, so we need to specify the LST and latitude of the local observer\n",
+    "lst = 18\n",
+    "LATITUDE = -35.206667\n",
+    "rotation_parameters = create_rotation_parameters(lst, LATITUDE)\n",
+    "rotator = create_rotator(lst, LATITUDE, coord=[\"G\", \"C\"])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "antenna_hpmap = antenna_hpmap_inst.get_map(rotator=rotator)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# galaxy\n",
+    "projview(\n",
+    "    antenna_hpmap,\n",
+    "    cmap='jet',\n",
+    "    return_only_data=False,\n",
+    "    graticule=True,\n",
+    "    graticule_labels=True,\n",
+    "    title='Galactic coordinates',\n",
+    "    xtick_label_color='w',\n",
+    "    # projection_type='cart'\n",
+    ")\n",
+    "\n",
+    "# from galaxy to local\n",
+    "projview(\n",
+    "    antenna_hpmap,\n",
+    "    cmap='jet',\n",
+    "    return_only_data=False,\n",
+    "    coord=['G','C'],\n",
+    "    rot=rotation_parameters,\n",
+    "    graticule=True,\n",
+    "    graticule_labels=True,\n",
+    "    title='Local coordinates',\n",
+    "    xtick_label_color='w',\n",
+    "    # projection_type='cart'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.6"
+  },
+  "toc": {
+   "base_numbering": 1,
+   "nav_menu": {},
+   "number_sections": true,
+   "sideBar": true,
+   "skip_h1_title": false,
+   "title_cell": "Table of Contents",
+   "title_sidebar": "Contents",
+   "toc_cell": false,
+   "toc_position": {},
+   "toc_section_display": true,
+   "toc_window_display": false
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "e7370f93d1d0cde622a1f8e1c04877d8463912d04d973331ad4851f04de6915a"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

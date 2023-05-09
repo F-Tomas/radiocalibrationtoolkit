@@ -1,0 +1,315 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Mock power dataset testing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from radiocalibrationtoolkit import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# some global plot settings\n",
+    "plt.rcParams[\"axes.labelweight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.weight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.size\"] = 16\n",
+    "plt.rcParams[\"legend.fontsize\"] = 14\n",
+    "\n",
+    "plt.rcParams[\"xtick.major.width\"] = 2\n",
+    "plt.rcParams[\"ytick.major.width\"] = 2\n",
+    "\n",
+    "plt.rcParams[\"xtick.major.size\"] = 5\n",
+    "plt.rcParams[\"ytick.major.size\"] = 5\n",
+    "\n",
+    "plt.rcParams[\"xtick.labelsize\"] = 14\n",
+    "plt.rcParams[\"ytick.labelsize\"] = 14"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# This ensures Plotly output works in multiple places:\n",
+    "# plotly_mimetype: VS Code notebook UI\n",
+    "# notebook: \"Jupyter: Export to HTML\" command in VS Code\n",
+    "# See https://plotly.com/python/renderers/#multiple-renderers\n",
+    "import plotly.io as pio\n",
+    "pio.renderers.default = \"plotly_mimetype+notebook\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def dataset_test(\n",
+    "    power_rec_file=\"\", power_sim_file=\"\", hw_file=\"\", temp_celsius=30, additional_noise=0\n",
+    "):\n",
+    "    power_sim_DF = pd.read_csv(power_sim_file, index_col=0)\n",
+    "    power_sim_DF.columns = power_sim_DF.columns.astype(float)\n",
+    "    power_sim_DF.iloc[:, :] = power_sim_DF.values\n",
+    "\n",
+    "    power_rec_DF = pd.read_csv(power_rec_file, index_col=0)\n",
+    "    power_rec_DF.columns = power_rec_DF.columns.astype(float)\n",
+    "    power_rec_DF.iloc[:, :] = power_rec_DF.values\n",
+    "    power_rec_DF = power_rec_DF.loc[:, power_sim_DF.columns]\n",
+    "\n",
+    "    hw_dict = read_hw_file(hw_file, interp_args={\"fill_value\": \"extrapolate\"})\n",
+    "    hw_reponse_1 = hw_dict[\"RResponse\"][\"LNA\"]\n",
+    "    hw_reponse_2 = hw_dict[\"RResponse\"][\"digitizer\"]\n",
+    "    hw_reponse_3 = hw_dict[\"RResponse\"][\"cable_fromLNA2digitizer\"]\n",
+    "    hw_reponse_4 = hw_dict[\"RResponse\"][\"impedance_matching_EW\"]\n",
+    "\n",
+    "    # merge all hw responses to one function\n",
+    "    def hw_response_func(x):\n",
+    "        return dB2PowerAmp(\n",
+    "            hw_reponse_1(x) + hw_reponse_2(x) + hw_reponse_3(x) + hw_reponse_4(x)\n",
+    "        )\n",
+    "\n",
+    "    # impedance function\n",
+    "    impedance_func = hw_dict[\"IImpedance\"][\"antenna_EW\"]\n",
+    "\n",
+    "    ###\n",
+    "\n",
+    "    temp_celsius = temp_celsius\n",
+    "    frequencies_MHz = np.linspace(30, 80, 51)\n",
+    "    temperature_noise = (\n",
+    "        4\n",
+    "        * constants.Boltzmann\n",
+    "        * (temp_celsius + 273.15)\n",
+    "        * impedance_func(frequencies_MHz)\n",
+    "    )\n",
+    "    hw_amplification = hw_response_func(frequencies_MHz)\n",
+    "    impedance = impedance_func(frequencies_MHz)\n",
+    "    additional_noise = additional_noise / impedance\n",
+    "    q = temperature_noise * hw_amplification / impedance * 1e12 + additional_noise\n",
+    "\n",
+    "    q = integrate_spectral_density(\n",
+    "        pd.DataFrame([q], columns=frequencies_MHz),\n",
+    "        integrated_MHz_bands=np.linspace(30, 80, 51),\n",
+    "        integrating_method=\"on_discontinuous_function\",\n",
+    "    )\n",
+    "    frequencies_MHz = power_rec_DF.columns.values\n",
+    "\n",
+    "    q = q.values.flatten()\n",
+    "\n",
+    "    ###\n",
+    "    fig, ax = plt.subplots()\n",
+    "    ax.plot(\n",
+    "        power_sim_DF.columns.values, (power_sim_DF.mean().values + q)[:], label=\"sim\"\n",
+    "    )\n",
+    "    ax.plot(\n",
+    "        power_rec_DF.columns.values, (power_rec_DF.mean().values)[:], label=\"rec (mock)\"\n",
+    "    )\n",
+    "    ax.legend()\n",
+    "    ax.set_xlabel(\"frequency [MHz]\")\n",
+    "    ax.set_ylabel(\"amplitude\")\n",
+    "\n",
+    "    fig, ax = plt.subplots()\n",
+    "    ax.plot(\n",
+    "        power_sim_DF.columns.values,\n",
+    "        (power_sim_DF.mean().values + q) / (power_rec_DF.mean().values),\n",
+    "    )\n",
+    "    ax.set_xlabel(\"frequency [MHz]\")\n",
+    "    ax.set_ylabel(\"sim/rec\")\n",
+    "\n",
+    "    fig = px.imshow(\n",
+    "        power_rec_DF.T / (power_sim_DF + q).values.T,\n",
+    "        width=600,\n",
+    "        aspect=\"cube\",\n",
+    "        color_continuous_scale=\"jet\",\n",
+    "    )\n",
+    "    # fig = px.imshow(df, width=600)\n",
+    "    fig.update_layout(\n",
+    "        xaxis=dict(\n",
+    "            title=\"<b>LST</b>\",\n",
+    "            tickprefix=\"<b>\",\n",
+    "            ticksuffix=\"</b>\",\n",
+    "            dtick=2,\n",
+    "        )\n",
+    "    )\n",
+    "    fig.update_layout(\n",
+    "        yaxis=dict(\n",
+    "            title=\"<b>frequency [MHz]</b>\",\n",
+    "            tickprefix=\"<b>\",\n",
+    "            ticksuffix=\"</b>\",\n",
+    "            range=(30, 80),\n",
+    "            tick0=0,\n",
+    "            dtick=10,\n",
+    "            autorange=False,\n",
+    "        )\n",
+    "    )\n",
+    "    fig.update_layout(\n",
+    "        coloraxis=dict(\n",
+    "            colorbar=dict(title=dict(text=\"<b>Power [pW]</b>\", side=\"right\"))\n",
+    "        )\n",
+    "    )\n",
+    "    fig.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "power_rec_file_ideal_list = [\n",
+    "    \"./mock_power_datasets/mock_power_dataset-isoAnt_GSM16_N10000_temp30.0C_0.0additionalnoise_rounding-False.csv\",\n",
+    "    \"./mock_power_datasets/mock_power_dataset-isoAnt_GSM16_N10000_temp30.0C_5e-16additionalnoise_rounding-False.csv\",\n",
+    "    \"./mock_power_datasets/mock_power_dataset-isoAnt_GSM16_N10000_temp30.0C_0.0additionalnoise_rounding-True.csv\"\n",
+    "]\n",
+    "\n",
+    "power_rec_file_real_list = [\n",
+    "    \"./mock_power_datasets/mock_power_dataset-Salla_EW_GSM16_N10000_temp30.0C_0.0additionalnoise_rounding-False.csv\",\n",
+    "    \"./mock_power_datasets/mock_power_dataset-Salla_EW_GSM16_N10000_temp30.0C_0.0additionalnoise_rounding-True.csv\",\n",
+    "]\n",
+    "\n",
+    "power_sim_ideal = './simulated_power_datasets/isoAnt_flathw_GSM16.csv'\n",
+    "power_sim_real =  './simulated_power_datasets/Salla_GSM16.csv' \n",
+    "\n",
+    "# read HW response\n",
+    "hw_file_ideal = \"./antenna_setup_files/HardwareProfileList_flat.xml\"\n",
+    "hw_file_real = \"./antenna_setup_files/HardwareProfileList_realistic.xml\"\n",
+    "\n",
+    "\n",
+    "temp_celsius = 30\n",
+    "an = 5e-4\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Isotropic antenna gain, flat HW response, no rounding, no extra noise"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dataset_test(power_rec_file=power_rec_file_ideal_list[0], power_sim_file=power_sim_ideal, hw_file=hw_file_ideal, temp_celsius=30, additional_noise=0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Isotropic antenna gain, flat HW response, no rounding, extra noise"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dataset_test(power_rec_file=power_rec_file_ideal_list[1], power_sim_file=power_sim_ideal, hw_file=hw_file_ideal, temp_celsius=30, additional_noise=an)"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Isotropic antenna gain, flat HW response, rounded, no extra noise"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dataset_test(power_rec_file=power_rec_file_ideal_list[2], power_sim_file=power_sim_ideal, hw_file=hw_file_ideal, temp_celsius=30, additional_noise=0)"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Realistic antenna gain and HW response, no rounding, no extra noise"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dataset_test(power_rec_file=power_rec_file_real_list[1], power_sim_file=power_sim_real, hw_file=hw_file_real, temp_celsius=30, additional_noise=0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Realistic antenna gain and HW response, rounded, no extra noise"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dataset_test(power_rec_file=power_rec_file_real_list[1], power_sim_file=power_sim_real, hw_file=hw_file_real, temp_celsius=30, additional_noise=0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.6"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

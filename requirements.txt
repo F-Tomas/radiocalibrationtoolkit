@@ -40,3 +40,5 @@ wget==3.2
 myst-parser==1.0.0
 nbsphinx==0.9.1
 sphinx-rtd-size==0.2.0
+nbconvert==7.2.9
+notebook==6.5.4

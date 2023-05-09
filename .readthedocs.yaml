@@ -7,12 +7,11 @@ build:
 
 python:
   install:
+    - before: 
+        - python3 -m ipykernel install --user
     - requirements: requirements.txt
     - method: setuptools
       path: .
-
-before_install:
-  - python3 -m ipykernel install --user
 
 submodules:
   include: all

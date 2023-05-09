@@ -86,3 +86,9 @@ add_module_names = False
 
 sphinx_rtd_size_width = "70%"
 
+import subprocess
+res = subprocess.run('examples/build_example_datasets.sh', shell=True, capture_output=True)
+print(res.stdout.decode())
+print(res.stderr.decode())
+
+

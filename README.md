@@ -37,7 +37,9 @@ run this in terminal:
 
 ## Documentation
 
-The documentation is located in the `doc` directory. To compile it, execute: 
+Check the documentation and tutorial [here](https://f-tomas.github.io/radiocalibrationtoolkit/index.html)
+
+To compile the documentation manually, go to `docs` and execute: 
 
 `sphinx-build -b html . ./html`
 

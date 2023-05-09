@@ -7,8 +7,6 @@ build:
 
 python:
   install:
-    - before: 
-        - python3 -m ipykernel install --user
     - requirements: requirements.txt
     - method: setuptools
       path: .
@@ -16,3 +14,7 @@ python:
 submodules:
   include: all
 
+
+formats:
+  - pdf
+  - epub

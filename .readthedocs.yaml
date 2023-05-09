@@ -11,6 +11,9 @@ python:
     - method: setuptools
       path: .
 
+before_install:
+  - python3 -m ipykernel install --user
+
 submodules:
   include: all
 

@@ -8,7 +8,7 @@ build:
     pre_create_environment:
       - echo "Command run at 'pre_create_environment' step"
       - pwd
-      - ./radiocalibrationtoolkit/doc/examples/build_example_datasets.sh
+      - ../../../radiocalibrationtoolkit/doc/examples/build_example_datasets.sh
 
 python:
   install:

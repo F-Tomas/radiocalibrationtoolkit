@@ -33,7 +33,7 @@ All the examples data files are pre-generated, so each example should work out o
 
 run this in terminal:
 
-`python -m pip install git+https://gitlab.iap.kit.edu/auger-observatory/sandboxes/t.fodran/radiocalibrationtoolkit.git`
+`python -m pip install git+https://github.com/F-Tomas/radiocalibrationtoolkit.git`
 
 ## Documentation
 

@@ -80,7 +80,7 @@ def main():
         # read hw file
         hw_file_path = args["hwmodel"]
         hw_dict = read_hw_file(hw_file_path)
-        impedance_func = hw_dict["IImpedance"]["antenna_EW"]
+        impedance_func = hw_dict["IImpedance"]["antenna_{}".format(orientation)]
 
         power_density_DF = calculate_power_spectral_density(
             antenna_inst=antenna_inst,
@@ -89,7 +89,7 @@ def main():
             freq_Mhz_range=freq_Mhz_range,
             latitude=args["latitude"],
             update_antenna_conventions={
-                "shift_phi": -90,
+                "shift_phi": shift_phi,
                 "flip_theta": True,
                 "flip_phi": False,
                 "in_degrees": True,
@@ -109,7 +109,7 @@ def main():
             hw_dict["RResponse"]["cable_fromLNA2digitizer"](power_DF.columns)
         )
         hw_reponse_4 = dB2PowerAmp(
-            hw_dict["RResponse"]["impedance_matching_EW"](power_DF.columns)
+            hw_dict["RResponse"]["impedance_matching_{}".format(orientation)](power_DF.columns)
         )
 
         power_DF = power_DF.multiply(
@@ -136,7 +136,7 @@ def main():
             freq_Mhz_range=freq_Mhz_range,
             latitude=args["latitude"],
             update_antenna_conventions={
-                "shift_phi": -90,
+                "shift_phi": shift_phi,
                 "flip_theta": True,
                 "flip_phi": False,
                 "in_degrees": True,
@@ -232,10 +232,27 @@ if __name__ == "__main__":
         default="power",
         help="Calculate 'power' or 'voltage2'.",
     )
-
+    optional.add_argument(
+        "-r",
+        "--orientation",
+        nargs="?",
+        default="EW",
+        help="This will read HW response with suffix either EW or NS. Default: EW",
+    )
+    optional.add_argument(
+        "-z",
+        "--shiftazimuth",
+        nargs="?",
+        default=-90,
+        type=float,
+        help="Modify antenna response conventions by shifting the azimuth. Default:-90 degrees.",
+    )
     args = vars(ap.parse_args())
 
+    orientation = args["orientation"]
     gal_model = args["galacticmodel"]
+    shift_phi = args["shiftazimuth"]
+
     if gal_model == "LFSS":
         galactic_map_inst = LowFrequencySkyModel(freq_unit="MHz")
     elif gal_model == "GSM08":

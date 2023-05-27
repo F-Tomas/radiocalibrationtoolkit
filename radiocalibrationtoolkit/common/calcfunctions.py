@@ -164,6 +164,8 @@ def calculate_power_spectral_density(
     update_antenna_conventions: dict = {},
     transform_hpmaps2_local_cs: bool = False,
     nside_transform: int = 512,
+    distort_antenna_map: float = 0,
+    distort_galactic_map: float = 0
 ) -> pd.DataFrame:
     """Calculate the power spectral density of the sky signal as received by an antenna.
 
@@ -241,8 +243,8 @@ def calculate_power_spectral_density(
             #  power_density_DF.loc[lst, frequency_MHz] =
             temp_row.append(
                 voltage_squared_spectral_density(
-                    antenna_map=antenna_map,
-                    galactic_map=galactic_map,
+                    antenna_map=distort_array(antenna_map, rstd=distort_antenna_map),
+                    galactic_map=distort_array(galactic_map, rstd=distort_galactic_map),
                     frequency_MHz=frequency_MHz,
                 )
                 / impedance_func(frequency_MHz)
@@ -378,3 +380,130 @@ def powerAmp2dB(powerAmp):
         Value converted to decibel scale.
     """
     return 10 * np.log10(powerAmp)
+    
+
+def voltageAmp2dB(voltageAmp):
+    """
+    Converts the given value from voltage amplitude scale to decibel scale.
+
+    Parameters:
+    -----------
+    voltageAmp : float
+        Value to be converted in voltage amplitude scale.
+
+    Returns:
+    --------
+    float
+        Value converted to decibel scale.
+    """
+    return 20 * np.log10(voltageAmp)
+
+
+def get_energy_from_two_sided_spectrum(spectrum: np.ndarray) -> float:
+    """
+    Calculates the energy from a two-sided spectrum.
+
+    Parameters:
+        spectrum (np.ndarray): Two-sided spectrum array.
+
+    Returns:
+        float: Energy calculated from the spectrum.
+    """
+    return np.sum(spectrum ** 2) / spectrum.size
+
+
+def get_energy_from_time_trace(time_trace: np.ndarray) -> float:
+    """
+    Calculates the energy from a time trace.
+
+    Parameters:
+        time_trace (np.ndarray): Time trace array.
+
+    Returns:
+        float: Energy calculated from the time trace.
+    """
+    return np.sum(time_trace ** 2)
+
+
+def get_energy_from_one_sided_spectrum(rspectrum: np.ndarray) -> float:
+    """
+    Calculates the energy from a one-sided spectrum.
+
+    Parameters:
+        rspectrum (np.ndarray): One-sided spectrum array.
+
+    Returns:
+        float: Energy calculated from the one-sided spectrum.
+    """
+    return (2 * np.sum(rspectrum[1:-1] ** 2) + rspectrum[0] ** 2 + rspectrum[-1] ** 2) / (2 * (rspectrum.size - 1))
+
+
+def get_energy_from_one_sided_spectrum_corrected4one_side(r2spectrum: np.ndarray) -> float:
+    """
+    Calculates the energy from a one-sided spectrum with correction for one side.
+
+    Parameters:
+        r2spectrum (np.ndarray): One-sided spectrum array.
+
+    Returns:
+        float: Energy calculated from the one-sided spectrum with correction.
+    """
+    return np.sum((r2spectrum) ** 2) / (2 * (r2spectrum.size - 1))
+
+
+def correct_energy_of_one_sided_spectrum(spectrum: np.ndarray) -> np.ndarray:
+    """
+    Corrects the energy of a one-sided spectrum.
+
+    Parameters:
+        spectrum (np.ndarray): One-sided spectrum array.
+
+    Returns:
+        np.ndarray: Corrected one-sided spectrum array.
+    """
+    r2spectrum = spectrum.copy()
+    r2spectrum[1:-1] = r2spectrum[1:-1] * np.sqrt(2)
+    return r2spectrum
+
+
+def linspace_with_middle_value(middle: float, radius: float, num_samples: int) -> np.ndarray:
+    """
+    Generates a 1-D array of evenly spaced values centered around a middle value.
+
+    Parameters:
+        middle (float): The middle value.
+        radius (float): The radius around the middle value.
+        num_samples (int): The number of samples to generate.
+
+    Returns:
+        np.ndarray: An array of evenly spaced values.
+    """
+    return np.linspace(middle - radius, middle + radius, num_samples)
+
+
+def calculate_truncated_stats(data: np.ndarray, lower_percentile: float, upper_percentile: float) -> tuple:
+    """
+    Calculates the truncated mean and standard deviation of the given data within the specified percentiles.
+
+    Parameters:
+        data (np.ndarray): Input data array.
+        lower_percentile (float): Lower percentile threshold.
+        upper_percentile (float): Upper percentile threshold.
+
+    Returns:
+        tuple: A tuple containing the truncated mean and standard deviation.
+    """
+    # Calculate the lower and upper thresholds
+    lower_threshold = np.percentile(data, lower_percentile)
+    upper_threshold = np.percentile(data, upper_percentile)
+
+    # Filter the data within the specified percentiles
+    truncated_data = data[(data >= lower_threshold) & (data <= upper_threshold)]
+
+    # Calculate the truncated mean and standard deviation
+    truncated_mean = np.mean(truncated_data)
+    truncated_std = np.std(truncated_data)
+
+    return truncated_mean, truncated_std
+
+

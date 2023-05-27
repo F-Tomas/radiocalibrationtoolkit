@@ -17,6 +17,7 @@ from scipy.integrate import quad
 from scipy.fft import fft, ifft
 from sklearn.neighbors import KernelDensity
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib.axes as axes
 import matplotlib.pyplot as plt
 from healpy.rotator import Rotator
 from healpy.newvisufunc import projview
@@ -971,3 +972,66 @@ class AppendOnlyIfMore(argparse.Action):
         else:
             items += values
         setattr(namespace, self.dest, items)
+
+def distort_array(arr, rstd=0.5):
+    if rstd == 0:
+        return arr
+    if isinstance(arr, np.ma.MaskedArray):
+        mask = arr.mask
+        arr = arr.data
+        masked = True
+    else:
+        masked = False
+    distorted_arr = np.asarray([np.random.normal(mu, rstd * abs(mu), size=1)[0] for mu in arr])
+
+    if masked:
+        distorted_arr = np.ma.array(distorted_arr, mask=mask)
+
+    return distorted_arr
+
+
+def autoscale_y(ax: axes.Axes, margin: float = 0.1) -> None:
+    # modified: https://stackoverflow.com/questions/29461608/matplotlib-fixing-x-axis-scale-and-autoscale-y-axis
+    """
+    Rescales the y-axis based on the visible data given the current xlim of the axis. Credit: Dan Hickstein
+
+    Parameters:
+        ax (matplotlib.axes.Axes): The matplotlib axes object.
+        margin (float): The fraction of the total height of the y-data to pad the upper and lower ylims.
+
+    Returns:
+        None
+    """
+    def get_bottom_top(line: np.ndarray) -> tuple[float, float]:
+        """
+        Calculates the bottom and top values of the y-data displayed within the x-limits.
+
+        Parameters:
+            line (np.ndarray): The y-data for a line.
+
+        Returns:
+            tuple[float, float]: The bottom and top values.
+        """
+        xd = line.get_xdata()
+        yd = line.get_ydata()
+        xd[np.abs(xd) == np.inf] = np.nan
+        yd[np.abs(yd) == np.inf] = np.nan
+        lo, hi = ax.get_xlim()
+        y_displayed = yd[((xd > lo) & (xd < hi))]
+        h = np.max(y_displayed) - np.min(y_displayed)
+        bot = np.min(y_displayed) - margin * h
+        top = np.max(y_displayed) + margin * h
+        return bot, top
+
+    lines = ax.get_lines()
+    bot, top = np.inf, -np.inf
+
+    for line in lines:
+        new_bot, new_top = get_bottom_top(line)
+        if new_bot < bot:
+            bot = new_bot
+        if new_top > top:
+            top = new_top
+
+    ax.set_ylim(bot, top)
+

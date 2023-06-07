@@ -171,13 +171,7 @@ def compare_maps(
         plt.subplots_adjust(top=0.9, wspace=0.05, hspace=0.1)
     return integrated_comparison_dict
 
-def create_KDE_plot(input_data: pd.DataFrame, bins: np.ndarray = np.linspace(0.5, 1.5, 20)) -> (np.ndarray, np.ndarray):
-
-    fig = plt.gcf()
-    if not fig.axes:
-        ax = fig.add_subplot(111)
-    else:
-        ax = fig.axes[0]
+def create_KDE_plot(input_data: pd.DataFrame, bins: np.ndarray = np.linspace(0.5, 1.5, 20), show_plots: bool = True) -> (np.ndarray, np.ndarray):
 
     xax_kde = np.linspace(bins[0], bins[-1], 2000)[:, np.newaxis]
     kde = KernelDensity(kernel="gaussian", bandwidth=0.05).fit(
@@ -199,8 +193,9 @@ def create_KDE_plot(input_data: pd.DataFrame, bins: np.ndarray = np.linspace(0.5
             r"$\sigma_+$={:.2f}".format(xax_[right_i + 1]),
         )
     )
+    stats = (xax_[left_i + 1], xax_[right_i + 1], xax_[center_i])
+    
 
-    ax.plot(xax_, np.exp(log_dens), label=textstr)
 
     print(
         "Test1: p0.5={}".format(
@@ -220,34 +215,43 @@ def create_KDE_plot(input_data: pd.DataFrame, bins: np.ndarray = np.linspace(0.5
     )
     print(xax_[center_i], xax_[left_i + 1], xax_[right_i])
 
-    ax.fill_between(
-        x=xax_,
-        y1=np.exp(log_dens),
-        where=(xax_ >= xax_[left_i + 1]) & (xax_ < xax_[right_i + 1]),
-        # color="b",
-        alpha=0.2,
-    )
+    if show_plots:
+        fig = plt.gcf()
+        if not fig.axes:
+            ax = fig.add_subplot(111)
+        else:
+            ax = fig.axes[0]
+        
+        ax.plot(xax_, np.exp(log_dens), label=textstr)
 
-    # ax.axes.axvline(xax_[center_i], ls='--')
-    ax.set_xlabel("<IR>")
-    ax.set_ylabel("PDF")
+        ax.fill_between(
+            x=xax_,
+            y1=np.exp(log_dens),
+            where=(xax_ >= xax_[left_i + 1]) & (xax_ < xax_[right_i + 1]),
+            # color="b",
+            alpha=0.2,
+        )
 
-    # props = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
-    # place a text box in upper left in axes coords
-    ax.legend()
-    # ax.text(
-    # 	0.05,
-    # 	0.95,
-    # 	textstr,
-    # 	transform=ax.transAxes,
-    # 	fontsize=14,
-    # 	verticalalignment="top",
-    # 	bbox=props,
-    # )
+        # ax.axes.axvline(xax_[center_i], ls='--')
+        ax.set_xlabel("<IR>")
+        ax.set_ylabel("PDF")
 
+        # props = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+        # place a text box in upper left in axes coords
+        ax.legend()
+        # ax.text(
+        # 	0.05,
+        # 	0.95,
+        # 	textstr,
+        # 	transform=ax.transAxes,
+        # 	fontsize=14,
+        # 	verticalalignment="top",
+        # 	bbox=props,
+        # )
+        
     # test if area under the curve is "1"
-    print("Normalization test: ", quad(interp1d(xax_, np.exp(log_dens)), 0.6, 1.45, epsabs=1e-5, epsrel=1e-5))
-    return xax_, log_dens
+    print("Normalization test: ", quad(interp1d(xax_, np.exp(log_dens)), bins[0], bins[-1], epsabs=1e-5, epsrel=1e-5))
+    return xax_, log_dens, stats
 
 
 def create_local_mask(nside: int, rotation_parameters: Tuple[float, float]) -> np.ndarray:

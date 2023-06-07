@@ -75,7 +75,7 @@ def main():
     freq_Mhz_range = range(args["frequencyrange"][0], args["frequencyrange"][1], 1)
 
     if args["datasettype"] == "power":
-        lst_range = np.asarray(list(range(24))) + 0.5
+        lst_range = np.asarray(list(range(lst_range_arg))) + shift_LST_bins
 
         # read hw file
         hw_file_path = args["hwmodel"]
@@ -247,12 +247,30 @@ if __name__ == "__main__":
         type=float,
         help="Modify antenna response conventions by shifting the azimuth. Default:-90 degrees.",
     )
+    optional.add_argument(
+        "-ls",
+        "--shiftlst",
+        nargs="?",
+        default=0.5,
+        type=float,
+        help="Shift LST bins.",
+    )
+    optional.add_argument(
+        "-lr",
+        "--lstrange",
+        nargs="?",
+        default=24,
+        type=int,
+        help="Usually one need just 0-23 (or 0.5-23.5) LST. But if the dataset is to be interpolated later, better is to do 0-24 (set the arg to 25 for this)",
+    )
     args = vars(ap.parse_args())
 
     orientation = args["orientation"]
     gal_model = args["galacticmodel"]
     shift_phi = args["shiftazimuth"]
-
+    shift_LST_bins = args["shiftlst"]
+    lst_range_arg = args["lstrange"]
+    
     if gal_model == "LFSS":
         galactic_map_inst = LowFrequencySkyModel(freq_unit="MHz")
     elif gal_model == "GSM08":

@@ -493,17 +493,24 @@ def calculate_truncated_stats(data: np.ndarray, lower_percentile: float, upper_p
     Returns:
         tuple: A tuple containing the truncated mean and standard deviation.
     """
-    # Calculate the lower and upper thresholds
-    lower_threshold = np.percentile(data, lower_percentile)
-    upper_threshold = np.percentile(data, upper_percentile)
-
     # Filter the data within the specified percentiles
-    truncated_data = data[(data >= lower_threshold) & (data <= upper_threshold)]
+    truncated_data = truncate_data(*locals().values())
 
     # Calculate the truncated mean and standard deviation
     truncated_mean = np.mean(truncated_data)
     truncated_std = np.std(truncated_data)
 
     return truncated_mean, truncated_std
+
+
+def truncate_data(data: np.ndarray,  lower_percentile: float, upper_percentile: float) -> np.ndarray:
+
+    # Calculate the lower and upper thresholds
+    lower_threshold = np.percentile(data, lower_percentile)
+    upper_threshold = np.percentile(data, upper_percentile)
+
+    # Filter the data within the specified percentiles
+    return data[(data >= lower_threshold) & (data <= upper_threshold)]
+    
 
 

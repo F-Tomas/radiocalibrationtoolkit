@@ -50,7 +50,7 @@ class GMOSS:
 
     def __init__(self):
         self.gmoss_map_DF = pd.read_hdf(
-            os.path.join(_path, "tabulated/gmoss_spectra_1-125MHz.h5")
+            os.path.join(_path, "tabulated/gmoss_spectra_1-400MHz.h5")
         )
         self.gmoss_map_DF.columns = self.gmoss_map_DF.columns.astype(float) * 1000
         temp = [

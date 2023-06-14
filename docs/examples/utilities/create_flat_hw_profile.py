@@ -4,6 +4,8 @@
 
 import numpy as np
 import sys
+import argparse
+
 
 def nparray2string(arr):
     string = ""
@@ -150,9 +152,29 @@ def main():
     closing_tags = "</HardwareProfileList>"
     opening_tags = "<HardwareProfileList>\n\n"
 
-    with open("./antenna_setup_files/HardwareProfileList_flat.xml", "w") as file:
-        file.write(opening_tags+hw_xml_string+closing_tags)
+    with open(output_path, "w") as file:
+        file.write(opening_tags + hw_xml_string + closing_tags)
+    print(
+        '[INFO] XML file with flat HW response at "'
+        + output_path
+        + '" should have been created.'
+    )
 
 
 if __name__ == "__main__":
+
+    ap = argparse.ArgumentParser()
+    ap._action_groups.pop()
+    optional = ap.add_argument_group("optional arguments")
+
+    optional.add_argument(
+        "-o",
+        "--outputpath",
+        nargs="?",
+        default="../antenna_setup_files/HardwareProfileList_flat.xml",
+        help="Save path",
+    )
+
+    args = vars(ap.parse_args())
+    output_path = args["outputpath"]
     sys.exit(main())

@@ -93,7 +93,9 @@ def main():
 
     ultralon_maps_DF = tabulate_ulsa(freq_range, index_type, nside=nside)
     ultralon_maps_DF.to_csv(
-        os.path.join(output_path, "ulsa_{}_{:.0f}-{:.0f}MHz.csv").format(index_type, freq_range[0], freq_range[-1]),
+        os.path.join(output_path, "ulsa_{}_{:.0f}-{:.0f}MHz.csv").format(
+            index_type, freq_range[0], freq_range[-1]
+        ),
         index=False,
     )
 

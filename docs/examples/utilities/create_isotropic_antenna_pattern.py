@@ -3,6 +3,8 @@
 
 import numpy as np
 import sys
+import argparse
+
 
 def nparray2string(arr):
     string = ""
@@ -32,7 +34,7 @@ def main():
         vel_ephi_phase[f] = np.zeros(phiList.size)
         vel_etheta_phase[f] = np.zeros(thetaList.size)
 
-    antennaPatternXMLfile = "./antenna_setup_files/Isotropic_antenna_pattern.xml"
+    # antennaPatternXMLfile = "../antenna_setup_files/Isotropic_antenna_pattern.xml"
 
     with open(antennaPatternXMLfile, "w") as xml_file:
         xml_file.write('<frequency unit="MHz">  <!-- Simulated Frequencies -->\n')
@@ -82,7 +84,7 @@ def main():
         xml_file.write("<!-- end of EAHPhi_phase -->\n")
 
     print(
-        '[INFO] Offline XML file with antenna pattern called "'
+        '[INFO] XML file with Isotropic antenna pattern at "'
         + antennaPatternXMLfile
         + '" should have been created.'
     )
@@ -90,4 +92,19 @@ def main():
 
 
 if __name__ == "__main__":
+
+    ap = argparse.ArgumentParser()
+    ap._action_groups.pop()
+    optional = ap.add_argument_group("optional arguments")
+
+    optional.add_argument(
+        "-o",
+        "--outputpath",
+        nargs="?",
+        default="../antenna_setup_files/Isotropic_antenna_pattern.xml",
+        help="Save path",
+    )
+
+    args = vars(ap.parse_args())
+    antennaPatternXMLfile = args["outputpath"]
     sys.exit(main())

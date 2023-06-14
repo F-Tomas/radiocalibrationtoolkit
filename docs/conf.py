@@ -87,8 +87,21 @@ add_module_names = False
 sphinx_rtd_size_width = "70%"
 
 import subprocess
-res = subprocess.run('examples/build_example_datasets.sh', shell=True, capture_output=True)
-print(res.stdout.decode())
-print(res.stderr.decode())
+
+process = subprocess.Popen('examples/build_example_datasets.sh', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+# Read and print the output in real time
+while True:
+    output = process.stdout.readline().decode().strip()
+    if output == '' and process.poll() is not None:
+        break
+    if output:
+        print(output)
+
+# Get the return code of the subprocess
+return_code = process.poll()
+
+# Print the return code
+print("Return code:", return_code)
 
 

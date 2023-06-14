@@ -14,6 +14,7 @@ from typing import Union
 from tqdm import tqdm
 from ..antennareader import *
 from ..skymapwrappers import *
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter, AutoMinorLocator
 
 NSIDE = 64
 pixel_theta, pixel_phi = hp.pix2ang(NSIDE, np.arange(hp.nside2npix(NSIDE)))
@@ -513,4 +514,303 @@ def truncate_data(data: np.ndarray,  lower_percentile: float, upper_percentile: 
     return data[(data >= lower_threshold) & (data <= upper_threshold)]
     
 
+def get_fitted_voltage_calibration_params_and_noise_offsets(
+    power_sim_DF: pd.DataFrame, power_rec_DF: pd.DataFrame
+) -> tuple:
+    """
+    Calculate the fitted voltage calibration parameters and noise offsets.
 
+    Parameters:
+        power_sim_DF : pd.DataFrame
+            Simulated power DataFrame with frequency columns.
+        power_rec_DF : pd.DataFrame
+            Recorded power DataFrame with frequency columns.
+
+    Returns:
+        tuple
+            A tuple containing two DataFrames:
+            - First DataFrame: Fitted voltage calibration parameters with frequency columns.
+            - Second DataFrame: Noise offsets with frequency columns.
+
+    """
+    slopes = []
+    intercepts = []
+    freqs = power_sim_DF.columns
+    for i, freq in enumerate(freqs):
+        x_arr = power_sim_DF.loc[:, freq].values
+        y_arr = power_rec_DF.loc[:, freq].values
+
+        intercept, slope = robust_regression(x_arr, y_arr)
+        intercepts.append(intercept)
+        slopes.append(slope)
+
+    slopes = np.asarray(slopes) ** (1 / 2)
+    intercepts = np.asarray(intercepts) ** (1 / 2)
+    return pd.DataFrame([slopes], columns=freqs), pd.DataFrame(
+        [intercepts], columns=freqs
+    )
+
+
+def get_fitted_voltage_cal_params_and_noise_offsets_from_concat_sim_dfs(
+    concatenated_df: pd.DataFrame, power_rec_DF: pd.DataFrame
+) -> tuple:
+    """
+    Calculate the fitted voltage calibration parameters and noise offsets
+    from concatenated simulation and recorded power DataFrames.
+
+    Parameters
+    ----------
+    concatenated_df : pd.DataFrame
+        Concatenated simulation DataFrame with multi-level index.
+    power_rec_DF : pd.DataFrame
+        Recorded power DataFrame with frequency columns.
+
+    Returns
+    -------
+    tuple
+        A tuple containing two DataFrames:
+        - First DataFrame: Fitted voltage calibration parameters with frequency columns.
+        - Second DataFrame: Noise offsets with frequency columns.
+    """
+    slopes_dict = {}
+    intercepts_dict = {}
+
+    for key in concatenated_df.index.levels[0]:
+        power_sim_DF = concatenated_df.xs(key)
+        s, i = get_fitted_voltage_calibration_params_and_noise_offsets(
+            power_sim_DF, power_rec_DF
+        )
+        slopes_dict[key] = s.values.flatten()
+        intercepts_dict[key] = i.values.flatten()
+
+    slopes_DF = pd.DataFrame(slopes_dict).T
+    slopes_DF.columns = power_sim_DF.columns
+    intercepts_DF = pd.DataFrame(intercepts_dict).T
+    intercepts_DF.columns = power_sim_DF.columns
+
+    return slopes_DF, intercepts_DF
+
+
+def get_frequency_independent_calibration_param(
+    slopes_DF: pd.DataFrame, show_plots: bool = False
+) -> tuple:
+    """
+    Calculate the frequency-independent calibration parameters.
+
+    Parameters
+    ----------
+    slopes_DF : pd.DataFrame
+        DataFrame containing slopes for each frequency.
+    show_plots : bool, optional
+        Flag indicating whether to show plots, by default False.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the statistics of the frequency-independent calibration parameters:
+        - Total central value
+        - Lower bound of the central value
+        - Upper bound of the central value
+
+    """
+    bounds = (0.2, 2)
+    bins = np.linspace(*bounds, 3000)
+    trunc = 5
+    tolerance = 0.001
+    norm_test = 0
+    i = 1
+    norm_test_list = []
+    stats_list = []
+    while (np.abs(norm_test - 1) > tolerance) & (trunc < 50):
+        print("Truncating data to {}, {} percentils".format(trunc, 100 - trunc))
+        print("Iteration number: {} out of max 9 iterations".format(i))
+        xax_, log_dens, stats = apply_KDE(
+            truncate_data(dropnans(slopes_DF.values.flatten()), 5, 100 - trunc),
+            bounds=bounds,
+            show_plots=show_plots,
+        )
+        norm_test, _ = quad(
+            interp1d(xax_, np.exp(log_dens)),
+            bins[0],
+            bins[-1],
+            epsabs=1e-5,
+            epsrel=1e-5,
+        )
+        norm_test_list.append(norm_test)
+        stats_list.append(stats)
+        # print(norm_test_list)
+        if i > 1:
+            if norm_test_list[-1] < norm_test_list[-2]:
+                print(
+                    "Norm has grown! Breaking the iteration and outputing the statistics from previous iteration!"
+                )
+                stats = stats_list[-2]
+                norm_test = 1  # this is to break the loop
+        i += 1
+        trunc += 5
+    return stats
+
+
+def get_stats_of_freq_dependent_cal_parameters_from_multiple_sim_datasets(
+    slopes_DF: pd.DataFrame,
+) -> tuple:
+    """
+    Calculate the statistics of frequency-dependent calibration parameters from multiple simulation datasets.
+
+    Parameters
+    ----------
+    slopes_DF : array-like
+        The input DataFrame containing slopes for each frequency.
+
+    Returns
+    -------
+    freq_dependent_slopes : ndarray
+        Array of mean slopes for each frequency.
+    bounds : ndarray
+        Array of standard deviations of slopes for each frequency.
+
+    """
+    bounds = []
+    freq_dependent_slopes = []
+    frequencies_MHz = []
+    for freq in slopes_DF.columns:
+        bounds.append(np.std(slopes_DF.loc[:, freq].values))
+        freq_dependent_slopes.append(np.mean(slopes_DF.loc[:, freq].values))
+        frequencies_MHz.append(freq)
+    bounds = np.asarray(bounds)
+    freq_dependent_slopes = np.asarray(freq_dependent_slopes)
+    return freq_dependent_slopes, bounds
+
+
+def get_and_plot_calibration_results(
+    slopes_DF: pd.DataFrame,
+    intercepts_DF: pd.DataFrame,
+    title: str = "",
+    labels: str or list = "",
+) -> tuple[float, float, float]:
+    """
+    Calculate and plot calibration results.
+
+    Parameters
+    ----------
+    slopes_DF : DataFrame
+        DataFrame containing slopes for each frequency.
+    intercepts_DF : DataFrame
+        DataFrame containing intercepts for each frequency.
+    title : str, optional
+        Title for the plot (default is an empty string).
+    labels : str or list, optional
+        Labels for the plot legend. If empty string, labels will be extracted from the index of `slopes_DF`.
+        If `None`, no labels will be displayed. (default is an empty string).
+
+    Returns
+    -------
+    total_central_value : float
+        Total central value of the calibration results.
+    bounds_total_central_value : float
+        Bounds of the total central value.
+
+    """
+    color_cycle = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+    alpha = 0.1
+    (
+        freq_dependent_slopes,
+        bounds,
+    ) = get_stats_of_freq_dependent_cal_parameters_from_multiple_sim_datasets(slopes_DF)
+    frequencies_MHz = slopes_DF.columns.values.astype(float)
+
+    stats = get_frequency_independent_calibration_param(slopes_DF, show_plots=True)
+
+    total_central_value = stats[2]
+    bounds_total_central_value = stats[:2]
+
+    # plot
+    fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+    fig.suptitle(title)
+
+    # for a single map, this does not make sense to do
+    if slopes_DF.index.size > 1:
+        ax[0].errorbar(
+            frequencies_MHz,
+            freq_dependent_slopes,
+            yerr=bounds,
+            label="$\mu(f)$",
+            color="k",
+        )
+        ax[0].set_xlabel("frequency [MHz]")
+        ax[0].set_ylabel("voltage \ncalibration parameter")
+
+    if labels == "":
+        glabels = [k.split("_")[2] for k in slopes_DF.index.values]
+    elif labels == None:
+        glabels = [None] * slopes_DF.index.size
+    else:
+        glabels = labels
+
+    for i, row in enumerate(slopes_DF.index):
+        color = color_cycle[i % len(color_cycle)]
+        ax[0].plot(
+            frequencies_MHz,
+            slopes_DF.loc[row, :].values,
+            linestyle="-",
+            alpha=alpha,
+            color=color,
+        )  # , label=glabels)
+        ax[0].plot(
+            frequencies_MHz,
+            slopes_DF.loc[row, :].values,
+            marker="o",
+            linestyle="",
+            markersize=3,
+            color=color,
+        )  # , label=glabels)
+
+        if slopes_DF.index.size > 1:
+            ax[1].plot(
+                frequencies_MHz,
+                intercepts_DF.loc[row, :].values,
+                color=color,
+                label=glabels[i],
+            )
+        else:
+            ax[1].bar(
+                frequencies_MHz,
+                intercepts_DF.loc[row, :].values,
+                color=color,
+                label=glabels[i],
+                width=1,
+            )
+        ax[1].set_ylim(0, 5)
+        ax[1].set_xlabel("frequency [MHz]")
+        ax[1].set_ylabel("voltage \nnoise offset ")
+        ax[1].xaxis.set_major_locator(MultipleLocator(10))
+        if labels is not None:
+            ax[1].legend(fontsize=12, ncol=2)
+
+    ax[0].axes.axhline(
+        total_central_value,
+        color="grey",
+        lw=3,
+        label=r"$\mu_{{\mathrm{{trun}}}}^{{\mathrm{{KDE}}}}={:.2f}_{{-{:.2f}\%}}^{{+{:.2f}\%}}$".format(
+            total_central_value,
+            abs(bounds_total_central_value[0] / total_central_value - 1),
+            abs(bounds_total_central_value[1] / total_central_value - 1),
+        ),
+    )
+    ax[0].axes.axhspan(
+        bounds_total_central_value[0],
+        bounds_total_central_value[1],
+        color="grey",
+        alpha=0.3,
+        # label="68% CI",
+    )
+    ax[0].legend(fontsize=12)
+
+    fig.subplots_adjust(
+        left=0.2,
+        bottom=0.2,
+        wspace=0.3,
+    )
+
+    return total_central_value, *bounds_total_central_value

@@ -3,8 +3,6 @@
 
 ## Getting started
 
-Temporary version!
-
 The package uses 5 different galactic model softwares:
 
 [SSM](http://tianlai.bao.ac.cn/~huangqizhi/)
@@ -25,6 +23,8 @@ The LFmap is in C++, but I wrote a wrapper/interface so that the model can be im
 Thus, you need to install pygdsm (pip install pygdsm), the SSM and ULSA can be installed by cloning them and using the setup.py, the pylfmap is ready to go, you just need to add it to your python path enviromental variable.
 
 The ULSA is currently tabulated only in 30-80MHz for frequency dependant index. Likewise the GMOSS. I will generate tables for these for the full 0-125 range (if possible).
+
+GMOSS, Haslam and GSM2008 are without CMB. To fix this, value of 2.7255 is added to GMOSS upon reading the tabulated values. To fix the Haslam and GSM2008, there is a decorator around their `pygdsm` classes. So, do not import them manually from `pygdsm`, their fixed versions are imported by `from radiocalibrationtoolkit import *`.
 
 All the examples data files are pre-generated, so each example should work out of the box. Also, all of these data files can be reproduce by running the scripts.
 

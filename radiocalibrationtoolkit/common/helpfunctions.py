@@ -10,6 +10,7 @@ import re
 import os
 import collections
 import argparse
+from pathlib import Path
 from typing import Type, Tuple, Optional, Union, List
 from scipy.interpolate import interp1d
 from scipy.interpolate import RegularGridInterpolator
@@ -22,11 +23,9 @@ import matplotlib.pyplot as plt
 from healpy.rotator import Rotator
 from healpy.newvisufunc import projview
 
-
 from collections import OrderedDict
 from lxml import etree as ET
 from io import StringIO
-
 
 def compare_maps(
     map_dict: dict,
@@ -171,9 +170,38 @@ def compare_maps(
         plt.subplots_adjust(top=0.9, wspace=0.05, hspace=0.1)
     return integrated_comparison_dict
 
-def create_KDE_plot(input_data: pd.DataFrame, bins: np.ndarray = np.linspace(0.5, 1.5, 20), show_plots: bool = True) -> (np.ndarray, np.ndarray):
+def apply_KDE(input_data: pd.DataFrame, bounds: list | tuple | np.ndarray = [0.5, 1.5], show_plots: bool = True) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Apply Kernel Density Estimation (KDE) on input data and calculate relevant statistics.
 
-    xax_kde = np.linspace(bins[0], bins[-1], 2000)[:, np.newaxis]
+    Parameters:
+    -----------
+    input_data : pd.DataFrame
+        Input data for KDE estimation.
+
+    bounds : np.ndarray, optional
+        Bounds of the KDE estimation range. Default is (0.5, 1.5).
+
+    show_plots : bool, optional
+        Flag to indicate whether to show the resulting plots. Default is True.
+
+    Returns:
+    --------
+    tuple[np.ndarray, np.ndarray]
+        Tuple containing the x-axis values, log densities, and calculated statistics.
+
+    Notes:
+    ------
+    - This function applies Kernel Density Estimation (KDE) on the input data using a Gaussian kernel and bandwidth of 0.05.
+    - It calculates the log densities and relevant statistics based on the KDE estimation.
+    - If show_plots is True, it displays the KDE plot along with relevant annotations and fills the area within +/- one standard deviation.
+
+    Example:
+    --------
+    # Example usage
+    xax_, log_dens, stats = apply_KDE(input_data, bounds=(0.2, 1.8), show_plots=True)
+    """
+    xax_kde = np.linspace(bounds[0], bounds[-1], 2000)[:, np.newaxis]
     kde = KernelDensity(kernel="gaussian", bandwidth=0.05).fit(
         input_data[:, np.newaxis]
     )
@@ -250,7 +278,7 @@ def create_KDE_plot(input_data: pd.DataFrame, bins: np.ndarray = np.linspace(0.5
         # )
         
     # test if area under the curve is "1"
-    print("Normalization test: ", quad(interp1d(xax_, np.exp(log_dens)), bins[0], bins[-1], epsabs=1e-5, epsrel=1e-5))
+    print("Normalization test: ", quad(interp1d(xax_, np.exp(log_dens)), bounds[0], bounds[-1], epsabs=1e-5, epsrel=1e-5))
     return xax_, log_dens, stats
 
 
@@ -420,6 +448,29 @@ def my_modulo(arr, modulo):
 
 
 def mkdir(directory):
+    """
+    Create a directory if it doesn't already exist.
+
+    Parameters:
+    -----------
+    directory : str
+        Directory path to be created.
+
+    Returns:
+    --------
+    None
+
+    Notes:
+    ------
+    - This function checks if the directory already exists.
+    - If the directory doesn't exist, it creates a new directory.
+    - If the directory already exists, it prints a message indicating that the directory already exists.
+
+    Example:
+    --------
+    # Example usage
+    mkdir("path/to/directory")
+    """
     if not os.path.exists(directory):
         os.makedirs(directory)
         print("Directory created successfully")
@@ -967,6 +1018,40 @@ def abs_fft(timeTrace: Union[np.ndarray, pd.Series], fs: float = 250.0, window: 
 
 
 class AppendOnlyIfMore(argparse.Action):
+    """
+    Custom action class for argparse that appends values to a list only if more than one value is provided.
+
+    Parameters:
+    -----------
+    parser : argparse.ArgumentParser
+        The argument parser object.
+    namespace : argparse.Namespace
+        The namespace object where the parsed values are stored.
+    values : List[str]
+        The list of values provided for the option.
+    option_string : str, optional
+        The option string.
+
+    Returns:
+    --------
+    None
+
+    Notes:
+    ------
+    - This action class is designed to be used with the argparse module.
+    - It appends values to the list attribute specified by 'dest' only if more than one value is provided.
+    - If only one value is provided, it replaces the list attribute with that single value.
+    - It is intended for use with options that can accept multiple values.
+
+    Example:
+    --------
+    # Example usage
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--values", action=AppendOnlyIfMore, default=[], dest="values", nargs="+")
+    args = parser.parse_args()
+    print(args.values)
+    ```
+    """
     def __call__(self, parser, namespace, values, option_string=None):
         items = getattr(namespace, self.dest, [])
         if items == self.default:
@@ -977,7 +1062,38 @@ class AppendOnlyIfMore(argparse.Action):
             items += values
         setattr(namespace, self.dest, items)
 
-def distort_array(arr, rstd=0.5):
+
+def distort_array(arr: np.ndarray, rstd: float = 0.5) -> np.ndarray:
+    """
+    Distort the values of a NumPy array by adding Gaussian noise.
+
+    Parameters:
+    -----------
+    arr : np.ndarray
+        The input NumPy array.
+    rstd : float, optional
+        The relative standard deviation of the Gaussian noise.
+
+    Returns:
+    --------
+    np.ndarray
+        The distorted array.
+
+    Notes:
+    ------
+    - This function adds Gaussian noise to the values of the input array.
+    - The amount of noise is controlled by the relative standard deviation (rstd).
+    - A higher rstd value results in more distortion.
+    - The function handles both masked and unmasked arrays.
+    - For masked arrays, the distortion is only applied to unmasked values.
+
+    Example:
+    --------
+    # Example usage
+    arr = np.array([1, 2, 3, 4, 5])
+    distorted_arr = distort_array(arr, rstd=0.5)
+    print(distorted_arr)
+    """
     if rstd == 0:
         return arr
     if isinstance(arr, np.ma.MaskedArray):
@@ -1038,4 +1154,62 @@ def autoscale_y(ax: axes.Axes, margin: float = 0.1) -> None:
             top = new_top
 
     ax.set_ylim(bot, top)
+
+
+def concatenate_simulated_dfs(dir_path: str, spec_substring: str = "") -> pd.DataFrame:
+    """
+    Concatenate simulated DataFrames from CSV files.
+
+    Parameters
+    ----------
+    dir_path : str
+        Directory path containing the CSV files.
+    spec_substring : str, optional
+        Substring to filter specific CSV files (default is an empty string).
+
+    Returns
+    -------
+    pd.DataFrame
+        Concatenated DataFrame containing the simulated data.
+
+    """
+    df_files = [
+        os.path.join(dir_path, i)
+        for i in os.listdir(dir_path)
+        if (i.endswith(".csv") & (spec_substring in i))
+    ]
+    power_sim_DF = pd.read_csv(df_files[-1], index_col=0)
+    # power_sim_DF.iloc[:, :] = power_sim_DF.values
+    power_sim_DF.columns = power_sim_DF.columns.astype(float)
+
+    df_list = []
+    df_names = []
+    # except_this = 'Salla_GSM16'
+    except_this = "none"
+    for f in df_files:
+        if except_this not in f:
+            df = pd.read_csv(f, index_col=0)
+            df.columns = df.columns.astype(float)
+            df_list.append(df)
+            df_names.append(Path(f).stem)
+
+    return pd.concat(df_list, keys=df_names)
+
+
+def dropnans(arr: np.ndarray) -> np.ndarray:
+    """
+    Drop NaN values from the array.
+
+    Parameters
+    ----------
+    arr : array-like
+        Input array.
+
+    Returns
+    -------
+    array
+        Array with NaN values removed.
+
+    """
+    return arr[~np.isnan(arr)]
 

@@ -10,14 +10,6 @@ import argparse
 sys.path.append(os.path.join(os.path.abspath(""), "../.."))
 from radiocalibrationtoolkit import *
 
-from pygdsm import (
-    GlobalSkyModel2016,
-    GlobalSkyModel,
-    LowFrequencySkyModel,
-    HaslamSkyModel,
-)
-from pylfmap import LFmap
-
 
 def save_figure(df, ylabel):
     # save figure
@@ -109,7 +101,9 @@ def main():
             hw_dict["RResponse"]["cable_fromLNA2digitizer"](power_DF.columns)
         )
         hw_reponse_4 = dB2PowerAmp(
-            hw_dict["RResponse"]["impedance_matching_{}".format(orientation)](power_DF.columns)
+            hw_dict["RResponse"]["impedance_matching_{}".format(orientation)](
+                power_DF.columns
+            )
         )
 
         power_DF = power_DF.multiply(
@@ -147,8 +141,11 @@ def main():
         voltage2_density_DF.columns.name = "freq_MHz"
 
         voltage2_density_DF.to_csv(
-            "./voltage2_density/voltage2_density_{}_{}.csv".format(
-                args["savefilenameprefix"], gal_model
+            os.path.join(
+                args["outputpath"],
+                "voltage2_density_{}_{}.csv".format(
+                    args["savefilenameprefix"], gal_model
+                ),
             )
         )
 
@@ -265,12 +262,17 @@ if __name__ == "__main__":
     )
     args = vars(ap.parse_args())
 
+    if (args["datasettype"] == "voltage2") and (
+        args["outputpath"] == "./simulated_power_datasets/"
+    ):
+        args["outputpath"] = "./voltage2_density/"
+
     orientation = args["orientation"]
     gal_model = args["galacticmodel"]
     shift_phi = args["shiftazimuth"]
     shift_LST_bins = args["shiftlst"]
     lst_range_arg = args["lstrange"]
-    
+
     if gal_model == "LFSS":
         galactic_map_inst = LowFrequencySkyModel(freq_unit="MHz")
     elif gal_model == "GSM08":

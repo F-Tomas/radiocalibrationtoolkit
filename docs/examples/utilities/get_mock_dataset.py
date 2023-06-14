@@ -9,6 +9,7 @@ from pathlib import Path
 
 piko = 1e-12
 
+
 def to_string(input_val):
     if isinstance(input_val, (float, int)):
         return str(input_val)
@@ -110,17 +111,15 @@ def main():
     if args["overridesavefilename"] is not None:
         filename = args["savefilename"]
     else:
-        filename = (
-            "mock_power_dataset-{}_N{}_temp{}C_{}additionalnoise_rounding-{}.csv".format(
-                Path(args["voltagedensity2file"]).stem.replace("voltage2_density_", ""),
-                args["numberoftraces"],
-                to_string(args["temperature"]),
-                args["additionalnoise"],
-                not args["turn_off_rounding"],
-            )
+        filename = "mock_power_dataset-{}_N{}_temp{}C_{}additionalnoise_rounding-{}.csv".format(
+            Path(args["voltagedensity2file"]).stem.replace("voltage2_density_", ""),
+            args["numberoftraces"],
+            to_string(args["temperature"]),
+            args["additionalnoise"],
+            not args["turn_off_rounding"],
         )
 
-    ((mock_power_DF/piko).round(3)).to_csv(os.path.join(args["outputpath"], filename))
+    ((mock_power_DF / piko).round(3)).to_csv(os.path.join(args["outputpath"], filename))
 
 
 if __name__ == "__main__":

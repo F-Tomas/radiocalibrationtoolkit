@@ -1,13 +1,6 @@
 import os
 import sys
 
-
-from pygdsm import (
-    GlobalSkyModel2016,
-    GlobalSkyModel,
-    LowFrequencySkyModel,
-    HaslamSkyModel,
-)
 from pylfmap import LFmap
 
 from radiocalibrationtoolkit import *

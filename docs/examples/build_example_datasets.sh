@@ -14,14 +14,14 @@ echo **************** simulated power in HW ****************
 # realistic
 for GMAP in $GMAPS; do
     echo $GMAP;
-    python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/SALLA_EW.xml -w ${base}/antenna_setup_files/HardwareProfileList_realistic.xml -s Salla_EW -o ${base}/simulated_power_datasets/
+    python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/SALLA_EW.xml -w ${base}/antenna_setup_files/HardwareProfileList_realistic.xml -s Salla_EW -o ${base}/simulated_power_datasets/ -r EW
     echo =================================================================
 done
 
 # idealistic
 for GMAP in $GMAPS; do
     echo $GMAP;
-    python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/Isotropic_antenna_pattern.xml -w ${base}/antenna_setup_files/HardwareProfileList_flat.xml -s isoAnt_flathw -o ${base}/simulated_power_datasets/ -r EW;
+    python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/Isotropic_antenna_pattern.xml -w ${base}/antenna_setup_files/HardwareProfileList_flat.xml -s isoAnt_flathw -o ${base}/simulated_power_datasets/;
     echo =================================================================
 done
 

@@ -14,7 +14,6 @@
    "outputs": [],
    "source": [
     "# sky map\n",
-    "from pygdsm import GlobalSkyModel2016\n",
     "import matplotlib.pyplot as plt\n",
     "import os\n",
     "import sys\n",
@@ -30,6 +29,28 @@
     "################################################################################################################\n",
     "# THIS IS NOT RECOMMENED APPROACH, THE HP MAP ARRAYs SHOULD BE ALWAYS BY DEFAULT IN GALACTIC COORDINATE SYSTEM #\n",
     "################################################################################################################"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# some global plot settings\n",
+    "plt.rcParams[\"axes.labelweight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.weight\"] = \"bold\"\n",
+    "plt.rcParams['font.size'] = 16\n",
+    "plt.rcParams['legend.fontsize']= 14\n",
+    "\n",
+    "plt.rcParams['xtick.major.width']= 2\n",
+    "plt.rcParams['ytick.major.width']= 2\n",
+    "\n",
+    "plt.rcParams['xtick.major.size']= 5\n",
+    "plt.rcParams['ytick.major.size']= 5\n",
+    "\n",
+    "plt.rcParams['xtick.labelsize']= 14\n",
+    "plt.rcParams['ytick.labelsize']= 14"
    ]
   },
   {
@@ -217,9 +238,9 @@
    "outputs": [],
    "source": [
     "fig, ax = plt.subplots()\n",
-    "ax.plot(sums/sums[0])\n",
+    "ax.plot(sums/sums[0] - 1)\n",
     "ax.set_xlabel('LST')\n",
-    "ax.set_ylabel(r'$\\frac{\\Sigma \\mathrm{pixel\\; values}}{\\Sigma \\mathrm{pixel\\; values\\; at\\; LST=0}}$')"
+    "ax.set_ylabel(r'$\\frac{\\Sigma \\mathrm{pixel\\; values}}{\\Sigma \\mathrm{pixel\\; values\\; at\\; LST=0}} - 1$')"
    ]
   },
   {

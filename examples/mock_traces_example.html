@@ -105,7 +105,7 @@
              
   <section id="Mock-traces-example">
 <h1>Mock traces example<a class="headerlink" href="#Mock-traces-example" title="Permalink to this heading">¶</a></h1>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -114,6 +114,14 @@
 <span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[INFO] LFmap: Import successful.
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -187,7 +195,7 @@
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 &lt;?xml version=&#34;1.0&#34; encoding=&#34;iso-8859-1&#34;?&gt;
-&lt;Element HardwareProfileList at 0x7f5054a93280&gt;
+&lt;Element HardwareProfileList at 0x7fa568d80680&gt;
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -212,7 +220,7 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x7f5054b30520&gt;
+&lt;matplotlib.legend.Legend at 0x7fa568dfd450&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -241,7 +249,7 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x7f5054a74040&gt;
+&lt;matplotlib.legend.Legend at 0x7fa568d4eb30&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -361,7 +369,7 @@ v^2 = 4 k_B T R
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|█████████████████████████████████████████████| 5/5 [00:00&lt;00:00, 34.49it/s]
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00&lt;00:00, 32.87it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -408,7 +416,7 @@ Text(0, 0.5, &#39;amplitude [ADC]&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|████████████████████████████████████████████| 1/1 [00:00&lt;00:00, 245.61it/s]
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00&lt;00:00, 277.84it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -429,23 +437,23 @@ Text(0, 0.5, &#39;amplitude [ADC]&#39;)
         1.24755859e+02, 1.24877930e+02, 1.25000000e+02]),
  &#39;sidereal_voltage2_density&#39;: array([-1.31014973e-18, -1.27563936e-18, -1.24112898e-18, ...,
          2.73509301e-18,  2.72614943e-18,  2.71720585e-18]),
- &#39;thermal_noise_voltage2_density&#39;: array([5.95840549e-18, 5.96073369e-18, 5.96306190e-18, ...,
-        4.17421279e-18, 4.17493034e-18, 4.17564790e-18]),
- &#39;total_voltage2_density_scattered&#39;: array([2.35158904e-19, 1.70522348e-18, 5.90667141e-18, ...,
-        4.34580150e-19, 1.62131434e-17, 6.84368629e-18]),
- &#39;total_voltage2_density_scattered_in_HW&#39;: array([5.70743163e-25, 3.38731380e-24, 9.60310720e-24, ...,
-        1.39883416e-23, 5.17392221e-22, 2.16520536e-22]),
- &#39;total_voltage2_density_scattered_in_HW_with_additional_noise&#39;: array([3.86007946e-16, 9.96185414e-16, 4.57129819e-16, ...,
-        2.55599011e-16, 3.27165154e-16, 7.68827472e-16]),
- &#39;spectrum_voltage_density_in_HW&#39;: array([3.82243705e-07, 9.31210144e-07, 1.56792712e-06, ...,
-        1.89235712e-06, 1.15087970e-05, 7.44508275e-06]),
- &#39;spectrum_voltage_density_in_HW_with_additional_noise&#39;: array([0.00994073, 0.01596945, 0.01081782, ..., 0.00808909, 0.00915174,
-        0.01402925]),
- &#39;spectrum_voltage_density_in_HW_with_additional_noise_with_NBI&#39;: array([0.00994073, 0.01596945, 0.01081782, ..., 0.00808909, 0.00915174,
-        0.01402925]),
- &#39;time_trace&#39;: array([-4, -1,  5, ..., -1,  4,  2]),
- &#39;additional_noise&#39;: array([5.25907749e-16, 5.56319176e-16, 7.90242925e-16, ...,
-        3.41751193e-16, 5.15580896e-16, 1.98333557e-17])}
+ &#39;thermal_noise_voltage2_density&#39;: array([5.95840564e-18, 5.96073384e-18, 5.96306205e-18, ...,
+        4.17421282e-18, 4.17493029e-18, 4.17564775e-18]),
+ &#39;total_voltage2_density_scattered&#39;: array([1.10172714e-18, 3.54291727e-18, 4.17764284e-18, ...,
+        4.20848737e-18, 2.82001162e-17, 6.70522888e-18]),
+ &#39;total_voltage2_density_scattered_in_HW&#39;: array([7.08112521e-25, 1.86660998e-24, 1.80421474e-24, ...,
+        4.45074786e-23, 2.95583322e-22, 6.96569890e-23]),
+ &#39;total_voltage2_density_scattered_in_HW_with_additional_noise&#39;: array([3.75201022e-16, 6.43248429e-17, 6.85710226e-16, ...,
+        2.47670829e-16, 4.53012547e-16, 1.61949486e-16]),
+ &#39;spectrum_voltage_density_in_HW&#39;: array([4.25766139e-07, 6.91268511e-07, 6.79616785e-07, ...,
+        3.37548730e-06, 8.69881201e-06, 4.22281768e-06]),
+ &#39;spectrum_voltage_density_in_HW_with_additional_noise&#39;: array([0.00980058, 0.00405797, 0.01324922, ..., 0.00796265, 0.01076899,
+        0.00643887]),
+ &#39;spectrum_voltage_density_in_HW_with_additional_noise_with_NBI&#39;: array([0.00980058, 0.00405797, 0.01324922, ..., 0.00796265, 0.01076899,
+        0.00643887]),
+ &#39;time_trace&#39;: array([ 1, -2, -1, ...,  0, -3,  0]),
+ &#39;additional_noise&#39;: array([6.45043224e-16, 8.86477159e-16, 1.22194332e-16, ...,
+        2.60649092e-16, 4.51042492e-16, 1.03130482e-15])}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -529,7 +537,7 @@ Text(0, 0.5, &#39;amplitude [ADC]&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x7f5053b95f60&gt;
+&lt;matplotlib.legend.Legend at 0x7fa56791e980&gt;
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">

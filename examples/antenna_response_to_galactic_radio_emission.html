@@ -105,16 +105,23 @@
              
   <section id="Antenna-response-to-galactic-radio-emission">
 <h1>Antenna response to galactic radio emission<a class="headerlink" href="#Antenna-response-to-galactic-radio-emission" title="Permalink to this heading">¶</a></h1>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pygdsm</span> <span class="kn">import</span> <span class="n">GlobalSkyModel2016</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[INFO] LFmap: Import successful.
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -175,7 +182,7 @@
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 &lt;?xml version=&#34;1.0&#34; encoding=&#34;iso-8859-1&#34;?&gt;
-&lt;Element HardwareProfileList at 0x7fc6638aaa80&gt;
+&lt;Element HardwareProfileList at 0x7f654518cb80&gt;
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -194,12 +201,14 @@
 <div class="highlight"><pre>
 defaultdict(&lt;function radiocalibrationtoolkit.common.helpfunctions.read_hw_file.&lt;locals&gt;.&lt;lambda&gt;()&gt;,
             {&#39;RResponse&#39;: defaultdict(&lt;function radiocalibrationtoolkit.common.helpfunctions.read_hw_file.&lt;locals&gt;.&lt;lambda&gt;()&gt;,
-                         {&#39;LNA&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7fc6638dd4e0&gt;,
-                          &#39;cable_fromLNA2digitizer&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7fc6638ff420&gt;,
-                          &#39;digitizer&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7fc6638ff6f0&gt;,
-                          &#39;impedance_matching_EW&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7fc6638ff650&gt;}),
+                         {&#39;LNA&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7f6545157740&gt;,
+                          &#39;cable_fromLNA2digitizer&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7f65511c2340&gt;,
+                          &#39;digitizer&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7f6545184c70&gt;,
+                          &#39;impedance_matching_EW&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7f65451850d0&gt;,
+                          &#39;impedance_matching_NS&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7f6545185850&gt;}),
              &#39;IImpedance&#39;: defaultdict(&lt;function radiocalibrationtoolkit.common.helpfunctions.read_hw_file.&lt;locals&gt;.&lt;lambda&gt;()&gt;,
-                         {&#39;antenna_EW&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7fc6638ff920&gt;})})
+                         {&#39;antenna_EW&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7f6545185800&gt;,
+                          &#39;antenna_NS&#39;: &lt;scipy.interpolate._interpolate.interp1d at 0x7f6545184db0&gt;})})
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -250,7 +259,7 @@ defaultdict(&lt;function radiocalibrationtoolkit.common.helpfunctions.read_hw_fi
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|█████████████████████████████████████████████| 2/2 [00:09&lt;00:00,  4.59s/it]
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:08&lt;00:00,  4.16s/it]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">

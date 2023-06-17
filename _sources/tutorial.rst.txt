@@ -43,6 +43,8 @@ Miscellaneous
 .. toctree::
    :maxdepth: 2
    
+   examples/gaussian_error_propagation.ipynb
+   examples/window_function_effect.ipynb
    examples/permanent_hpmap_array_rotation.ipynb
    examples/compare_galactic_power_simulations_via_galactic_and_local_CS.ipynb
    utilities

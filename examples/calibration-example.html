@@ -27,7 +27,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Permanent hpmap array rotation" href="permanent_hpmap_array_rotation.html" />
+    <link rel="next" title="Statistical error propagation" href="gaussian_error_propagation.html" />
     <link rel="prev" title="Mock power dataset testing" href="mock_power_dataset_testing.html" /> 
 </head>
 
@@ -108,202 +108,31 @@
              
   <section id="Calibration-example">
 <h1>Calibration example<a class="headerlink" href="#Calibration-example" title="Permalink to this heading">¶</a></h1>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">MultipleLocator</span><span class="p">,</span> <span class="n">FormatStrFormatter</span><span class="p">,</span> <span class="n">AutoMinorLocator</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
 <span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[INFO] LFmap: Import successful.
+</pre></div></div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># some ad-hoc plotting functions</span>
-
-<span class="k">def</span> <span class="nf">statistic_without_nans</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid function argument.&quot;</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">calculate_and_plot_with_true</span><span class="p">(</span><span class="n">df_true_sim_file_path</span><span class="p">,</span> <span class="n">power_rec_DF</span><span class="p">):</span>
-    <span class="n">power_sim_true_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">df_true_sim_file_path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">power_sim_true_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_sim_true_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-
-    <span class="n">frequencies_MHz</span> <span class="o">=</span> <span class="n">power_sim_true_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">intercepts</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">power_sim_true_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-        <span class="n">x_arr</span> <span class="o">=</span> <span class="n">power_sim_true_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">freq</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">y_arr</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">freq</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="n">robust_regression</span><span class="p">(</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">)</span>
-        <span class="n">intercepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intercept</span><span class="p">)</span>
-        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
-
-    <span class="n">intercepts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">intercepts</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">slopes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">df_true_sim_file_path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies_MHz</span><span class="p">,</span> <span class="p">(</span><span class="n">slopes</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">median</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">slopes</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">slopes</span><span class="p">)])</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">median</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;median=</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">median</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;voltage </span><span class="se">\n</span><span class="s2">calibration parameter&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">frequencies_MHz</span><span class="p">,</span> <span class="n">intercepts</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># ax[1].set_ylim(0, 5)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;voltage </span><span class="se">\n</span><span class="s2">noise offset &quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-
-    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">get_slope_and_intercepts_dfs</span><span class="p">(</span><span class="n">concatenated_df</span><span class="p">,</span> <span class="n">power_rec_DF</span><span class="p">):</span>
-    <span class="n">slopes_dict</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">intercepts_dict</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">concatenated_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">power_sim_DF</span> <span class="o">=</span> <span class="n">concatenated_df</span><span class="o">.</span><span class="n">xs</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="n">frequencies_MHz</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
-
-        <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">intercepts</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-            <span class="n">x_arr</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">freq</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-            <span class="n">y_arr</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">freq</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
-            <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="n">robust_regression</span><span class="p">(</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">)</span>
-            <span class="n">intercepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intercept</span><span class="p">)</span>
-            <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
-
-        <span class="n">slopes_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">intercepts_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">intercepts</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-
-    <span class="n">slopes_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">slopes_dict</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">slopes_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span>
-    <span class="n">intercepts_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">intercepts_dict</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">intercepts_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span>
-
-    <span class="k">return</span> <span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span>
-
-
-<span class="k">def</span> <span class="nf">bounds_from_slope_DF</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">stat_func</span><span class="p">):</span>
-    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">slopes_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">boot_res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">slopes_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,),</span>
-            <span class="n">stat_func</span><span class="p">,</span>
-            <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-            <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.68</span><span class="p">,</span>
-            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;BCa&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">boot_res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">boot_res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
-        <span class="p">)</span>
-    <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">freq_dependent_slopes</span> <span class="o">=</span> <span class="n">slopes_DF</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">statistic_without_nans</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">stat_func</span><span class="p">,))</span>
-    <span class="k">return</span> <span class="n">freq_dependent_slopes</span><span class="p">,</span> <span class="n">bounds</span>
-
-
-<span class="k">def</span> <span class="nf">plot_results_with_CI</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># calculate</span>
-    <span class="n">stat_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span>
-    <span class="n">stat</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>
-
-    <span class="n">freq_dependent_slopes</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds_from_slope_DF</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">stat_func</span><span class="p">)</span>
-
-    <span class="c1"># this needs to be median, because at some frequencies there can be strong outliers</span>
-    <span class="n">total_central_value</span> <span class="o">=</span> <span class="n">freq_dependent_slopes</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
-    <span class="n">boot_res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">freq_dependent_slopes</span><span class="o">.</span><span class="n">values</span><span class="p">,),</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">,</span>
-        <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.68</span><span class="p">,</span>
-        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;BCa&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">bounds_total_central_value</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">boot_res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
-        <span class="n">boot_res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># plot</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">labels</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">glabels</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">slopes_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">glabels</span> <span class="o">=</span> <span class="n">labels</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">frequencies_MHz</span><span class="p">,</span> <span class="n">slopes_DF</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span>
-    <span class="p">)</span>  <span class="c1"># , label=glabels)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">frequencies_MHz</span><span class="p">,</span> <span class="n">slopes_DF</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span>
-    <span class="p">)</span>  <span class="c1"># , label=glabels)</span>
-
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">freq_dependent_slopes</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">freq_dependent_slopes</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">stat</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
-        <span class="n">frequencies_MHz</span><span class="p">,</span>
-        <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">,],</span>
-        <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">,],</span>
-        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;68% CI&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;voltage </span><span class="se">\n</span><span class="s2">calibration parameter&quot;</span><span class="p">)</span>
-
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
-        <span class="n">total_central_value</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span>
-        <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Me(CP(f))=</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total_central_value</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span>
-        <span class="n">bounds_total_central_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-        <span class="n">bounds_total_central_value</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span>
-        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;68% CI&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies_MHz</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">glabels</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;voltage </span><span class="se">\n</span><span class="s2">noise offset &quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span>
-        <span class="n">left</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-        <span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-        <span class="n">wspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">total_central_value</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This ensures Plotly output works in multiple places:</span>
@@ -316,7 +145,7 @@
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># some global plot settings</span>
@@ -337,7 +166,7 @@
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for this example you need to create a mock power dataframe and simulated sidereal power dataset</span>
@@ -347,49 +176,40 @@
 <section id="Calibrate-with-%22true%22">
 <h2>Calibrate with “true”<a class="headerlink" href="#Calibrate-with-%22true%22" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># in this case the recorded is the mock dataset</span>
+<span class="n">sky_map_model</span> <span class="o">=</span> <span class="s2">&quot;LFmap&quot;</span>
+
 <span class="n">power_rec_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
-    <span class="c1"># &quot;./mock_power_datasets/mock_power_dataset-Salla_EW_GSM16_N10000_temp30.0C_0.0additionalnoise_rounding-True.csv&quot;,</span>
-    <span class="s2">&quot;./mock_power_datasets/mock_power_dataset-Salla_EW_GSM16_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;./mock_power_datasets/mock_power_dataset-Salla_EW_&quot;</span>
+    <span class="o">+</span> <span class="n">sky_map_model</span>
+    <span class="o">+</span> <span class="s2">&quot;_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&quot;</span><span class="p">,</span>
     <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># power_rec_DF.iloc[:, :] = power_rec_DF.values</span>
-<span class="c1"># power_rec_DF = power_rec_DF.iloc[:, 30:80]</span>
 <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
 <span class="n">dir_path</span> <span class="o">=</span> <span class="s2">&quot;./simulated_power_datasets/&quot;</span>
 <span class="n">df_files</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Salla&#39;</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Salla_EW&quot;</span><span class="p">))</span>
 <span class="p">]</span>
-<span class="n">power_sim_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">df_files</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="c1"># power_sim_DF.iloc[:, :] = power_sim_DF.values</span>
+<span class="n">file_path_2_true</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df_files</span> <span class="k">if</span> <span class="n">sky_map_model</span> <span class="ow">in</span> <span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">power_sim_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path_2_true</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="n">antenna_type</span> <span class="o">=</span> <span class="s2">&quot;Salla_EW&quot;</span>
+<span class="n">dir_path</span> <span class="o">=</span> <span class="s2">&quot;./simulated_power_datasets/&quot;</span>
+
+<span class="n">concatenated_sim_df</span> <span class="o">=</span> <span class="n">concatenate_simulated_dfs</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">antenna_type</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_files</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&#39;./simulated_power_datasets/Salla_GSM16.csv&#39;
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit each band and make a plot overview</span>
@@ -433,11 +253,11 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_9_0.png" src="../_images/examples_calibration-example_9_0.png" />
+<img alt="../_images/examples_calibration-example_7_0.png" src="../_images/examples_calibration-example_7_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
@@ -445,44 +265,75 @@
 
 <span class="c1"># modify the axis limits of the copied figure</span>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">axes</span>
-<span class="n">ax2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
+<span class="n">ax2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
 <span class="n">fig2</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_10_0.png" src="../_images/examples_calibration-example_10_0.png" />
+<img alt="../_images/examples_calibration-example_8_0.png" src="../_images/examples_calibration-example_8_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><br/><span></span><span class="n">calculate_and_plot_with_true</span><span class="p">([(</span><span class="n">df_files</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])],</span> <span class="n">power_rec_DF</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span> <span class="o">=</span> <span class="n">get_fitted_voltage_calibration_params_and_noise_offsets</span><span class="p">(</span><span class="n">power_sim_DF</span><span class="p">,</span> <span class="n">power_rec_DF</span><span class="p">)</span>
+<span class="n">get_and_plot_calibration_results</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">sky_map_model</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0014095648643875913
+Test2: p0.5=-0.0014095648643781544
+Test3: p0.5+/-0.341=0.0007949805252250863
+0.9977988994497249 0.9473736868434217 1.0491245622811407
+Normalization test:  (0.9999997465698934, 8.367366209119815e-06)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(0.9977988994497249, 0.9473736868434217, 1.0500250125062531)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_9_2.png" src="../_images/examples_calibration-example_9_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_11_0.png" src="../_images/examples_calibration-example_11_0.png" />
+<img alt="../_images/examples_calibration-example_9_3.png" src="../_images/examples_calibration-example_9_3.png" />
 </div>
 </div>
 </section>
 <section id="Calibrate-with-all-'not-true'-simulated-datasets">
 <h2>Calibrate with all ‘not true’ simulated datasets<a class="headerlink" href="#Calibrate-with-all-'not-true'-simulated-datasets" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">df_names</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">except_this</span> <span class="o">=</span> <span class="s1">&#39;Salla_GSM16&#39;</span>
+<span class="n">except_this</span> <span class="o">=</span> <span class="s2">&quot;Salla_EW_&quot;</span><span class="o">+</span><span class="n">sky_map_model</span>
 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">df_files</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">except_this</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -497,108 +348,87 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;Salla_GMOSS&#39;,
- &#39;Salla_SSM&#39;,
- &#39;Salla_Haslam&#39;,
- &#39;Salla_LFSS&#39;,
- &#39;Salla_ULSA&#39;,
- &#39;Salla_GSM08&#39;,
- &#39;Salla_LFmap&#39;]
+[&#39;Salla_EW_GMOSS&#39;,
+ &#39;Salla_EW_ULSA&#39;,
+ &#39;Salla_EW_GSM08&#39;,
+ &#39;Salla_EW_Haslam&#39;,
+ &#39;Salla_EW_SSM&#39;,
+ &#39;Salla_EW_LFSS&#39;,
+ &#39;Salla_EW_GSM16&#39;]
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span> <span class="o">=</span> <span class="n">get_slope_and_intercepts_dfs</span><span class="p">(</span><span class="n">concatenated_sim_df</span><span class="p">,</span> <span class="n">power_rec_DF</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_results_with_CI</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<br/></pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">slopes_DF</span><span class="p">,</span>
+    <span class="n">intercepts_DF</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">=</span> <span class="n">get_fitted_voltage_cal_params_and_noise_offsets_from_concat_sim_dfs</span><span class="p">(</span>
+    <span class="n">concatenated_sim_df</span><span class="p">,</span> <span class="n">power_rec_DF</span>
+<span class="p">)</span>
+<span class="n">get_and_plot_calibration_results</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">except_this</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0016128016128159617
+Test2: p0.5=-0.0016128016128064138
+Test3: p0.5+/-0.341=-0.001372935735571068
+1.0671335667833917 1.0059029514757378 1.1283641820910455
+Normalization test:  (0.9999996936867219, 4.593107438354139e-06)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.935816948375442
+(1.0671335667833917, 1.0059029514757378, 1.1292646323161581)
 </pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_12_2.png" src="../_images/examples_calibration-example_12_2.png" />
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_15_1.png" src="../_images/examples_calibration-example_15_1.png" />
+<img alt="../_images/examples_calibration-example_12_3.png" src="../_images/examples_calibration-example_12_3.png" />
 </div>
 </div>
 </section>
 <section id="Iteratively-apply-the-previous-procedure-to-all-simulated-datasets">
 <h2>Iteratively apply the previous procedure to all simulated datasets<a class="headerlink" href="#Iteratively-apply-the-previous-procedure-to-all-simulated-datasets" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for this example you need to create a mock power dataframe and simulated sidereal power dataset</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot results</span>
-<span class="k">def</span> <span class="nf">calculate_and_plot_results</span><span class="p">(</span><span class="n">df_sim_files</span><span class="p">,</span> <span class="n">df_mock_files</span><span class="p">,</span> <span class="n">df_true_sim_file_path</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">df_sim_files</span><span class="p">,</span> <span class="n">df_mock_files</span><span class="p">,</span> <span class="n">df_true_sim_file_path</span><span class="p">)</span>
-    <span class="c1"># calculate</span>
-    <span class="c1"># read in all simulated datasets except the &quot;true&quot; one</span>
-    <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">df_names</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">df_sim_files</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-        <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">df_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
-
-    <span class="n">concatenated_sim_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">df_names</span><span class="p">)</span>
-    <span class="c1"># read-in rec dataset</span>
-    <span class="n">power_rec_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
-        <span class="n">df_mock_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-
-    <span class="c1"># fitted with all others</span>
-    <span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span> <span class="o">=</span> <span class="n">get_slope_and_intercepts_dfs</span><span class="p">(</span>
-        <span class="n">concatenated_sim_df</span><span class="p">,</span> <span class="n">power_rec_DF</span>
-    <span class="p">)</span>
-    <span class="n">median</span> <span class="o">=</span> <span class="n">plot_results_with_CI</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;True: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gmodel</span><span class="p">))</span>
-    <span class="c1"># fitted with True</span>
-    <span class="n">calculate_and_plot_with_true</span><span class="p">(</span><span class="n">df_true_sim_file_path</span><span class="p">,</span> <span class="n">power_rec_DF</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">median</span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mock_datasets_path</span> <span class="o">=</span> <span class="s2">&quot;./mock_power_datasets/&quot;</span>
-<span class="n">sim_datasets_path</span> <span class="o">=</span> <span class="s2">&quot;./simulated_power_datasets/&quot;</span>
-
-<span class="n">galactic_models</span> <span class="o">=</span> <span class="p">[</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">galactic_models</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;GSM16&quot;</span><span class="p">,</span>
     <span class="s2">&quot;LFSS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GSM08&quot;</span><span class="p">,</span>
@@ -609,41 +439,45 @@
     <span class="s2">&quot;ULSA&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">galactic_models</span><span class="p">)</span>
-
-<span class="n">antenna_model</span> <span class="o">=</span> <span class="s2">&quot;Salla&quot;</span>
-<span class="n">all_slopes_dict</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">all_intercepts_dict</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">medians</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+<span class="n">all_freq_dep_cal_params_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">all_freq_dep_noise_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">central_stats_dict</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">gmodel</span> <span class="ow">in</span> <span class="n">galactic_models</span><span class="p">:</span>
-    <span class="n">temp_galactic_models</span> <span class="o">=</span> <span class="n">galactic_models</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">temp_galactic_models</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">gmodel</span><span class="p">)</span>
-    <span class="n">re_string_mock</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.*</span><span class="si">{}</span><span class="s2">.*N10000.*-10_50.*csv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">antenna_model</span><span class="p">,</span> <span class="n">gmodel</span><span class="p">)</span>
-    <span class="n">re_string_sim</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.*</span><span class="si">{}</span><span class="s2">.*csv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">antenna_model</span><span class="p">,</span> <span class="n">gmodel</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;************************&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gmodel</span><span class="p">)</span>
+    <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">df_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">measured_label</span> <span class="o">=</span> <span class="s2">&quot;Salla_EW_&quot;</span> <span class="o">+</span> <span class="n">gmodel</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">df_files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">measured_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">df_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
 
-    <span class="n">df_mock_files</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mock_datasets_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">mock_datasets_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">re_string_mock</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-    <span class="p">]</span>
-
-    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="p">[</span><span class="s2">&quot;^</span><span class="si">{}</span><span class="s2">.*&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">antenna_model</span><span class="p">)</span> <span class="o">+</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">temp_galactic_models</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df_names</span><span class="p">)</span>
+    <span class="n">concatenated_sim_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">df_names</span><span class="p">)</span>
+    <span class="n">power_rec_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="s2">&quot;./mock_power_datasets/mock_power_dataset-&quot;</span>
+        <span class="o">+</span> <span class="n">measured_label</span>
+        <span class="o">+</span> <span class="s2">&quot;_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&quot;</span><span class="p">,</span>
+        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">df_sim_files</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sim_datasets_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">sim_datasets_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span>
-    <span class="p">]</span>
-
-    <span class="n">df_true_sim_file_path</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sim_datasets_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">sim_datasets_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">re_string_sim</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-    <span class="p">]</span>
-    <span class="n">all_slopes_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">],</span> <span class="n">all_intercepts_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">],</span> <span class="n">m</span> <span class="o">=</span> <span class="n">calculate_and_plot_results</span><span class="p">(</span><span class="n">df_sim_files</span><span class="p">,</span> <span class="n">df_mock_files</span><span class="p">,</span> <span class="n">df_true_sim_file_path</span><span class="p">)</span>
-    <span class="n">medians</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">medians</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
-    <span class="c1"># here should be the function</span>
+    <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="p">(</span>
+        <span class="n">slopes_DF</span><span class="p">,</span>
+        <span class="n">intercepts_DF</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">get_fitted_voltage_cal_params_and_noise_offsets_from_concat_sim_dfs</span><span class="p">(</span>
+        <span class="n">concatenated_sim_df</span><span class="p">,</span> <span class="n">power_rec_DF</span>
+    <span class="p">)</span>
+    <span class="n">all_freq_dep_cal_params_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">],</span> <span class="n">all_freq_dep_noise_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">slopes_DF</span><span class="p">,</span>
+        <span class="n">intercepts_DF</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">central_stats_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_and_plot_calibration_results</span><span class="p">(</span>
+        <span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">gmodel</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;************************&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -652,177 +486,276 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;, &#39;./simulated_power_datasets/Salla_SSM.csv&#39;, &#39;./simulated_power_datasets/Salla_Haslam.csv&#39;, &#39;./simulated_power_datasets/Salla_LFSS.csv&#39;, &#39;./simulated_power_datasets/Salla_ULSA.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM08.csv&#39;, &#39;./simulated_power_datasets/Salla_LFmap.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_GSM16_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_GSM16.csv&#39;]
-[&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;, &#39;./simulated_power_datasets/Salla_SSM.csv&#39;, &#39;./simulated_power_datasets/Salla_Haslam.csv&#39;, &#39;./simulated_power_datasets/Salla_ULSA.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM16.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM08.csv&#39;, &#39;./simulated_power_datasets/Salla_LFmap.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_LFSS_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_LFSS.csv&#39;]
-[&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;, &#39;./simulated_power_datasets/Salla_SSM.csv&#39;, &#39;./simulated_power_datasets/Salla_Haslam.csv&#39;, &#39;./simulated_power_datasets/Salla_LFSS.csv&#39;, &#39;./simulated_power_datasets/Salla_ULSA.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM16.csv&#39;, &#39;./simulated_power_datasets/Salla_LFmap.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_GSM08_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_GSM08.csv&#39;]
-[&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;, &#39;./simulated_power_datasets/Salla_SSM.csv&#39;, &#39;./simulated_power_datasets/Salla_LFSS.csv&#39;, &#39;./simulated_power_datasets/Salla_ULSA.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM16.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM08.csv&#39;, &#39;./simulated_power_datasets/Salla_LFmap.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_Haslam_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_Haslam.csv&#39;]
-[&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;, &#39;./simulated_power_datasets/Salla_SSM.csv&#39;, &#39;./simulated_power_datasets/Salla_Haslam.csv&#39;, &#39;./simulated_power_datasets/Salla_LFSS.csv&#39;, &#39;./simulated_power_datasets/Salla_ULSA.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM16.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM08.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_LFmap_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_LFmap.csv&#39;]
-[&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;, &#39;./simulated_power_datasets/Salla_Haslam.csv&#39;, &#39;./simulated_power_datasets/Salla_LFSS.csv&#39;, &#39;./simulated_power_datasets/Salla_ULSA.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM16.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM08.csv&#39;, &#39;./simulated_power_datasets/Salla_LFmap.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_SSM_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_SSM.csv&#39;]
-[&#39;./simulated_power_datasets/Salla_SSM.csv&#39;, &#39;./simulated_power_datasets/Salla_Haslam.csv&#39;, &#39;./simulated_power_datasets/Salla_LFSS.csv&#39;, &#39;./simulated_power_datasets/Salla_ULSA.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM16.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM08.csv&#39;, &#39;./simulated_power_datasets/Salla_LFmap.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_GMOSS_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;]
-[&#39;./simulated_power_datasets/Salla_GMOSS.csv&#39;, &#39;./simulated_power_datasets/Salla_SSM.csv&#39;, &#39;./simulated_power_datasets/Salla_Haslam.csv&#39;, &#39;./simulated_power_datasets/Salla_LFSS.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM16.csv&#39;, &#39;./simulated_power_datasets/Salla_GSM08.csv&#39;, &#39;./simulated_power_datasets/Salla_LFmap.csv&#39;] [&#39;./mock_power_datasets/mock_power_dataset-Salla_EW_ULSA_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&#39;] [&#39;./simulated_power_datasets/Salla_ULSA.csv&#39;]
+************************
+GSM16
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0011128620629228259
+Test2: p0.5=-0.0011128620629131114
+Test3: p0.5+/-0.341=-2.294940812719304e-05
+0.9401700850425212 0.8789394697348676 1.001400700350175
+Normalization test:  (1.000001666178155, 3.5599836161498855e-06)
+************************
+************************
+LFSS
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0001646157927197578
+Test2: p0.5=0.0001646157927293057
+Test3: p0.5+/-0.341=0.0003869591688764329
+0.9509754877438721 0.8888444222111056 1.015807903951976
+Normalization test:  (0.9999996199571539, 5.3261019541753255e-06)
+************************
+************************
+GSM08
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.002476926830653925
+Test2: p0.5=-0.002476926830644377
+Test3: p0.5+/-0.341=-1.67675874277462e-05
+1.014007003501751 0.9482741370685344 1.0779389694847423
+Normalization test:  (0.9999999975661396, 7.110808530162103e-06)
+************************
+************************
+Haslam
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0005809929283888682
+Test2: p0.5=-0.0005809929283790427
+Test3: p0.5+/-0.341=0.00022858946283499382
+1.0590295147573787 0.9950975487743872 1.1229614807403703
+Normalization test:  (1.0000010953113656, 5.8539345150653045e-06)
+************************
+************************
+LFmap
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0016128016128159617
+Test2: p0.5=-0.0016128016128064138
+Test3: p0.5+/-0.341=-0.001372935735571068
+1.0671335667833917 1.0059029514757378 1.1283641820910455
+Normalization test:  (0.9999996936867219, 4.593107438354139e-06)
+************************
+************************
+SSM
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0016649643807146175
+Test2: p0.5=-0.0016649643807049586
+Test3: p0.5+/-0.341=0.0014481908282403255
+0.9806903451725864 0.9140570285142571 1.0491245622811407
+Normalization test:  (0.999999596649851, 6.784258453692367e-06)
+************************
+************************
+GMOSS
+[&#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0007653411186733239
+Test2: p0.5=-0.0007653411186636649
+Test3: p0.5+/-0.341=0.0015077400453994416
+1.015807903951976 0.9500750375187594 1.08064032016008
+Normalization test:  (1.0000000490418244, 6.952903049657667e-06)
+************************
+************************
+ULSA
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.00159864499075546
+Test2: p0.5=0.001598644990765008
+Test3: p0.5+/-0.341=-0.0011347548600298962
+0.9509754877438721 0.8897448724362182 1.0149074537268634
+Normalization test:  (0.9999996040561989, 5.575372865980736e-06)
+************************
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_1.png" src="../_images/examples_calibration-example_19_1.png" />
+<img alt="../_images/examples_calibration-example_15_1.png" src="../_images/examples_calibration-example_15_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_2.png" src="../_images/examples_calibration-example_19_2.png" />
+<img alt="../_images/examples_calibration-example_15_2.png" src="../_images/examples_calibration-example_15_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_3.png" src="../_images/examples_calibration-example_19_3.png" />
+<img alt="../_images/examples_calibration-example_15_3.png" src="../_images/examples_calibration-example_15_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_4.png" src="../_images/examples_calibration-example_19_4.png" />
+<img alt="../_images/examples_calibration-example_15_4.png" src="../_images/examples_calibration-example_15_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_5.png" src="../_images/examples_calibration-example_19_5.png" />
+<img alt="../_images/examples_calibration-example_15_5.png" src="../_images/examples_calibration-example_15_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_6.png" src="../_images/examples_calibration-example_19_6.png" />
+<img alt="../_images/examples_calibration-example_15_6.png" src="../_images/examples_calibration-example_15_6.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_7.png" src="../_images/examples_calibration-example_19_7.png" />
+<img alt="../_images/examples_calibration-example_15_7.png" src="../_images/examples_calibration-example_15_7.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_8.png" src="../_images/examples_calibration-example_19_8.png" />
+<img alt="../_images/examples_calibration-example_15_8.png" src="../_images/examples_calibration-example_15_8.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_9.png" src="../_images/examples_calibration-example_19_9.png" />
+<img alt="../_images/examples_calibration-example_15_9.png" src="../_images/examples_calibration-example_15_9.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_10.png" src="../_images/examples_calibration-example_19_10.png" />
+<img alt="../_images/examples_calibration-example_15_10.png" src="../_images/examples_calibration-example_15_10.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_11.png" src="../_images/examples_calibration-example_19_11.png" />
+<img alt="../_images/examples_calibration-example_15_11.png" src="../_images/examples_calibration-example_15_11.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_12.png" src="../_images/examples_calibration-example_19_12.png" />
+<img alt="../_images/examples_calibration-example_15_12.png" src="../_images/examples_calibration-example_15_12.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_13.png" src="../_images/examples_calibration-example_19_13.png" />
+<img alt="../_images/examples_calibration-example_15_13.png" src="../_images/examples_calibration-example_15_13.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_14.png" src="../_images/examples_calibration-example_19_14.png" />
+<img alt="../_images/examples_calibration-example_15_14.png" src="../_images/examples_calibration-example_15_14.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_15.png" src="../_images/examples_calibration-example_19_15.png" />
+<img alt="../_images/examples_calibration-example_15_15.png" src="../_images/examples_calibration-example_15_15.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_19_16.png" src="../_images/examples_calibration-example_19_16.png" />
+<img alt="../_images/examples_calibration-example_15_16.png" src="../_images/examples_calibration-example_15_16.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_slopes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_freq_dep_cal_params_dict</span><span class="p">)</span>
+<span class="n">all_intercepts_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_freq_dep_noise_dict</span><span class="p">)</span>
+<span class="n">central_stats_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">central_stats_dict</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mu&quot;</span><span class="p">,</span> <span class="s2">&quot;err_low&quot;</span><span class="p">,</span> <span class="s2">&quot;err_high&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_slopes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_slopes_dict</span><span class="p">)</span>
-<span class="n">all_intercepts_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_intercepts_dict</span><span class="p">)</span>
-
-<span class="n">freq_dependent_slopes</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds_from_slope_DF</span><span class="p">(</span><span class="n">all_slopes_df</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
-
-<span class="n">plot_results_with_CI</span><span class="p">(</span><span class="n">all_slopes_df</span><span class="p">,</span> <span class="n">all_intercepts_df</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;All results together&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_and_plot_calibration_results</span><span class="p">(</span><span class="n">all_slopes_df</span><span class="p">,</span> <span class="n">all_intercepts_df</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
-No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.002013900060338747
+Test2: p0.5=-0.002013900060329643
+Test3: p0.5+/-0.341=0.0022066061212077104
+0.9968984492246125 0.9212606303151576 1.0743371685842922
+Normalization test:  (0.9999997046308042, 8.117105066936797e-06)
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.9981303170182356
+(0.9968984492246125, 0.9212606303151576, 1.0752376188094048)
 </pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_17_2.png" src="../_images/examples_calibration-example_17_2.png" />
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_20_2.png" src="../_images/examples_calibration-example_20_2.png" />
+<img alt="../_images/examples_calibration-example_17_3.png" src="../_images/examples_calibration-example_17_3.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;possible biases&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">medians</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;voltage calibration parameter&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Entries&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;possible biases&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">central_stats_DF</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;voltage calibration parameter&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Entries&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">medians</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">medians</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Min and Max observed bias:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">central_stats_DF</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">central_stats_DF</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -831,64 +764,65 @@ No artists with labels found to put in legend.  Note that artists whose label st
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.935816948375442 1.067407868667611
+Min and Max observed bias:
+0.9401700850425212 1.0671335667833917
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_21_1.png" src="../_images/examples_calibration-example_21_1.png" />
+<img alt="../_images/examples_calibration-example_18_1.png" src="../_images/examples_calibration-example_18_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">medians</span><span class="p">,)</span>  <span class="c1"># samples must be in a sequence</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">central_stats_DF</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">values</span><span class="p">,)</span>  <span class="c1"># samples must be in a sequence</span>
 
-<span class="n">props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;wheat&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 <span class="n">bvalues</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bvalues</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;boostraped&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$&lt;bias&gt;$&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="s1">&#39;$\mu$=</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bvalues</span><span class="p">)),</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
-        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">props</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;boostraped&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$&lt;bias&gt;$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+    <span class="mf">0.05</span><span class="p">,</span>
+    <span class="mf">0.95</span><span class="p">,</span>
+    <span class="s2">&quot;$\mu$=</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bvalues</span><span class="p">)),</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="o">=</span><span class="n">props</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;boostraped&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;boostraped&quot;</span><span class="p">)</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 <span class="n">bvalues</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bvalues</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$\sigma$ bias&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="s1">&#39;$\mu$=</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bvalues</span><span class="p">)),</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
-        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">props</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\sigma$ bias&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+    <span class="mf">0.05</span><span class="p">,</span>
+    <span class="mf">0.95</span><span class="p">,</span>
+    <span class="s2">&quot;$\mu$=</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bvalues</span><span class="p">)),</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="o">=</span><span class="n">props</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Text(0.05, 0.95, &#39;$\\mu$=0.04&#39;)
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_calibration-example_22_1.png" src="../_images/examples_calibration-example_22_1.png" />
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
+<img alt="../_images/examples_calibration-example_19_0.png" src="../_images/examples_calibration-example_19_0.png" />
 </div>
 </div>
 </section>
@@ -899,7 +833,7 @@ Text(0.05, 0.95, &#39;$\\mu$=0.04&#39;)
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="mock_power_dataset_testing.html" class="btn btn-neutral float-left" title="Mock power dataset testing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="permanent_hpmap_array_rotation.html" class="btn btn-neutral float-right" title="Permanent hpmap array rotation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="gaussian_error_propagation.html" class="btn btn-neutral float-right" title="Statistical error propagation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,6 +1,0 @@
-Power dataset production
-========================
-
-.. literalinclude:: examples/get_power_dataset.py
-   :language: python
-

@@ -70,6 +70,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS.generate"><code class="docutils literal notranslate"><span class="pre">GMOSS.generate()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GlobalSkyModel"><code class="docutils literal notranslate"><span class="pre">GlobalSkyModel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.HaslamSkyModel"><code class="docutils literal notranslate"><span class="pre">HaslamSkyModel</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM"><code class="docutils literal notranslate"><span class="pre">SSM</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM.generate"><code class="docutils literal notranslate"><span class="pre">SSM.generate()</span></code></a></li>
 </ul>
@@ -78,9 +80,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.ULSA.generate"><code class="docutils literal notranslate"><span class="pre">ULSA.generate()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.add_CMB_decorator"><code class="docutils literal notranslate"><span class="pre">add_CMB_decorator()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#skymapwrappers-tabulate-ulsa">skymapwrappers.tabulate_ulsa</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="radiocalibrationtoolkit.antennareader.html">antennareader</a></li>
@@ -161,6 +163,18 @@ to be generated.</p>
 </section>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="radiocalibrationtoolkit.skymapwrappers.modelwrapper.GlobalSkyModel">
+<span class="sig-name descname"><span class="pre">GlobalSkyModel</span></span><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GlobalSkyModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">AddCMB</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="radiocalibrationtoolkit.skymapwrappers.modelwrapper.HaslamSkyModel">
+<span class="sig-name descname"><span class="pre">HaslamSkyModel</span></span><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.HaslamSkyModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">AddCMB</span></code></p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SSM</span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/skymapwrappers/modelwrapper.html#SSM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM" title="Permalink to this definition">¶</a></dt>
@@ -228,9 +242,41 @@ needs to be generated.</p>
 </section>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="radiocalibrationtoolkit.skymapwrappers.modelwrapper.add_CMB_decorator">
+<span class="sig-name descname"><span class="pre">add_CMB_decorator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/skymapwrappers/modelwrapper.html#add_CMB_decorator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.add_CMB_decorator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator function to add the Cosmic Microwave Background (CMB) temperature to the output of a class.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>cls<span class="classifier">class</span></dt><dd><p>The original class to be decorated.</p>
+</dd>
+</dl>
 </section>
-<section id="skymapwrappers-tabulate-ulsa">
-<h2>skymapwrappers.tabulate_ulsa<a class="headerlink" href="#skymapwrappers-tabulate-ulsa" title="Permalink to this heading">¶</a></h2>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>class</dt><dd><p>The decorated class that adds the CMB temperature to the output.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h3>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h3>
+<p>The CMB temperature (2.7255 K) is added to the output generated by the decorated class.</p>
+</section>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h3>
+<p>&#64;add_CMB_decorator
+OriginalClass</p>
+<p># Decorate the class
+ModifiedClass = add_CMB_decorator(OriginalClass)</p>
+<p># Create an instance of the modified class
+modified = ModifiedClass()</p>
+<p># Generate the output with added CMB temperature
+result = modified.generate(freq)</p>
+</section>
+</dd></dl>
+
 </section>
 </section>
 

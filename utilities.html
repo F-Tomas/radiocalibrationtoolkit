@@ -61,9 +61,20 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html#mocktraces">Mocktraces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html#calibration">Calibration</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="tutorial.html#miscellaneous">Miscellaneous</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="examples/gaussian_error_propagation.html">Statistical error propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/window_function_effect.html">Window function and amplitude correction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/permanent_hpmap_array_rotation.html">Permanent hpmap array rotation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/compare_galactic_power_simulations_via_galactic_and_local_CS.html">Compare galactic power simulations via galactic and local CS</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tabulate-ulsa">Tabulate ULSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-power-dataset">Get power dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-mock-dataset">Get mock dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-voltage-squared-spectral-density">Generate voltage squared spectral density</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-isotropic-antenna-pattern">Create isotropic antenna pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-flat-hw-profile-response">Create flat HW profile response</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert-2-port-network-skrf-file-to-xml">Convert 2-port network SKRF file to XML</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -102,269 +113,8 @@
              
   <section id="utilities">
 <h1>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-
-<span class="c1"># This uses the relative path to the package, one directory up.</span>
-<span class="c1"># Add path to the radiocalibrationtoolkit to your PYTHONPATH to avoid this.</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="s2">&quot;../..&quot;</span><span class="p">))</span>
-<span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="kn">from</span> <span class="nn">pygdsm</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">GlobalSkyModel2016</span><span class="p">,</span>
-    <span class="n">GlobalSkyModel</span><span class="p">,</span>
-    <span class="n">LowFrequencySkyModel</span><span class="p">,</span>
-    <span class="n">HaslamSkyModel</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pylfmap</span> <span class="kn">import</span> <span class="n">LFmap</span>
-
-
-<span class="k">def</span> <span class="nf">save_figure</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">):</span>
-    <span class="c1"># save figure</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-        <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
-        <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;cube&quot;</span><span class="p">,</span>
-        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
-        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;</span><span class="si">{}</span><span class="s2">&lt;/b&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gal_model</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-        <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;LST&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span> <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="n">dtick</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
-        <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;frequency [MHz]&lt;/b&gt;&quot;</span><span class="p">,</span>
-            <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span>
-            <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span>
-            <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-            <span class="n">tick0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">dtick</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-            <span class="n">autorange</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-        <span class="n">coloraxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                <span class="n">title</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;</span><span class="si">{}</span><span class="s2">&lt;/b&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ylabel</span><span class="p">),</span>
-                    <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
-                <span class="p">),</span>
-                <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span>
-                <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span>
-            <span class="p">),</span>
-            <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">cmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="c1"># family=font,</span>
-            <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">write_image</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">args</span><span class="p">[</span><span class="s2">&quot;datasettype&quot;</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilenameprefix&quot;</span><span class="p">],</span> <span class="n">gal_model</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">antenna_inst</span> <span class="o">=</span> <span class="n">AntennaPattern</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;antennamodel&quot;</span><span class="p">])</span>
-
-    <span class="n">freq_Mhz_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;frequencyrange&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frequencyrange&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;datasettype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;power&quot;</span><span class="p">:</span>
-        <span class="n">lst_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">)))</span> <span class="o">+</span> <span class="mf">0.5</span>
-
-        <span class="c1"># read hw file</span>
-        <span class="n">hw_file_path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;hwmodel&quot;</span><span class="p">]</span>
-        <span class="n">hw_dict</span> <span class="o">=</span> <span class="n">read_hw_file</span><span class="p">(</span><span class="n">hw_file_path</span><span class="p">)</span>
-        <span class="n">impedance_func</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;IImpedance&quot;</span><span class="p">][</span><span class="s2">&quot;antenna_EW&quot;</span><span class="p">]</span>
-
-        <span class="n">power_density_DF</span> <span class="o">=</span> <span class="n">calculate_power_spectral_density</span><span class="p">(</span>
-            <span class="n">antenna_inst</span><span class="o">=</span><span class="n">antenna_inst</span><span class="p">,</span>
-            <span class="n">galactic_map_inst</span><span class="o">=</span><span class="n">galactic_map_inst</span><span class="p">,</span>
-            <span class="n">lst_range</span><span class="o">=</span><span class="n">lst_range</span><span class="p">,</span>
-            <span class="n">freq_Mhz_range</span><span class="o">=</span><span class="n">freq_Mhz_range</span><span class="p">,</span>
-            <span class="n">latitude</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">],</span>
-            <span class="n">update_antenna_conventions</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;shift_phi&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span>
-                <span class="s2">&quot;flip_theta&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;flip_phi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;in_degrees&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;add_invisible_sky&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="n">impedance_func</span><span class="o">=</span><span class="n">impedance_func</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">power_DF</span> <span class="o">=</span> <span class="n">integrate_spectral_density</span><span class="p">(</span>
-            <span class="n">power_density_DF</span><span class="p">,</span> <span class="n">integrated_MHz_bands</span><span class="o">=</span><span class="n">power_density_DF</span><span class="o">.</span><span class="n">columns</span>
-        <span class="p">)</span>
-
-        <span class="c1"># apply HW response</span>
-        <span class="n">hw_reponse_1</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span><span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;LNA&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
-        <span class="n">hw_reponse_2</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span><span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;digitizer&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
-        <span class="n">hw_reponse_3</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
-            <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;cable_fromLNA2digitizer&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">hw_reponse_4</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
-            <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;impedance_matching_EW&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="n">power_DF</span> <span class="o">=</span> <span class="n">power_DF</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
-            <span class="n">hw_reponse_1</span> <span class="o">*</span> <span class="n">hw_reponse_2</span> <span class="o">*</span> <span class="n">hw_reponse_3</span> <span class="o">*</span> <span class="n">hw_reponse_4</span>
-        <span class="p">)</span>
-
-        <span class="c1"># to piko</span>
-        <span class="n">power_DF</span> <span class="o">=</span> <span class="n">power_DF</span> <span class="o">*</span> <span class="mf">1e12</span>
-
-        <span class="c1"># save path</span>
-        <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">],</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilenameprefix&quot;</span><span class="p">],</span> <span class="n">gal_model</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="p">(</span><span class="n">power_DF</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_path</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
-        <span class="n">save_figure</span><span class="p">(</span><span class="n">power_DF</span><span class="p">,</span> <span class="s2">&quot;Power [pW]&quot;</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;datasettype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;voltage2&quot;</span><span class="p">:</span>
-        <span class="n">lst_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
-
-        <span class="n">voltage2_density_DF</span> <span class="o">=</span> <span class="n">calculate_power_spectral_density</span><span class="p">(</span>
-            <span class="n">antenna_inst</span><span class="o">=</span><span class="n">antenna_inst</span><span class="p">,</span>
-            <span class="n">galactic_map_inst</span><span class="o">=</span><span class="n">galactic_map_inst</span><span class="p">,</span>
-            <span class="n">lst_range</span><span class="o">=</span><span class="n">lst_range</span><span class="p">,</span>
-            <span class="n">freq_Mhz_range</span><span class="o">=</span><span class="n">freq_Mhz_range</span><span class="p">,</span>
-            <span class="n">latitude</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">],</span>
-            <span class="n">update_antenna_conventions</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;shift_phi&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span>
-                <span class="s2">&quot;flip_theta&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;flip_phi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;in_degrees&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;add_invisible_sky&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
-        <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;LST&quot;</span>
-        <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;freq_MHz&quot;</span>
-
-        <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-            <span class="s2">&quot;./voltage2_density/voltage2_density_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.csv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilenameprefix&quot;</span><span class="p">],</span> <span class="n">gal_model</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># select galactic radio emission model</span>
-    <span class="n">galactic_models</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;LFSS&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;GSM08&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;GSM16&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Haslam&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;LFmap&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;SSM&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;GMOSS&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ULSA&quot;</span><span class="p">,</span>
-    <span class="p">]</span>
-
-    <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">ap</span><span class="o">.</span><span class="n">_action_groups</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-    <span class="n">required</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;required arguments&quot;</span><span class="p">)</span>
-    <span class="n">optional</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;optional arguments&quot;</span><span class="p">)</span>
-
-    <span class="n">required</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-g&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--galacticmodel&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">choices</span><span class="o">=</span><span class="n">galactic_models</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Galactic radio emission model, choose from these: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">galactic_models</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">required</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-a&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--antennamodel&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the antenna model file.&quot;</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-w&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--hwmodel&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the hardware response file.&quot;</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--frequencyrange&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">81</span><span class="p">],</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Frequency range in MHz, &#39;from&#39; &#39;to&#39;, must be an integer! Default is [30 81)&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-l&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--latitude&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=-</span><span class="mf">35.206667</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Latitude of the local observer, default it -35.206667 (Malargue, Argentina).&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--outputpath&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./simulated_power_datasets/&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output folder. If it does not exists, it will be created.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--savefilenameprefix&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;power_&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Saved power dataset filename prefix.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-t&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--datasettype&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Calculate &#39;power&#39; or &#39;voltage2&#39;.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
-
-    <span class="n">gal_model</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;galacticmodel&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;LFSS&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">LowFrequencySkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;GSM08&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">GlobalSkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;GSM16&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">GlobalSkyModel2016</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;Haslam&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">HaslamSkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">,</span> <span class="n">spectral_index</span><span class="o">=-</span><span class="mf">2.53</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;LFmap&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">LFmap</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;SSM&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">SSM</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;GMOSS&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">GMOSS</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;ULSA&quot;</span><span class="p">:</span>
-        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">ULSA</span><span class="p">(</span><span class="n">index_type</span><span class="o">=</span><span class="s2">&quot;freq_dependent_index&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Model not recognized, use some from these:&quot;</span><span class="p">,</span> <span class="n">galactic_models</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
-
-    <span class="n">mkdir</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">])</span>
-
-    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</pre></div>
-</div>
+<section id="tabulate-ulsa">
+<h2>Tabulate ULSA<a class="headerlink" href="#tabulate-ulsa" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -460,7 +210,9 @@
 
     <span class="n">ultralon_maps_DF</span> <span class="o">=</span> <span class="n">tabulate_ulsa</span><span class="p">(</span><span class="n">freq_range</span><span class="p">,</span> <span class="n">index_type</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">)</span>
     <span class="n">ultralon_maps_DF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;ulsa_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{:.0f}</span><span class="s2">-</span><span class="si">{:.0f}</span><span class="s2">MHz.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index_type</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">freq_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;ulsa_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{:.0f}</span><span class="s2">-</span><span class="si">{:.0f}</span><span class="s2">MHz.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">index_type</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">freq_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">),</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -530,6 +282,1147 @@
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
+</section>
+<section id="get-power-dataset">
+<h2>Get power dataset<a class="headerlink" href="#get-power-dataset" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="c1"># This uses the relative path to the package, one directory up.</span>
+<span class="c1"># Add path to the radiocalibrationtoolkit to your PYTHONPATH to avoid this.</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="s2">&quot;../..&quot;</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="k">def</span> <span class="nf">save_figure</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">):</span>
+    <span class="c1"># save figure</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+        <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;cube&quot;</span><span class="p">,</span>
+        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;</span><span class="si">{}</span><span class="s2">&lt;/b&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gal_model</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;LST&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span> <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="n">dtick</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;frequency [MHz]&lt;/b&gt;&quot;</span><span class="p">,</span>
+            <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span>
+            <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span>
+            <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+            <span class="n">tick0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">dtick</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">autorange</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">coloraxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;</span><span class="si">{}</span><span class="s2">&lt;/b&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ylabel</span><span class="p">),</span>
+                    <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span>
+                <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">cmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="c1"># family=font,</span>
+            <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">write_image</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">args</span><span class="p">[</span><span class="s2">&quot;datasettype&quot;</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilenameprefix&quot;</span><span class="p">],</span> <span class="n">gal_model</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">antenna_inst</span> <span class="o">=</span> <span class="n">AntennaPattern</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;antennamodel&quot;</span><span class="p">])</span>
+
+    <span class="n">freq_Mhz_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;frequencyrange&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frequencyrange&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;datasettype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;power&quot;</span><span class="p">:</span>
+        <span class="n">lst_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">lst_range_arg</span><span class="p">)))</span> <span class="o">+</span> <span class="n">shift_LST_bins</span>
+
+        <span class="c1"># read hw file</span>
+        <span class="n">hw_file_path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;hwmodel&quot;</span><span class="p">]</span>
+        <span class="n">hw_dict</span> <span class="o">=</span> <span class="n">read_hw_file</span><span class="p">(</span><span class="n">hw_file_path</span><span class="p">)</span>
+        <span class="n">impedance_func</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;IImpedance&quot;</span><span class="p">][</span><span class="s2">&quot;antenna_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">orientation</span><span class="p">)]</span>
+
+        <span class="n">power_density_DF</span> <span class="o">=</span> <span class="n">calculate_power_spectral_density</span><span class="p">(</span>
+            <span class="n">antenna_inst</span><span class="o">=</span><span class="n">antenna_inst</span><span class="p">,</span>
+            <span class="n">galactic_map_inst</span><span class="o">=</span><span class="n">galactic_map_inst</span><span class="p">,</span>
+            <span class="n">lst_range</span><span class="o">=</span><span class="n">lst_range</span><span class="p">,</span>
+            <span class="n">freq_Mhz_range</span><span class="o">=</span><span class="n">freq_Mhz_range</span><span class="p">,</span>
+            <span class="n">latitude</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">],</span>
+            <span class="n">update_antenna_conventions</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;shift_phi&quot;</span><span class="p">:</span> <span class="n">shift_phi</span><span class="p">,</span>
+                <span class="s2">&quot;flip_theta&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;flip_phi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;in_degrees&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;add_invisible_sky&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">impedance_func</span><span class="o">=</span><span class="n">impedance_func</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">power_DF</span> <span class="o">=</span> <span class="n">integrate_spectral_density</span><span class="p">(</span>
+            <span class="n">power_density_DF</span><span class="p">,</span> <span class="n">integrated_MHz_bands</span><span class="o">=</span><span class="n">power_density_DF</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">)</span>
+
+        <span class="c1"># apply HW response</span>
+        <span class="n">hw_reponse_1</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span><span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;LNA&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+        <span class="n">hw_reponse_2</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span><span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;digitizer&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+        <span class="n">hw_reponse_3</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
+            <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;cable_fromLNA2digitizer&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">hw_reponse_4</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
+            <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;impedance_matching_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">orientation</span><span class="p">)](</span>
+                <span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">power_DF</span> <span class="o">=</span> <span class="n">power_DF</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
+            <span class="n">hw_reponse_1</span> <span class="o">*</span> <span class="n">hw_reponse_2</span> <span class="o">*</span> <span class="n">hw_reponse_3</span> <span class="o">*</span> <span class="n">hw_reponse_4</span>
+        <span class="p">)</span>
+
+        <span class="c1"># to piko</span>
+        <span class="n">power_DF</span> <span class="o">=</span> <span class="n">power_DF</span> <span class="o">*</span> <span class="mf">1e12</span>
+
+        <span class="c1"># save path</span>
+        <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">],</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilenameprefix&quot;</span><span class="p">],</span> <span class="n">gal_model</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="p">(</span><span class="n">power_DF</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_path</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+        <span class="n">save_figure</span><span class="p">(</span><span class="n">power_DF</span><span class="p">,</span> <span class="s2">&quot;Power [pW]&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;datasettype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;voltage2&quot;</span><span class="p">:</span>
+        <span class="n">lst_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+
+        <span class="n">voltage2_density_DF</span> <span class="o">=</span> <span class="n">calculate_power_spectral_density</span><span class="p">(</span>
+            <span class="n">antenna_inst</span><span class="o">=</span><span class="n">antenna_inst</span><span class="p">,</span>
+            <span class="n">galactic_map_inst</span><span class="o">=</span><span class="n">galactic_map_inst</span><span class="p">,</span>
+            <span class="n">lst_range</span><span class="o">=</span><span class="n">lst_range</span><span class="p">,</span>
+            <span class="n">freq_Mhz_range</span><span class="o">=</span><span class="n">freq_Mhz_range</span><span class="p">,</span>
+            <span class="n">latitude</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">],</span>
+            <span class="n">update_antenna_conventions</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;shift_phi&quot;</span><span class="p">:</span> <span class="n">shift_phi</span><span class="p">,</span>
+                <span class="s2">&quot;flip_theta&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;flip_phi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;in_degrees&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;add_invisible_sky&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;LST&quot;</span>
+        <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;freq_MHz&quot;</span>
+
+        <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;voltage2_density_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.csv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilenameprefix&quot;</span><span class="p">],</span> <span class="n">gal_model</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># select galactic radio emission model</span>
+    <span class="n">galactic_models</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;LFSS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;GSM08&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;GSM16&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Haslam&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LFmap&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SSM&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;GMOSS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ULSA&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">_action_groups</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;required arguments&quot;</span><span class="p">)</span>
+    <span class="n">optional</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;optional arguments&quot;</span><span class="p">)</span>
+
+    <span class="n">required</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-g&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--galacticmodel&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">galactic_models</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Galactic radio emission model, choose from these: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">galactic_models</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">required</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-a&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--antennamodel&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the antenna model file.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-w&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--hwmodel&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the hardware response file.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--frequencyrange&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">81</span><span class="p">],</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Frequency range in MHz, &#39;from&#39; &#39;to&#39;, must be an integer! Default is [30 81)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-l&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--latitude&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=-</span><span class="mf">35.206667</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Latitude of the local observer, default it -35.206667 (Malargue, Argentina).&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--outputpath&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./simulated_power_datasets/&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output folder. If it does not exists, it will be created.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--savefilenameprefix&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;power_&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Saved power dataset filename prefix.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-t&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--datasettype&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Calculate &#39;power&#39; or &#39;voltage2&#39;.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-r&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--orientation&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;EW&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;This will read HW response with suffix either EW or NS. Default: EW&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--shiftazimuth&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Modify antenna response conventions by shifting the azimuth. Default:-90 degrees.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-ls&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--shiftlst&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Shift LST bins.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-lr&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--lstrange&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Usually one need just 0-23 (or 0.5-23.5) LST. But if the dataset is to be interpolated later, better is to do 0-24 (set the arg to 25 for this)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;datasettype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;voltage2&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;./simulated_power_datasets/&quot;</span>
+    <span class="p">):</span>
+        <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./voltage2_density/&quot;</span>
+
+    <span class="n">orientation</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;orientation&quot;</span><span class="p">]</span>
+    <span class="n">gal_model</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;galacticmodel&quot;</span><span class="p">]</span>
+    <span class="n">shift_phi</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;shiftazimuth&quot;</span><span class="p">]</span>
+    <span class="n">shift_LST_bins</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;shiftlst&quot;</span><span class="p">]</span>
+    <span class="n">lst_range_arg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;lstrange&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;LFSS&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">LowFrequencySkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;GSM08&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">GlobalSkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;GSM16&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">GlobalSkyModel2016</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;Haslam&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">HaslamSkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">,</span> <span class="n">spectral_index</span><span class="o">=-</span><span class="mf">2.53</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;LFmap&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">LFmap</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;SSM&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">SSM</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;GMOSS&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">GMOSS</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">gal_model</span> <span class="o">==</span> <span class="s2">&quot;ULSA&quot;</span><span class="p">:</span>
+        <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">ULSA</span><span class="p">(</span><span class="n">index_type</span><span class="o">=</span><span class="s2">&quot;freq_dependent_index&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Model not recognized, use some from these:&quot;</span><span class="p">,</span> <span class="n">galactic_models</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">])</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="get-mock-dataset">
+<h2>Get mock dataset<a class="headerlink" href="#get-mock-dataset" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">piko</span> <span class="o">=</span> <span class="mf">1e-12</span>
+
+
+<span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="n">input_val</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_val</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_val</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_val</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">input_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input must be a float, int, or tuple&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># read HW response</span>
+
+    <span class="n">hw_dict</span> <span class="o">=</span> <span class="n">read_hw_file</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">[</span><span class="s2">&quot;hwprofilefile&quot;</span><span class="p">],</span> <span class="n">interp_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;fill_value&quot;</span><span class="p">:</span> <span class="s2">&quot;extrapolate&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="n">hw_reponse_1</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;LNA&quot;</span><span class="p">]</span>
+    <span class="n">hw_reponse_2</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;digitizer&quot;</span><span class="p">]</span>
+    <span class="n">hw_reponse_3</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;cable_fromLNA2digitizer&quot;</span><span class="p">]</span>
+    <span class="n">hw_reponse_4</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;impedance_matching_EW&quot;</span><span class="p">]</span>
+
+    <span class="c1"># merge all hw responses to one function</span>
+    <span class="k">def</span> <span class="nf">hw_response_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
+            <span class="n">hw_reponse_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="c1"># impedance function</span>
+    <span class="n">impedance_func</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;IImpedance&quot;</span><span class="p">][</span><span class="s2">&quot;antenna_EW&quot;</span><span class="p">]</span>
+
+    <span class="c1"># read sidereal voltage square spectral density</span>
+    <span class="n">sidereal_voltage2_density_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">[</span><span class="s2">&quot;voltagedensity2file&quot;</span><span class="p">],</span>
+        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sidereal_voltage2_density_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">sidereal_voltage2_density_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+        <span class="nb">float</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">hw_response_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
+            <span class="n">hw_reponse_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">mock_trace_generator</span> <span class="o">=</span> <span class="n">Mock_trace_generator</span><span class="p">(</span>
+        <span class="n">sidereal_voltage2_density_DF</span><span class="o">=</span><span class="n">sidereal_voltage2_density_DF</span><span class="p">,</span>
+        <span class="n">hw_response_func</span><span class="o">=</span><span class="n">hw_response_func</span><span class="p">,</span>
+        <span class="n">impedance_func</span><span class="o">=</span><span class="n">impedance_func</span><span class="p">,</span>
+        <span class="n">voltage2ADC</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+        <span class="n">time_trace_size</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+        <span class="n">sampling_frequency_MHz</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">freq_MHz_bins</span> <span class="o">=</span> <span class="n">mock_trace_generator</span><span class="o">.</span><span class="n">get_frequency_bins</span><span class="p">()</span>
+
+    <span class="n">mock_traces_DF</span> <span class="o">=</span> <span class="n">mock_trace_generator</span><span class="o">.</span><span class="n">generate_mock_trace</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">[</span><span class="s2">&quot;numberoftraces&quot;</span><span class="p">],</span>
+        <span class="n">temp_celsius</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">],</span>
+        <span class="n">additional_noise</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;additionalnoise&quot;</span><span class="p">],</span>
+        <span class="c1"># nbi={&quot;67.25&quot;: 1},</span>
+        <span class="c1"># nbi_err=0.3,</span>
+        <span class="n">rounding</span><span class="o">=</span><span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;turn_off_rounding&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># system parameters</span>
+    <span class="n">sampling_frequency_MHz</span> <span class="o">=</span> <span class="mi">250</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">mock_traces_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">ADC2Volts</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2048</span>
+    <span class="n">trace_time_length_sec</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="p">(</span><span class="n">sampling_frequency_MHz</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
+
+    <span class="c1"># FFT to spectra</span>
+    <span class="n">spectra_df</span> <span class="o">=</span> <span class="n">time_trace_df_2_spectra_df</span><span class="p">(</span>
+        <span class="n">mock_traces_DF</span><span class="p">,</span> <span class="n">DSC</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sampling_frequency_MHz</span><span class="o">=</span><span class="n">sampling_frequency_MHz</span>
+    <span class="p">)</span>
+
+    <span class="c1"># use the formula, create the integrand first</span>
+    <span class="n">integrand_df</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">spectra_df</span> <span class="o">*</span> <span class="n">ADC2Volts</span> <span class="o">/</span> <span class="p">(</span><span class="n">sampling_frequency_MHz</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">impedance_func</span><span class="p">(</span><span class="n">spectra_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+
+    <span class="n">fr</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frequencyrange&quot;</span><span class="p">]</span>
+    <span class="c1"># integrate</span>
+    <span class="n">mock_power_unbinned_DF</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">trace_time_length_sec</span><span class="p">)</span> <span class="o">*</span> <span class="n">integrate_spectral_density</span><span class="p">(</span>
+        <span class="n">integrand_df</span><span class="p">,</span>
+        <span class="n">integrated_MHz_bands</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">fr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">fr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">integrating_method</span><span class="o">=</span><span class="s2">&quot;on_discontinuous_function&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">mock_power_unbinned_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">mock_traces_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">mock_power_unbinned_DF</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="n">mock_power_DF</span> <span class="o">=</span> <span class="n">bin_df_rows</span><span class="p">(</span>
+        <span class="n">mock_power_unbinned_DF</span><span class="p">,</span> <span class="n">binning_column</span><span class="o">=</span><span class="s2">&quot;lst&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">mock_power_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;lst&quot;</span>
+    <span class="n">mock_power_DF</span> <span class="o">=</span> <span class="n">mock_power_DF</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;temp_c&quot;</span><span class="p">,</span> <span class="s2">&quot;lst&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;overridesavefilename&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilename&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;mock_power_dataset-</span><span class="si">{}</span><span class="s2">_N</span><span class="si">{}</span><span class="s2">_temp</span><span class="si">{}</span><span class="s2">C_</span><span class="si">{}</span><span class="s2">additionalnoise_rounding-</span><span class="si">{}</span><span class="s2">.csv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;voltagedensity2file&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;voltage2_density_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;numberoftraces&quot;</span><span class="p">],</span>
+            <span class="n">to_string</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]),</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;additionalnoise&quot;</span><span class="p">],</span>
+            <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;turn_off_rounding&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="p">((</span><span class="n">mock_power_DF</span> <span class="o">/</span> <span class="n">piko</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">],</span> <span class="n">filename</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">_action_groups</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;required arguments&quot;</span><span class="p">)</span>
+    <span class="n">optional</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;optional arguments&quot;</span><span class="p">)</span>
+
+    <span class="n">required</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--voltagedensity2file&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the antenna model file.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-w&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--hwprofilefile&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the hardware response file.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--frequencyrange&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">81</span><span class="p">),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Frequency range in MHz, &#39;from&#39; &#39;to&#39;, must be an integer! Default is [30 81)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-t&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--temperature&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">AppendOnlyIfMore</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Temperature range. Random temperature from this range will be used for the temperature noise.</span><span class="se">\</span>
+<span class="s2">                If only one values is specified,</span><span class="se">\</span>
+<span class="s2">                the temperature will be fixed to this temperature.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-n&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--numberoftraces&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of generated time traces&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-a&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--additionalnoise&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Mean of the additional noise added to final spectrum. Default is zero (no extra noise).</span><span class="se">\</span>
+<span class="s2">            Reasonable value for the extra noise is 5e-16&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-tor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--turn-off-rounding&quot;</span><span class="p">,</span>
+        <span class="c1"># nargs=&quot;?&quot;,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether the generated time traces in ADC units should be rounded.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--outputpath&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./mock_power_datasets/&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output folder. If it does not exists, it will be created.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--overridesavefilename&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Overrides filename.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-voltage-squared-spectral-density">
+<h2>Generate voltage squared spectral density<a class="headerlink" href="#generate-voltage-squared-spectral-density" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">pylfmap</span> <span class="kn">import</span> <span class="n">LFmap</span>
+
+<span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">LATITUDE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">35.206667</span>
+
+<span class="n">antenna_inst</span> <span class="o">=</span> <span class="n">AntennaPattern</span><span class="p">(</span>
+    <span class="s2">&quot;./antenna_setup_files/SALLA_32S_4NEC2_WCD_8S_PERMITTIVITY5.5_CONDUCTIVITY0.0014_extended_EW.xml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Prepare objects</span>
+<span class="n">lfmap</span> <span class="o">=</span> <span class="n">LFmap</span><span class="p">()</span>
+<span class="n">lfss</span> <span class="o">=</span> <span class="n">LowFrequencySkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
+<span class="n">gsm2008</span> <span class="o">=</span> <span class="n">GlobalSkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
+<span class="n">gsm2016</span> <span class="o">=</span> <span class="n">GlobalSkyModel2016</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">)</span>
+<span class="n">haslam</span> <span class="o">=</span> <span class="n">HaslamSkyModel</span><span class="p">(</span><span class="n">freq_unit</span><span class="o">=</span><span class="s2">&quot;MHz&quot;</span><span class="p">,</span> <span class="n">spectral_index</span><span class="o">=-</span><span class="mf">2.53</span><span class="p">)</span>
+<span class="n">ssm</span> <span class="o">=</span> <span class="n">SSM</span><span class="p">()</span>
+<span class="n">gmoss</span> <span class="o">=</span> <span class="n">GMOSS</span><span class="p">()</span>
+<span class="n">ulsa_fdi</span> <span class="o">=</span> <span class="n">ULSA</span><span class="p">(</span><span class="n">index_type</span><span class="o">=</span><span class="s2">&quot;freq_dependent_index&quot;</span><span class="p">)</span>
+
+
+<span class="n">map_instances_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;LFSS&quot;</span><span class="p">:</span> <span class="n">lfss</span><span class="p">,</span>
+    <span class="s2">&quot;GSM08&quot;</span><span class="p">:</span> <span class="n">gsm2008</span><span class="p">,</span>
+    <span class="s2">&quot;GSM16&quot;</span><span class="p">:</span> <span class="n">gsm2016</span><span class="p">,</span>
+    <span class="s2">&quot;Haslam&quot;</span><span class="p">:</span> <span class="n">haslam</span><span class="p">,</span>
+    <span class="s2">&quot;LFmap&quot;</span><span class="p">:</span> <span class="n">lfmap</span><span class="p">,</span>
+    <span class="s2">&quot;SSM&quot;</span><span class="p">:</span> <span class="n">ssm</span><span class="p">,</span>
+    <span class="s2">&quot;GMOSS&quot;</span><span class="p">:</span> <span class="n">gmoss</span><span class="p">,</span>
+    <span class="s2">&quot;ULSA&quot;</span><span class="p">:</span> <span class="n">ulsa_fdi</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># for just the voltage square spectral density</span>
+<span class="c1"># do not use impedance and do not integrate!</span>
+
+<span class="k">for</span> <span class="n">map_label</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">map_instances_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+    <span class="n">galactic_map_inst</span> <span class="o">=</span> <span class="n">map_instances_dict</span><span class="p">[</span><span class="n">map_label</span><span class="p">]</span>
+
+    <span class="n">lst_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+    <span class="n">freq_Mhz_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">voltage2_density_DF</span> <span class="o">=</span> <span class="n">calculate_power_spectral_density</span><span class="p">(</span>
+        <span class="n">antenna_inst</span><span class="o">=</span><span class="n">antenna_inst</span><span class="p">,</span>
+        <span class="n">galactic_map_inst</span><span class="o">=</span><span class="n">galactic_map_inst</span><span class="p">,</span>
+        <span class="n">lst_range</span><span class="o">=</span><span class="n">lst_range</span><span class="p">,</span>
+        <span class="n">freq_Mhz_range</span><span class="o">=</span><span class="n">freq_Mhz_range</span><span class="p">,</span>
+        <span class="n">latitude</span><span class="o">=</span><span class="n">LATITUDE</span><span class="p">,</span>
+        <span class="n">update_antenna_conventions</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;shift_phi&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span>
+            <span class="s2">&quot;flip_theta&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;flip_phi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;in_degrees&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;add_invisible_sky&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;LST&quot;</span>
+    <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;freq_MHz&quot;</span>
+
+    <span class="n">voltage2_density_DF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+        <span class="s2">&quot;./voltage2_density/voltage2_density_</span><span class="si">{}</span><span class="s2">.csv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">map_label</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-isotropic-antenna-pattern">
+<h2>Create isotropic antenna pattern<a class="headerlink" href="#create-isotropic-antenna-pattern" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+
+<span class="k">def</span> <span class="nf">nparray2string</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
+        <span class="c1"># string+=&#39;{:.2f} &#39;.format(i)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">string</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">thetaList</span><span class="p">,</span> <span class="n">phiList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">91</span><span class="p">,</span> <span class="mi">5</span><span class="p">))),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">361</span><span class="p">,</span> <span class="mi">5</span><span class="p">)))</span>
+    <span class="p">)</span>
+    <span class="n">thetaList</span> <span class="o">=</span> <span class="n">thetaList</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">phiList</span> <span class="o">=</span> <span class="n">phiList</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="n">freqList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="n">vel_shifted_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">freqList</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="n">vel_theta</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">vel_phi</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">vel_ephi_phase</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">vel_etheta_phase</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">freqList</span><span class="p">:</span>
+        <span class="n">vel_theta</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">thetaList</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">vel_phi</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">phiList</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">vel_ephi_phase</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">phiList</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">vel_etheta_phase</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">thetaList</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="c1"># antennaPatternXMLfile = &quot;../antenna_setup_files/Isotropic_antenna_pattern.xml&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">antennaPatternXMLfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;frequency unit=&quot;MHz&quot;&gt;  &lt;!-- Simulated Frequencies --&gt;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">freqList</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s1">&#39;&lt;/frequency&gt;</span><span class="se">\n</span><span class="s1">&lt;theta unit=&quot;deg&quot;&gt;  &lt;!-- zenith angle theta --&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">thetaList</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;/theta&gt;</span><span class="se">\n</span><span class="s1">&lt;phi unit=&quot;deg&quot;&gt;  &lt;!-- azimuth angle phi --&gt;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">phiList</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s1">&#39;&lt;/phi&gt;</span><span class="se">\n</span><span class="s1">&lt;MeanTransfer unit=&quot;m&quot;&gt;  &lt;!-- Mean Transfer of the antenna to electric field - not directional --&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">vel_shifted_mean</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&lt;/MeanTransfer&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">&quot;&lt;!-- EAHTheta_amp: Projection of the effective antenna height in e_theta direction --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">freqList</span><span class="p">:</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;EAHTheta_amp unit=&quot;m&quot; idfreq=&quot;</span><span class="si">%.1f</span><span class="s1">&quot;&gt;&#39;</span> <span class="o">%</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">vel_theta</span><span class="p">[</span><span class="n">f</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;&lt;/EAHTheta_amp&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&lt;!-- end of EAHTheta_amp --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">&quot;&lt;!-- EAHTheta_phase: Phase of the effective antenna height in e_theta direction --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">freqList</span><span class="p">:</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;EAHTheta_phase unit=&quot;deg&quot; idfreq=&quot;</span><span class="si">%.1f</span><span class="s1">&quot;&gt;&#39;</span> <span class="o">%</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">vel_etheta_phase</span><span class="p">[</span><span class="n">f</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;&lt;/EAHTheta_phase&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&lt;!-- end of EAHTheta_phase --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">&quot;&lt;!-- EAHPhi_amp: Projection of the effective antenna height in e_phi direction --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">freqList</span><span class="p">:</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;EAHPhi_amp unit=&quot;m&quot; idfreq=&quot;</span><span class="si">%.1f</span><span class="s1">&quot;&gt;&#39;</span> <span class="o">%</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">vel_phi</span><span class="p">[</span><span class="n">f</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;&lt;/EAHPhi_amp&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&lt;!-- end of EAHPhi_amp --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">&quot;&lt;!-- EAHPhi_phase: Phase of the effective antenna height in e_phi direction --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">freqList</span><span class="p">:</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;EAHPhi_phase unit=&quot;deg&quot; idfreq=&quot;</span><span class="si">%.1f</span><span class="s1">&quot;&gt;&#39;</span> <span class="o">%</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nparray2string</span><span class="p">(</span><span class="n">vel_ephi_phase</span><span class="p">[</span><span class="n">f</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;&lt;/EAHPhi_phase&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">xml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&lt;!-- end of EAHPhi_phase --&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s1">&#39;[INFO] XML file with Isotropic antenna pattern at &quot;&#39;</span>
+        <span class="o">+</span> <span class="n">antennaPatternXMLfile</span>
+        <span class="o">+</span> <span class="s1">&#39;&quot; should have been created.&#39;</span>
+    <span class="p">)</span>
+    <span class="c1"># You should have the XML with the antenna pattern created by now! Check the folder.</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">_action_groups</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">optional</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;optional arguments&quot;</span><span class="p">)</span>
+
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--outputpath&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;../antenna_setup_files/Isotropic_antenna_pattern.xml&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Save path&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+    <span class="n">antennaPatternXMLfile</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">]</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="create-flat-hw-profile-response">
+<h2>Create flat HW profile response<a class="headerlink" href="#create-flat-hw-profile-response" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+
+<span class="k">def</span> <span class="nf">nparray2string</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
+        <span class="c1"># string+=&#39;{:.2f} &#39;.format(i)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">string</span>
+
+
+<span class="k">def</span> <span class="nf">get_hw_profile_xml_string</span><span class="p">(</span>
+    <span class="n">responseId</span><span class="p">,</span>
+    <span class="n">freqString</span><span class="p">,</span>
+    <span class="n">magString</span><span class="p">,</span>
+    <span class="n">phaseString</span><span class="p">,</span>
+    <span class="n">magUnit</span><span class="o">=</span><span class="s2">&quot;dB&quot;</span><span class="p">,</span>
+    <span class="n">phaseUnit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+    <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;Response&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">freqString</span> <span class="o">=</span> <span class="n">nparray2string</span><span class="p">(</span><span class="n">freqString</span><span class="p">)</span>
+    <span class="n">magString</span> <span class="o">=</span> <span class="n">nparray2string</span><span class="p">(</span><span class="n">magString</span><span class="p">)</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;&lt;!-- </span><span class="si">{}</span><span class="s2"> --&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">responseId</span><span class="p">)</span>
+
+    <span class="n">freqUnit</span> <span class="o">=</span> <span class="s2">&quot;MHz&quot;</span>
+    <span class="n">magUnit</span> <span class="o">=</span> <span class="s2">&quot;dB&quot;</span>
+    <span class="n">phaseUnit</span> <span class="o">=</span> <span class="s2">&quot;degree&quot;</span>
+
+    <span class="n">type__</span> <span class="o">=</span> <span class="n">type_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">type_</span>
+
+    <span class="k">if</span> <span class="n">phaseString</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">phase_XML_string</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;      &lt;Phase unit =&quot;&#39;</span> <span class="o">+</span> <span class="n">phaseUnit</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s2">&quot;        &quot;</span> <span class="o">+</span> <span class="n">phaseString</span> <span class="o">+</span> <span class="s2">&quot;      &lt;/Phase&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">phase_XML_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">xml_string</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">header</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;  &lt;&quot;</span>
+        <span class="o">+</span> <span class="n">type__</span>
+        <span class="o">+</span> <span class="s1">&#39; id=&quot;&#39;</span>
+        <span class="o">+</span> <span class="n">responseId</span>
+        <span class="o">+</span> <span class="s1">&#39;&quot;&gt; </span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="o">+</span> <span class="s2">&quot;    &lt;&quot;</span>
+        <span class="o">+</span> <span class="n">type_</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt; </span><span class="se">\n</span><span class="s2"> &quot;</span>
+        <span class="o">+</span> <span class="s1">&#39;      &lt;x unit=&quot;&#39;</span>
+        <span class="o">+</span> <span class="n">freqUnit</span>
+        <span class="o">+</span> <span class="s1">&#39;&quot;&gt; </span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="o">+</span> <span class="s2">&quot;        &quot;</span>
+        <span class="o">+</span> <span class="n">freqString</span>
+        <span class="o">+</span> <span class="s2">&quot;      &lt;/x&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;      &lt;&quot;</span>
+        <span class="o">+</span> <span class="n">magUnit</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;        &quot;</span>
+        <span class="o">+</span> <span class="n">magString</span>
+        <span class="o">+</span> <span class="s2">&quot;      &lt;/&quot;</span>
+        <span class="o">+</span> <span class="n">magUnit</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">phase_XML_string</span>
+        <span class="o">+</span> <span class="s2">&quot;    &lt;/&quot;</span>
+        <span class="o">+</span> <span class="n">type_</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;  &lt;/&quot;</span>
+        <span class="o">+</span> <span class="n">type__</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">xml_string</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">flat_hw_0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">6.35</span>
+    <span class="n">flat_hw_1</span> <span class="o">=</span> <span class="mf">13.12</span>
+    <span class="n">flat_hw_2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.05</span>
+    <span class="n">flat_hw_3</span> <span class="o">=</span> <span class="mf">17.64</span>
+    <span class="n">flat_impedance</span> <span class="o">=</span> <span class="mi">400</span>
+
+    <span class="n">frequency</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">126</span><span class="p">)))</span>
+    <span class="n">custom_hw_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">))</span> <span class="o">*</span> <span class="n">flat_hw_0</span>
+    <span class="n">custom_hw_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">))</span> <span class="o">*</span> <span class="n">flat_hw_1</span>
+    <span class="n">custom_hw_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">))</span> <span class="o">*</span> <span class="n">flat_hw_2</span>
+    <span class="n">custom_hw_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">))</span> <span class="o">*</span> <span class="n">flat_hw_3</span>
+    <span class="c1"># Supression until 30 MHz and from 80 MHz</span>
+    <span class="n">custom_hw_3</span><span class="p">[(</span><span class="n">frequency</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">frequency</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">20</span>
+
+    <span class="n">hw_xml_string_0</span> <span class="o">=</span> <span class="n">get_hw_profile_xml_string</span><span class="p">(</span>
+        <span class="s2">&quot;impedance_matching_EW&quot;</span><span class="p">,</span>
+        <span class="n">frequency</span><span class="p">,</span>
+        <span class="n">custom_hw_0</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">magUnit</span><span class="o">=</span><span class="s2">&quot;dB&quot;</span><span class="p">,</span>
+        <span class="n">phaseUnit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hw_xml_string_1</span> <span class="o">=</span> <span class="n">get_hw_profile_xml_string</span><span class="p">(</span>
+        <span class="s2">&quot;LNA&quot;</span><span class="p">,</span>
+        <span class="n">frequency</span><span class="p">,</span>
+        <span class="n">custom_hw_1</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">magUnit</span><span class="o">=</span><span class="s2">&quot;dB&quot;</span><span class="p">,</span>
+        <span class="n">phaseUnit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hw_xml_string_2</span> <span class="o">=</span> <span class="n">get_hw_profile_xml_string</span><span class="p">(</span>
+        <span class="s2">&quot;cable_fromLNA2digitizer&quot;</span><span class="p">,</span>
+        <span class="n">frequency</span><span class="p">,</span>
+        <span class="n">custom_hw_2</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">magUnit</span><span class="o">=</span><span class="s2">&quot;dB&quot;</span><span class="p">,</span>
+        <span class="n">phaseUnit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hw_xml_string_3</span> <span class="o">=</span> <span class="n">get_hw_profile_xml_string</span><span class="p">(</span>
+        <span class="s2">&quot;digitizer&quot;</span><span class="p">,</span>
+        <span class="n">frequency</span><span class="p">,</span>
+        <span class="n">custom_hw_3</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">magUnit</span><span class="o">=</span><span class="s2">&quot;dB&quot;</span><span class="p">,</span>
+        <span class="n">phaseUnit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">imp_string</span> <span class="o">=</span> <span class="n">get_hw_profile_xml_string</span><span class="p">(</span>
+        <span class="s2">&quot;antenna_EW&quot;</span><span class="p">,</span>
+        <span class="n">frequency</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">frequency</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">*</span> <span class="n">flat_impedance</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">magUnit</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+        <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;Impedance&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">hw_xml_string</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">hw_xml_string_0</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">hw_xml_string_1</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">hw_xml_string_2</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">hw_xml_string_3</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">imp_string</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">closing_tags</span> <span class="o">=</span> <span class="s2">&quot;&lt;/HardwareProfileList&gt;&quot;</span>
+    <span class="n">opening_tags</span> <span class="o">=</span> <span class="s2">&quot;&lt;HardwareProfileList&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">opening_tags</span> <span class="o">+</span> <span class="n">hw_xml_string</span> <span class="o">+</span> <span class="n">closing_tags</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s1">&#39;[INFO] XML file with flat HW response at &quot;&#39;</span>
+        <span class="o">+</span> <span class="n">output_path</span>
+        <span class="o">+</span> <span class="s1">&#39;&quot; should have been created.&#39;</span>
+    <span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">_action_groups</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">optional</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;optional arguments&quot;</span><span class="p">)</span>
+
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--outputpath&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;../antenna_setup_files/HardwareProfileList_flat.xml&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Save path&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">]</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="convert-2-port-network-skrf-file-to-xml">
+<h2>Convert 2-port network SKRF file to XML<a class="headerlink" href="#convert-2-port-network-skrf-file-to-xml" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">skrf</span> <span class="k">as</span> <span class="nn">rf</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">MHz</span> <span class="o">=</span> <span class="mf">1e6</span>
+
+
+<span class="k">def</span> <span class="nf">nparray2string</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
+        <span class="c1"># string+=&#39;{:.2f} &#39;.format(i)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">string</span>
+
+
+<span class="k">def</span> <span class="nf">get_hw_profile_xml_string</span><span class="p">(</span>
+    <span class="n">responseId</span><span class="p">,</span>
+    <span class="n">freq_string</span><span class="p">,</span>
+    <span class="n">mag_string</span><span class="p">,</span>
+    <span class="n">phase_string</span><span class="p">,</span>
+    <span class="n">mag_unit</span><span class="o">=</span><span class="s2">&quot;dB&quot;</span><span class="p">,</span>
+    <span class="n">phase_unit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+    <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;Response&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">freq_string</span> <span class="o">=</span> <span class="n">nparray2string</span><span class="p">(</span><span class="n">freq_string</span><span class="p">)</span>
+    <span class="n">mag_string</span> <span class="o">=</span> <span class="n">nparray2string</span><span class="p">(</span><span class="n">mag_string</span><span class="p">)</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;&lt;!-- </span><span class="si">{}</span><span class="s2"> --&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ifilename</span><span class="p">)</span>
+
+    <span class="n">freqUnit</span> <span class="o">=</span> <span class="s2">&quot;MHz&quot;</span>
+
+    <span class="n">type__</span> <span class="o">=</span> <span class="n">type_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">type_</span>
+
+    <span class="k">if</span> <span class="n">phase_string</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">phase_string</span> <span class="o">=</span> <span class="n">nparray2string</span><span class="p">(</span><span class="n">phase_string</span><span class="p">)</span>
+        <span class="n">phase_XML_string</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;      &lt;Phase unit =&quot;&#39;</span> <span class="o">+</span> <span class="n">phase_unit</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s2">&quot;        &quot;</span> <span class="o">+</span> <span class="n">phase_string</span> <span class="o">+</span> <span class="s2">&quot;      &lt;/Phase&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">phase_XML_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">xml_string</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">header</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;  &lt;&quot;</span>
+        <span class="o">+</span> <span class="n">type__</span>
+        <span class="o">+</span> <span class="s1">&#39; id=&quot;&#39;</span>
+        <span class="o">+</span> <span class="n">responseId</span>
+        <span class="o">+</span> <span class="s1">&#39;&quot;&gt; </span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="o">+</span> <span class="s2">&quot;    &lt;&quot;</span>
+        <span class="o">+</span> <span class="n">type_</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt; </span><span class="se">\n</span><span class="s2"> &quot;</span>
+        <span class="o">+</span> <span class="s1">&#39;      &lt;x unit=&quot;&#39;</span>
+        <span class="o">+</span> <span class="n">freqUnit</span>
+        <span class="o">+</span> <span class="s1">&#39;&quot;&gt; </span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="o">+</span> <span class="s2">&quot;        &quot;</span>
+        <span class="o">+</span> <span class="n">freq_string</span>
+        <span class="o">+</span> <span class="s2">&quot;      &lt;/x&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;      &lt;&quot;</span>
+        <span class="o">+</span> <span class="n">mag_unit</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;        &quot;</span>
+        <span class="o">+</span> <span class="n">mag_string</span>
+        <span class="o">+</span> <span class="s2">&quot;      &lt;/&quot;</span>
+        <span class="o">+</span> <span class="n">mag_unit</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">phase_XML_string</span>
+        <span class="o">+</span> <span class="s2">&quot;    &lt;/&quot;</span>
+        <span class="o">+</span> <span class="n">type_</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;  &lt;/&quot;</span>
+        <span class="o">+</span> <span class="n">type__</span>
+        <span class="o">+</span> <span class="s2">&quot;&gt;&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">xml_string</span>
+
+
+<span class="k">def</span> <span class="nf">calculate_impedance</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;reference_impedance&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">s2impedance</span><span class="p">(</span><span class="n">sparameter_file_path</span><span class="p">,</span> <span class="n">frequency_MHz_new</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">ntwk</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="n">sparameter_file_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">frequency_MHz_new</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ntwk</span> <span class="o">=</span> <span class="n">ntwk</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">frequency_MHz_new</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ntwk</span><span class="o">.</span><span class="n">f</span> <span class="o">/</span> <span class="n">MHz</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">calculate_impedance</span><span class="p">,</span> <span class="n">ntwk</span><span class="o">.</span><span class="n">s11</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">s2dB</span><span class="p">(</span><span class="n">sparameter_file_path</span><span class="p">,</span> <span class="n">unwrapped_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frequency_MHz_new</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">ntwk</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="n">sparameter_file_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">frequency_MHz_new</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ntwk</span> <span class="o">=</span> <span class="n">ntwk</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">frequency_MHz_new</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+
+    <span class="n">frequency_MHz</span> <span class="o">=</span> <span class="n">ntwk</span><span class="o">.</span><span class="n">f</span> <span class="o">/</span> <span class="n">MHz</span>
+    <span class="n">magnitude_dB</span> <span class="o">=</span> <span class="n">ntwk</span><span class="o">.</span><span class="n">s21</span><span class="o">.</span><span class="n">s_db</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">phase_degs_wrapped</span> <span class="o">=</span> <span class="n">ntwk</span><span class="o">.</span><span class="n">s21</span><span class="o">.</span><span class="n">s_deg</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="c1"># unwrape phase if wraped</span>
+    <span class="n">phase_degs_unwrapped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">phase_degs_wrapped</span><span class="p">,</span> <span class="mi">180</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">unwrapped_phase</span><span class="p">:</span>
+        <span class="n">phase_degs</span> <span class="o">=</span> <span class="n">phase_degs_unwrapped</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">phase_degs</span> <span class="o">=</span> <span class="n">phase_degs_wrapped</span>
+
+    <span class="n">magnitude_dB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">magnitude_dB</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])</span>
+    <span class="n">phase_degs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">phase_degs</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">magnitude_dB</span><span class="p">,</span> <span class="n">phase_degs</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frange&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">frequency_MHz_new</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">Frequency</span><span class="p">(</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frange&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frange&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frange&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;frange&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;MHz&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">frequency_MHz_new</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">values_dB</span><span class="p">,</span> <span class="n">values_phase_degs</span> <span class="o">=</span> <span class="n">s2dB</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">[</span><span class="s2">&quot;inputfile&quot;</span><span class="p">],</span> <span class="n">frequency_MHz_new</span><span class="o">=</span><span class="n">frequency_MHz_new</span>
+    <span class="p">)</span>
+    <span class="n">amp_xml_string</span> <span class="o">=</span> <span class="n">get_hw_profile_xml_string</span><span class="p">(</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">frequency_MHz</span><span class="p">,</span>
+        <span class="n">values_dB</span><span class="p">,</span>
+        <span class="n">values_phase_degs</span><span class="p">,</span>
+        <span class="n">mag_unit</span><span class="o">=</span><span class="s2">&quot;dB&quot;</span><span class="p">,</span>
+        <span class="n">phase_unit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">impedance</span> <span class="o">=</span> <span class="n">s2impedance</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">[</span><span class="s2">&quot;inputfile&quot;</span><span class="p">],</span> <span class="n">frequency_MHz_new</span><span class="o">=</span><span class="n">frequency_MHz_new</span>
+    <span class="p">)</span>
+    <span class="n">imp_string</span> <span class="o">=</span> <span class="n">get_hw_profile_xml_string</span><span class="p">(</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">frequency_MHz</span><span class="p">,</span>
+        <span class="n">impedance</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mag_unit</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+        <span class="n">phase_unit</span><span class="o">=</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+        <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;Impedance&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">abs_output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;savefilename&quot;</span><span class="p">])</span>
+    <span class="n">closing_tags</span> <span class="o">=</span> <span class="s2">&quot;&lt;/HardwareProfileList&gt;&quot;</span>
+    <span class="c1"># if appending, delete closing tags and do not use the opening tags</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
+        <span class="n">opening_tags</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">abs_output_path</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">file_contents</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">closing_tags</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_contents</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">opening_tags</span> <span class="o">=</span> <span class="s2">&quot;&lt;HardwareProfileList&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">abs_output_path</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">opening_tags</span> <span class="o">+</span> <span class="n">amp_xml_string</span> <span class="o">+</span> <span class="n">imp_string</span> <span class="o">+</span> <span class="n">closing_tags</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">_action_groups</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;required arguments&quot;</span><span class="p">)</span>
+    <span class="n">optional</span> <span class="o">=</span> <span class="n">ap</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;optional arguments&quot;</span><span class="p">)</span>
+
+    <span class="n">required</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--inputfile&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the S-parameter file.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">required</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--mode&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Append or Write to an existing file.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-l&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--label&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Label for the hardware. If not provided, stem from the file name will be used.&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--frange&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use skrf to interpolate the s-parameter file values to a frequency range in MHz, &#39;from&#39; &#39;to&#39;.</span><span class="se">\</span>
+<span class="s2">              Must be an integer!. Spacing is &#39;1&#39;&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--outputpath&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./antenna_setup_files/&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output folder. If it does not exists, it will be created.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--savefilename&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;HardwareProfileList.xml&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Saved power dataset filename.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-r&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--round&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;To how many places the hw profiles will be rounded..&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">optional</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--reference_impedance&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Reference impedance, default is 50 Ohms.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+
+    <span class="n">ifilename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;inputfile&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">stem</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">ifilename</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">])</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 

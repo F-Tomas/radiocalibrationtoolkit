@@ -125,14 +125,6 @@
 <span class="kn">import</span> <span class="nn">healpy</span> <span class="k">as</span> <span class="nn">hp</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
-<span class="kn">from</span> <span class="nn">pygdsm</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">GlobalSkyModel2016</span><span class="p">,</span>
-    <span class="n">GlobalSkyModel</span><span class="p">,</span>
-    <span class="n">LowFrequencySkyModel</span><span class="p">,</span>
-    <span class="n">HaslamSkyModel</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pylfmap</span> <span class="kn">import</span> <span class="n">LFmap</span>
-
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
@@ -320,25 +312,8 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">integrate_hpmap</span><span class="p">(</span><span class="n">gmoss_map_N</span><span class="o">+</span><span class="mf">2.75</span><span class="p">)</span><span class="o">/</span><span class="n">integrate_hpmap</span><span class="p">(</span><span class="n">gmoss_map_N</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-1.0003563453462547
-</pre></div></div>
-</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">map_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -363,7 +338,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the maps in the dictionary</span>
@@ -372,7 +347,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -383,8 +358,8 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
                mask=False,
          fill_value=-1.6375e+30)),
  (&#39;GSM08&#39;,
-  masked_array(data=[4267.97014572, 3819.72189502, 3662.01733267, ...,
-                     3603.73014558, 3720.16569487, 3608.65983489],
+  masked_array(data=[4270.69564572, 3822.44739502, 3664.74283267, ...,
+                     3606.45564558, 3722.89119487, 3611.38533489],
                mask=False,
          fill_value=-1.6375e+30)),
  (&#39;GSM16&#39;,
@@ -394,8 +369,8 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
          fill_value=-1.6375e+30,
               dtype=float32)),
  (&#39;Haslam&#39;,
-  masked_array(data=[4253.95079958, 4200.77365683, 4176.65689163, ...,
-                     4621.56378236, 4640.03107866, 4703.16874133],
+  masked_array(data=[4256.67629958, 4203.49915683, 4179.38239163, ...,
+                     4624.28928236, 4642.75657866, 4705.89424133],
                mask=False,
          fill_value=-1.6375e+30)),
  (&#39;LFmap&#39;,
@@ -409,8 +384,8 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
                mask=False,
          fill_value=-1.6375e+30)),
  (&#39;GMOSS&#39;,
-  masked_array(data=[4562.15039676, 4092.8007799 , 4239.77818602, ...,
-                     4769.56037615, 4563.15656298, 4259.17010243],
+  masked_array(data=[4564.87589676, 4095.5262799 , 4242.50368602, ...,
+                     4772.28587615, 4565.88206298, 4261.89560243],
                mask=False,
          fill_value=-1.6375e+30)),
  (&#39;ULSA&#39;,
@@ -423,7 +398,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 <section id="Galactic-coordinates">
 <h2>Galactic coordinates<a class="headerlink" href="#Galactic-coordinates" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Prints all maps</span>
@@ -457,60 +432,60 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_0.png" src="../_images/examples_galactic_models_comparison_extended_12_0.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_0.png" src="../_images/examples_galactic_models_comparison_extended_11_0.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_1.png" src="../_images/examples_galactic_models_comparison_extended_12_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_1.png" src="../_images/examples_galactic_models_comparison_extended_11_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_2.png" src="../_images/examples_galactic_models_comparison_extended_12_2.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_2.png" src="../_images/examples_galactic_models_comparison_extended_11_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_3.png" src="../_images/examples_galactic_models_comparison_extended_12_3.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_3.png" src="../_images/examples_galactic_models_comparison_extended_11_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_4.png" src="../_images/examples_galactic_models_comparison_extended_12_4.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_4.png" src="../_images/examples_galactic_models_comparison_extended_11_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_5.png" src="../_images/examples_galactic_models_comparison_extended_12_5.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_5.png" src="../_images/examples_galactic_models_comparison_extended_11_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_6.png" src="../_images/examples_galactic_models_comparison_extended_12_6.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_6.png" src="../_images/examples_galactic_models_comparison_extended_11_6.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_12_7.png" src="../_images/examples_galactic_models_comparison_extended_12_7.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_11_7.png" src="../_images/examples_galactic_models_comparison_extended_11_7.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_maps</span><span class="p">(</span>
@@ -523,50 +498,50 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;LFSS/GSM08&#39;: [1.11],
- &#39;LFSS/GSM16&#39;: [1.02],
- &#39;LFSS/Haslam&#39;: [1.05],
- &#39;LFSS/LFmap&#39;: [1.05],
- &#39;LFSS/SSM&#39;: [1.04],
- &#39;LFSS/GMOSS&#39;: [1.14],
- &#39;LFSS/ULSA&#39;: [1.02],
- &#39;GSM08/GSM16&#39;: [0.92],
- &#39;GSM08/Haslam&#39;: [0.95],
- &#39;GSM08/LFmap&#39;: [0.94],
- &#39;GSM08/SSM&#39;: [0.94],
- &#39;GSM08/GMOSS&#39;: [1.03],
- &#39;GSM08/ULSA&#39;: [0.92],
- &#39;GSM16/Haslam&#39;: [1.03],
- &#39;GSM16/LFmap&#39;: [1.03],
- &#39;GSM16/SSM&#39;: [1.02],
- &#39;GSM16/GMOSS&#39;: [1.12],
- &#39;GSM16/ULSA&#39;: [0.99],
- &#39;Haslam/LFmap&#39;: [1.0],
- &#39;Haslam/SSM&#39;: [0.99],
- &#39;Haslam/GMOSS&#39;: [1.09],
- &#39;Haslam/ULSA&#39;: [0.96],
- &#39;LFmap/SSM&#39;: [0.99],
- &#39;LFmap/GMOSS&#39;: [1.09],
- &#39;LFmap/ULSA&#39;: [0.97],
- &#39;SSM/GMOSS&#39;: [1.1],
- &#39;SSM/ULSA&#39;: [0.98],
- &#39;GMOSS/ULSA&#39;: [0.89]}
+{&#39;LFSS/GSM08&#39;: [0.11039941376682116],
+ &#39;LFSS/GSM16&#39;: [0.022262053826482164],
+ &#39;LFSS/Haslam&#39;: [0.05341591508303489],
+ &#39;LFSS/LFmap&#39;: [0.04890712148530696],
+ &#39;LFSS/SSM&#39;: [0.0426396115267742],
+ &#39;LFSS/GMOSS&#39;: [0.14325168305853953],
+ &#39;LFSS/ULSA&#39;: [0.01678984313885956],
+ &#39;GSM08/GSM16&#39;: [-0.07937446548296478],
+ &#39;GSM08/Haslam&#39;: [-0.05131801942373193],
+ &#39;GSM08/LFmap&#39;: [-0.05537853453372521],
+ &#39;GSM08/SSM&#39;: [-0.06102290887401007],
+ &#39;GSM08/GMOSS&#39;: [0.029585993007933187],
+ &#39;GSM08/ULSA&#39;: [-0.08430261171555276],
+ &#39;GSM16/Haslam&#39;: [0.030475415907241343],
+ &#39;GSM16/LFmap&#39;: [0.026064811423928136],
+ &#39;GSM16/SSM&#39;: [0.019933790581402988],
+ &#39;GSM16/GMOSS&#39;: [0.11835480812300014],
+ &#39;GSM16/ULSA&#39;: [-0.005353041000729197],
+ &#39;Haslam/LFmap&#39;: [-0.004280164684404397],
+ &#39;Haslam/SSM&#39;: [-0.010229865907628088],
+ &#39;Haslam/GMOSS&#39;: [0.08528043547588071],
+ &#39;Haslam/ULSA&#39;: [-0.03476886139629709],
+ &#39;LFmap/SSM&#39;: [-0.0059752763902085615],
+ &#39;LFmap/GMOSS&#39;: [0.08994558206415437],
+ &#39;LFmap/ULSA&#39;: [-0.03061975430290509],
+ &#39;SSM/GMOSS&#39;: [0.09649745743348026],
+ &#39;SSM/ULSA&#39;: [-0.02479262067365917],
+ &#39;GMOSS/ULSA&#39;: [-0.11061592280481658]}
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_13_1.png" src="../_images/examples_galactic_models_comparison_extended_13_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_12_1.png" src="../_images/examples_galactic_models_comparison_extended_12_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_maps</span><span class="p">(</span>
@@ -580,27 +555,27 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;ULSA FDI/ULSA CI&#39;: [1.0],
- &#39;ULSA FDI/ULSA DPI&#39;: [0.99],
- &#39;ULSA CI/ULSA DPI&#39;: [0.99]}
+{&#39;ULSA FDI/ULSA CI&#39;: [0.00016637697495314185],
+ &#39;ULSA FDI/ULSA DPI&#39;: [-0.01154210020249169],
+ &#39;ULSA CI/ULSA DPI&#39;: [-0.011706529480482675]}
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_14_1.png" src="../_images/examples_galactic_models_comparison_extended_14_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_13_1.png" src="../_images/examples_galactic_models_comparison_extended_13_1.png" />
 </div>
 </div>
 <section id="Compare-at-all-frequencies">
 <h3>Compare at all frequencies<a class="headerlink" href="#Compare-at-all-frequencies" title="Permalink to this heading">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -834,7 +809,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
@@ -842,8 +817,8 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
     <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
     <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
-    <span class="n">zmin</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-    <span class="n">zmax</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span>
+    <span class="n">zmin</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">zmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;b&gt;frequency [MHz]&lt;/b&gt;&quot;</span><span class="p">},</span>
 <span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
@@ -866,7 +841,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 
 <span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span>
     <span class="n">go</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">Annotation</span><span class="p">(</span>
-        <span class="n">text</span><span class="o">=</span><span class="s1">&#39;&lt;b&gt;Integrated ratio&lt;/b&gt;&#39;</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="s1">&#39;&lt;b&gt;RDIS&lt;/b&gt;&#39;</span><span class="p">,</span>
         <span class="n">x</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span>
         <span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="n">xref</span><span class="o">=</span><span class="s1">&#39;paper&#39;</span><span class="p">,</span>
@@ -912,9 +887,9 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<div>                            <div id="7a50ed9c-536f-4709-94a2-e53b59291698" class="plotly-graph-div" style="height:600px; width:500px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("7a50ed9c-536f-4709-94a2-e53b59291698")) {                    Plotly.newPlot(                        "7a50ed9c-536f-4709-94a2-e53b59291698",                        [{"coloraxis":"coloraxis","name":"0","x":[30,35,40,45,50,55,60,65,70,75,80],"y":["LFSS/GSM08","LFSS/GSM16","LFSS/Haslam","LFSS/LFmap","LFSS/SSM","LFSS/GMOSS","LFSS/ULSA","GSM08/GSM16","GSM08/Haslam","GSM08/LFmap","GSM08/SSM","GSM08/GMOSS","GSM08/ULSA","GSM16/Haslam","GSM16/LFmap","GSM16/SSM","GSM16/GMOSS","GSM16/ULSA","Haslam/LFmap","Haslam/SSM","Haslam/GMOSS","Haslam/ULSA","LFmap/SSM","LFmap/GMOSS","LFmap/ULSA","SSM/GMOSS","SSM/ULSA","GMOSS/ULSA"],"z":[[1.11,1.1,1.11,1.11,1.12,1.15,1.17,1.17,1.17,1.18,1.19],[1.02,1.02,1.03,1.02,1.05,1.1,1.14,1.16,1.17,1.19,1.21],[0.94,0.98,1.03,1.05,1.08,1.12,1.16,1.17,1.18,1.19,1.21],[0.99,1.01,1.04,1.05,1.06,1.09,1.12,1.12,1.13,1.14,1.15],[0.95,0.98,1.02,1.04,1.07,1.1,1.14,1.15,1.15,1.17,1.18],[1.08,1.1,1.13,1.14,1.16,1.19,1.23,1.23,1.23,1.24,1.25],[0.92,0.95,0.99,1.02,1.04,1.08,1.11,1.12,1.13,1.15,1.16],[0.92,0.93,0.93,0.92,0.94,0.96,0.97,0.99,1.0,1.01,1.02],[0.85,0.89,0.93,0.95,0.96,0.98,0.99,1.0,1.01,1.01,1.02],[0.89,0.92,0.93,0.94,0.95,0.95,0.96,0.96,0.96,0.96,0.97],[0.85,0.89,0.92,0.94,0.95,0.96,0.97,0.98,0.98,0.99,0.99],[0.98,1.0,1.02,1.03,1.03,1.04,1.04,1.05,1.05,1.05,1.05],[0.83,0.87,0.9,0.92,0.93,0.94,0.95,0.96,0.96,0.97,0.98],[0.92,0.96,1.0,1.03,1.03,1.02,1.02,1.01,1.01,1.0,1.0],[0.97,0.99,1.01,1.03,1.01,0.99,0.98,0.97,0.96,0.96,0.95],[0.93,0.96,0.99,1.02,1.01,1.0,1.0,0.99,0.99,0.98,0.98],[1.06,1.08,1.1,1.12,1.1,1.09,1.07,1.06,1.05,1.04,1.04],[0.9,0.93,0.97,0.99,0.99,0.98,0.98,0.97,0.97,0.96,0.96],[1.05,1.03,1.01,1.0,0.98,0.97,0.97,0.96,0.96,0.95,0.95],[1.01,1.0,0.99,0.99,0.99,0.98,0.98,0.98,0.98,0.98,0.98],[1.15,1.12,1.1,1.09,1.07,1.06,1.06,1.05,1.04,1.04,1.03],[0.97,0.97,0.97,0.96,0.96,0.96,0.96,0.96,0.96,0.96,0.96],[0.96,0.97,0.98,0.99,1.0,1.01,1.02,1.02,1.02,1.03,1.03],[1.09,1.09,1.09,1.09,1.09,1.09,1.09,1.09,1.09,1.09,1.09],[0.93,0.94,0.96,0.97,0.98,0.99,0.99,1.0,1.0,1.01,1.01],[1.14,1.12,1.11,1.1,1.09,1.08,1.08,1.07,1.07,1.06,1.06],[0.97,0.97,0.97,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98],[0.85,0.87,0.88,0.89,0.9,0.9,0.91,0.91,0.92,0.92,0.93]],"type":"heatmap","xaxis":"x","yaxis":"y","hovertemplate":"<b>frequency [MHz]</b>: %{x}<br>y: %{y}<br>color: %{z}<extra></extra>"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"scaleanchor":"y","constrain":"domain","title":{"text":"<b>frequency [MHz]</b>"},"nticks":5,"tickfont":{"size":18},"tickprefix":"<b>","ticksuffix":"</b>","tick0":30,"dtick":10},"yaxis":{"anchor":"x","domain":[0.0,1.0],"autorange":"reversed","constrain":"domain","tickprefix":"<b>","ticksuffix":"</b>"},"coloraxis":{"colorscale":[[0.0,"rgb(0,0,131)"],[0.2,"rgb(0,60,170)"],[0.4,"rgb(5,255,255)"],[0.6,"rgb(255,255,0)"],[0.8,"rgb(250,0,0)"],[1.0,"rgb(128,0,0)"]],"cmin":0.7,"cmax":1.3,"colorbar":{"tickfont":{"size":18},"tickprefix":"<b>","ticksuffix":"</b>"}},"margin":{"t":20,"l":20,"r":120,"b":20},"height":600,"width":500,"font":{"family":"Arial Black","size":15,"color":"black"},"annotations":[{"align":"center","font":{"size":18},"showarrow":false,"text":"<b>Integrated ratio</b>","textangle":-90,"valign":"middle","x":1.4,"xref":"paper","y":0.5,"yref":"paper"}]},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="1e7b6a95-1c07-4c98-b005-20ae7b5c0c46" class="plotly-graph-div" style="height:600px; width:500px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("1e7b6a95-1c07-4c98-b005-20ae7b5c0c46")) {                    Plotly.newPlot(                        "1e7b6a95-1c07-4c98-b005-20ae7b5c0c46",                        [{"coloraxis":"coloraxis","name":"0","x":[30,35,40,45,50,55,60,65,70,75,80],"y":["LFSS/GSM08","LFSS/GSM16","LFSS/Haslam","LFSS/LFmap","LFSS/SSM","LFSS/GMOSS","LFSS/ULSA","GSM08/GSM16","GSM08/Haslam","GSM08/LFmap","GSM08/SSM","GSM08/GMOSS","GSM08/ULSA","GSM16/Haslam","GSM16/LFmap","GSM16/SSM","GSM16/GMOSS","GSM16/ULSA","Haslam/LFmap","Haslam/SSM","Haslam/GMOSS","Haslam/ULSA","LFmap/SSM","LFmap/GMOSS","LFmap/ULSA","SSM/GMOSS","SSM/ULSA","GMOSS/ULSA"],"z":[[0.10699641276150085,0.10341673136759355,0.10694346029631574,0.11039941376682116,0.12018817579629637,0.1482513927279172,0.17401209532402184,0.17189238534692963,0.17084946407774737,0.179163961393644,0.18825974269201673],[0.02037413014622369,0.022881386784346258,0.027096809866393512,0.022262053826482164,0.05373716902271464,0.10011822931191405,0.14269625415532539,0.15640741615238962,0.16939034635679895,0.19031644029830042,0.21093583541309813],[-0.05888451730986555,-0.01592813630149159,0.024875755772757246,0.05341591508303489,0.07984175837630425,0.12168407604651543,0.15968545783442378,0.16854141310199422,0.17689935365728404,0.1934202230320361,0.20974278846553274],[-0.010500429287057855,0.011819782328799766,0.03518655491854683,0.04890712148530696,0.06287552476228564,0.09378954931452888,0.12232485516277047,0.12401385004008358,0.12652315707429374,0.13789992600461076,0.14995250320331133],[-0.05396943713083757,-0.018405028226880393,0.017464800380859735,0.0426396115267742,0.06546870722361642,0.10415777195507636,0.13943985102349798,0.14635819406918293,0.15299453032115706,0.16774905178634447,0.18237411703473438],[0.08215402224274593,0.10323534428018677,0.12800717321739752,0.14325168305853953,0.15900853557302974,0.19314277723987439,0.22442112551133775,0.22607817252957774,0.22829040920679433,0.23984544793970142,0.25183021713373743],[-0.08316275677972151,-0.04503098233196123,-0.008452492126360345,0.01678984313885956,0.040471606940510885,0.0793860943824094,0.11490344694423493,0.12267261845716271,0.13020144974775416,0.145759534127351,0.16128265167190392],[-0.07824983136051022,-0.0729872425293302,-0.07213254632585153,-0.07937446548296478,-0.05932128923459168,-0.04191866321333393,-0.026674206589033078,-0.013213644348372244,-0.0012462043718810545,0.0094579543386617,0.019083447756724103],[-0.14984775755285562,-0.10815937829868427,-0.07413902106760728,-0.05131801942373193,-0.03601753552818154,-0.02313719526025171,-0.012203143005646955,-0.0028594538942612324,0.005167094289360241,0.012090143614585047,0.018079419003833364],[-0.10614021933047846,-0.08301210814998894,-0.06482436362066801,-0.05537853453372521,-0.05116341367669708,-0.04743024372389626,-0.044026156431536734,-0.04085574401327974,-0.0378582459687663,-0.03499431524371166,-0.032238102590196216],[-0.14540774300324488,-0.11040412577710879,-0.08083399299500249,-0.06102290887401007,-0.0488484611380422,-0.0384006682265694,-0.02944794558609909,-0.021788853308563283,-0.015249555390670189,-0.009680510922169261,-0.004953147401887348],[-0.022441256568106804,-0.00016438674731900083,0.019028716168975057,0.029585993007933187,0.03465521295039342,0.03909543223397116,0.04293740276449465,0.04623785243438272,0.049059206064796745,0.051461449410596494,0.053498803466741185],[-0.17177939092580552,-0.13453458650709993,-0.10424737718020938,-0.08430261171555276,-0.07116355142663255,-0.05997406036835151,-0.05034756338134094,-0.0420002446514709,-0.034716686967107835,-0.028328907904217715,-0.022703025315825243],[-0.07767606519456849,-0.037941371880706676,-0.002162458370331466,0.030475415907241343,0.024773340184820913,0.019603208237072955,0.014867646250977362,0.01049283909815868,0.006421300914514205,0.002607527400829479,-0.00098522722069605],[-0.030258077425832974,-0.010814161444780201,0.00787632185636511,0.026064811423928136,0.008672329313434535,-0.005752727142194103,-0.017827483829124358,-0.028012243487754773,-0.03665772461356187,-0.04403578117475526,-0.05036049840657575],[-0.07285912596236388,-0.040362856871430264,-0.009377898356812908,0.019933790581402988,0.011133267901883181,0.0036719168317835837,-0.0028497539219068946,-0.00869003600534024,-0.014020823830744433,-0.018959150481279163,-0.023586483728611718],[0.06054631362289542,0.0785564763754778,0.09824815186032021,0.11835480812300014,0.09990286918316538,0.08455868237556996,0.07151933075725614,0.0602475869698218,0.05036817948215222,0.041609950064193546,0.03377089068198935],[-0.10146953344564691,-0.06639320061322562,-0.03461144232098057,-0.005353041000729197,-0.012589061553657466,-0.018845369867629413,-0.024322130321180357,-0.02917206965644492,-0.03351224570233258,-0.03743282429988393,-0.04100397584175519],[0.05141142496615192,0.02819704500645348,0.010060535716366337,-0.004280164684404397,-0.015711777658543036,-0.02486843428347818,-0.03221615173257397,-0.03810525032545342,-0.042804167090790934,-0.04652200118275929,-0.049423965021573646],[0.005222611113546272,-0.002516982770018217,-0.007231076889227084,-0.010229865907628088,-0.013310330926912584,-0.015624991444304293,-0.017457843136820972,-0.018983682378807543,-0.02031169722529047,-0.021510588433360733,-0.02262354584110693],[0.14986315935368477,0.12109225451667482,0.10062821455550885,0.08528043547588071,0.07331331334672964,0.06370662000054605,0.05582174652582106,0.049238100406597596,0.04366648294079667,0.03890098727313007,0.034790394346214004],[-0.025797301092590375,-0.029573903191470574,-0.03251930559523086,-0.03476886139629709,-0.036459185922752324,-0.037709353789874056,-0.038615652707945425,-0.0392530329952695,-0.039678757375822604,-0.039936216920806955,-0.04005821506495355],[-0.043930294797864256,-0.02987173317180547,-0.017119382447042808,-0.0059752763902085615,0.002439780012726045,0.009479175081755997,0.01524959175767826,0.01987906468261258,0.023498294802578812,0.026231767046984267,0.028193872130465536],[0.09363768744542811,0.09034767213286288,0.08966559491893134,0.08994558206415437,0.09044616097660585,0.09083395246152226,0.09096855503013912,0.09080343848597083,0.09033747020061389,0.08959093818824759,0.08859297548953982],[-0.07343340981978375,-0.056186650679939776,-0.04215573206352263,-0.03061975430290509,-0.021078590389768892,-0.013168396919815084,-0.00661253128663819,-0.0011932518294797134,0.0032651727133719,0.006907117175353639,0.00985270994848153],[0.14388907157580877,0.12392114467267512,0.10864491115089114,0.09649745743348026,0.08779218733993432,0.08059084267209116,0.07458162395452961,0.06954194498092758,0.06530462799738013,0.06173963150992834,0.058742913176407674],[-0.03085874896086349,-0.02712519406755376,-0.025472421746205454,-0.02479262067365917,-0.02346113040545572,-0.0224349075846334,-0.021533742265748668,-0.020661583556134788,-0.019768593843245807,-0.01883068765960927,-0.017838233312926],[-0.15276640443460276,-0.13439229207153924,-0.12097411132106184,-0.11061592280481658,-0.10227442248638197,-0.09534205379897709,-0.08944445361588027,-0.0843384674723262,-0.07985811720404468,-0.07588519518194525,-0.07233214554379142]],"type":"heatmap","xaxis":"x","yaxis":"y","hovertemplate":"<b>frequency [MHz]</b>: %{x}<br>y: %{y}<br>color: %{z}<extra></extra>"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"scaleanchor":"y","constrain":"domain","title":{"text":"<b>frequency [MHz]</b>"},"nticks":5,"tickfont":{"size":18},"tickprefix":"<b>","ticksuffix":"</b>","tick0":30,"dtick":10},"yaxis":{"anchor":"x","domain":[0.0,1.0],"autorange":"reversed","constrain":"domain","tickprefix":"<b>","ticksuffix":"</b>"},"coloraxis":{"colorscale":[[0.0,"rgb(0,0,131)"],[0.2,"rgb(0,60,170)"],[0.4,"rgb(5,255,255)"],[0.6,"rgb(255,255,0)"],[0.8,"rgb(250,0,0)"],[1.0,"rgb(128,0,0)"]],"cmin":-0.3,"cmax":0.3,"colorbar":{"tickfont":{"size":18},"tickprefix":"<b>","ticksuffix":"</b>"}},"margin":{"t":20,"l":20,"r":120,"b":20},"height":600,"width":500,"font":{"family":"Arial Black","size":15,"color":"black"},"annotations":[{"align":"center","font":{"size":18},"showarrow":false,"text":"<b>RDIS</b>","textangle":-90,"valign":"middle","x":1.4,"xref":"paper","y":0.5,"yref":"paper"}]},                        {"responsive": true}                    ).then(function(){
 
-var gd = document.getElementById('7a50ed9c-536f-4709-94a2-e53b59291698');
+var gd = document.getElementById('1e7b6a95-1c07-4c98-b005-20ae7b5c0c46');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -939,10 +914,11 @@ if (outputEl) {{
                         })                };                });            </script>        </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;all </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="c1"># temp = compare_DF.std(axis=0)</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="n">compare_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
@@ -955,12 +931,13 @@ if (outputEl) {{
     <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&lt;IR&gt;$_{\mathrm</span><span class="si">{models}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&lt;RDIS&gt;$_{\mathrm</span><span class="si">{models}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;without LFSS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">,</span>
@@ -971,38 +948,63 @@ if (outputEl) {{
     <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span>
 
-
-<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&lt;IR&gt;$_{\mathrm</span><span class="si">{models}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&lt;RDIS&gt;$_{\mathrm</span><span class="si">{models}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;without LFSS and GSM08</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">,</span>
+    <span class="n">compare_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">13</span><span class="p">:,:]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="n">yerr</span><span class="o">=</span><span class="n">compare_DF</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&lt;RDIS&gt;$_{\mathrm</span><span class="si">{models}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Text(0, 0.5, &#39;&lt;IR&gt;$_{\\mathrm{models}}$&#39;)
+(-0.15, 0.15)
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_18_1.png" src="../_images/examples_galactic_models_comparison_extended_18_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_17_1.png" src="../_images/examples_galactic_models_comparison_extended_17_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_galactic_models_comparison_extended_17_2.png" src="../_images/examples_galactic_models_comparison_extended_17_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_18_2.png" src="../_images/examples_galactic_models_comparison_extended_18_2.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_17_3.png" src="../_images/examples_galactic_models_comparison_extended_17_3.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">12</span><span class="p">:,:]</span>
@@ -1010,7 +1012,7 @@ Text(0, 0.5, &#39;&lt;IR&gt;$_{\\mathrm{models}}$&#39;)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1048,250 +1050,307 @@ Text(0, 0.5, &#39;&lt;IR&gt;$_{\\mathrm{models}}$&#39;)
   <tbody>
     <tr>
       <th>GSM08/ULSA</th>
-      <td>0.83</td>
-      <td>0.87</td>
-      <td>0.90</td>
-      <td>0.92</td>
-      <td>0.93</td>
-      <td>0.94</td>
-      <td>0.95</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.97</td>
-      <td>0.98</td>
+      <td>-0.171779</td>
+      <td>-0.134535</td>
+      <td>-0.104247</td>
+      <td>-0.084303</td>
+      <td>-0.071164</td>
+      <td>-0.059974</td>
+      <td>-0.050348</td>
+      <td>-0.042000</td>
+      <td>-0.034717</td>
+      <td>-0.028329</td>
+      <td>-0.022703</td>
     </tr>
     <tr>
       <th>GSM16/Haslam</th>
-      <td>0.92</td>
-      <td>0.96</td>
-      <td>1.00</td>
-      <td>1.03</td>
-      <td>1.03</td>
-      <td>1.02</td>
-      <td>1.02</td>
-      <td>1.01</td>
-      <td>1.01</td>
-      <td>1.00</td>
-      <td>1.00</td>
+      <td>-0.077676</td>
+      <td>-0.037941</td>
+      <td>-0.002162</td>
+      <td>0.030475</td>
+      <td>0.024773</td>
+      <td>0.019603</td>
+      <td>0.014868</td>
+      <td>0.010493</td>
+      <td>0.006421</td>
+      <td>0.002608</td>
+      <td>-0.000985</td>
     </tr>
     <tr>
       <th>GSM16/LFmap</th>
-      <td>0.97</td>
-      <td>0.99</td>
-      <td>1.01</td>
-      <td>1.03</td>
-      <td>1.01</td>
-      <td>0.99</td>
-      <td>0.98</td>
-      <td>0.97</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.95</td>
+      <td>-0.030258</td>
+      <td>-0.010814</td>
+      <td>0.007876</td>
+      <td>0.026065</td>
+      <td>0.008672</td>
+      <td>-0.005753</td>
+      <td>-0.017827</td>
+      <td>-0.028012</td>
+      <td>-0.036658</td>
+      <td>-0.044036</td>
+      <td>-0.050360</td>
     </tr>
     <tr>
       <th>GSM16/SSM</th>
-      <td>0.93</td>
-      <td>0.96</td>
-      <td>0.99</td>
-      <td>1.02</td>
-      <td>1.01</td>
-      <td>1.00</td>
-      <td>1.00</td>
-      <td>0.99</td>
-      <td>0.99</td>
-      <td>0.98</td>
-      <td>0.98</td>
+      <td>-0.072859</td>
+      <td>-0.040363</td>
+      <td>-0.009378</td>
+      <td>0.019934</td>
+      <td>0.011133</td>
+      <td>0.003672</td>
+      <td>-0.002850</td>
+      <td>-0.008690</td>
+      <td>-0.014021</td>
+      <td>-0.018959</td>
+      <td>-0.023586</td>
     </tr>
     <tr>
       <th>GSM16/GMOSS</th>
-      <td>1.06</td>
-      <td>1.08</td>
-      <td>1.10</td>
-      <td>1.12</td>
-      <td>1.10</td>
-      <td>1.09</td>
-      <td>1.07</td>
-      <td>1.06</td>
-      <td>1.05</td>
-      <td>1.04</td>
-      <td>1.04</td>
+      <td>0.060546</td>
+      <td>0.078556</td>
+      <td>0.098248</td>
+      <td>0.118355</td>
+      <td>0.099903</td>
+      <td>0.084559</td>
+      <td>0.071519</td>
+      <td>0.060248</td>
+      <td>0.050368</td>
+      <td>0.041610</td>
+      <td>0.033771</td>
     </tr>
     <tr>
       <th>GSM16/ULSA</th>
-      <td>0.90</td>
-      <td>0.93</td>
-      <td>0.97</td>
-      <td>0.99</td>
-      <td>0.99</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.97</td>
-      <td>0.97</td>
-      <td>0.96</td>
-      <td>0.96</td>
+      <td>-0.101470</td>
+      <td>-0.066393</td>
+      <td>-0.034611</td>
+      <td>-0.005353</td>
+      <td>-0.012589</td>
+      <td>-0.018845</td>
+      <td>-0.024322</td>
+      <td>-0.029172</td>
+      <td>-0.033512</td>
+      <td>-0.037433</td>
+      <td>-0.041004</td>
     </tr>
     <tr>
       <th>Haslam/LFmap</th>
-      <td>1.05</td>
-      <td>1.03</td>
-      <td>1.01</td>
-      <td>1.00</td>
-      <td>0.98</td>
-      <td>0.97</td>
-      <td>0.97</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.95</td>
-      <td>0.95</td>
+      <td>0.051411</td>
+      <td>0.028197</td>
+      <td>0.010061</td>
+      <td>-0.004280</td>
+      <td>-0.015712</td>
+      <td>-0.024868</td>
+      <td>-0.032216</td>
+      <td>-0.038105</td>
+      <td>-0.042804</td>
+      <td>-0.046522</td>
+      <td>-0.049424</td>
     </tr>
     <tr>
       <th>Haslam/SSM</th>
-      <td>1.01</td>
-      <td>1.00</td>
-      <td>0.99</td>
-      <td>0.99</td>
-      <td>0.99</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
+      <td>0.005223</td>
+      <td>-0.002517</td>
+      <td>-0.007231</td>
+      <td>-0.010230</td>
+      <td>-0.013310</td>
+      <td>-0.015625</td>
+      <td>-0.017458</td>
+      <td>-0.018984</td>
+      <td>-0.020312</td>
+      <td>-0.021511</td>
+      <td>-0.022624</td>
     </tr>
     <tr>
       <th>Haslam/GMOSS</th>
-      <td>1.15</td>
-      <td>1.12</td>
-      <td>1.10</td>
-      <td>1.09</td>
-      <td>1.07</td>
-      <td>1.06</td>
-      <td>1.06</td>
-      <td>1.05</td>
-      <td>1.04</td>
-      <td>1.04</td>
-      <td>1.03</td>
+      <td>0.149863</td>
+      <td>0.121092</td>
+      <td>0.100628</td>
+      <td>0.085280</td>
+      <td>0.073313</td>
+      <td>0.063707</td>
+      <td>0.055822</td>
+      <td>0.049238</td>
+      <td>0.043666</td>
+      <td>0.038901</td>
+      <td>0.034790</td>
     </tr>
     <tr>
       <th>Haslam/ULSA</th>
-      <td>0.97</td>
-      <td>0.97</td>
-      <td>0.97</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.96</td>
-      <td>0.96</td>
+      <td>-0.025797</td>
+      <td>-0.029574</td>
+      <td>-0.032519</td>
+      <td>-0.034769</td>
+      <td>-0.036459</td>
+      <td>-0.037709</td>
+      <td>-0.038616</td>
+      <td>-0.039253</td>
+      <td>-0.039679</td>
+      <td>-0.039936</td>
+      <td>-0.040058</td>
     </tr>
     <tr>
       <th>LFmap/SSM</th>
-      <td>0.96</td>
-      <td>0.97</td>
-      <td>0.98</td>
-      <td>0.99</td>
-      <td>1.00</td>
-      <td>1.01</td>
-      <td>1.02</td>
-      <td>1.02</td>
-      <td>1.02</td>
-      <td>1.03</td>
-      <td>1.03</td>
+      <td>-0.043930</td>
+      <td>-0.029872</td>
+      <td>-0.017119</td>
+      <td>-0.005975</td>
+      <td>0.002440</td>
+      <td>0.009479</td>
+      <td>0.015250</td>
+      <td>0.019879</td>
+      <td>0.023498</td>
+      <td>0.026232</td>
+      <td>0.028194</td>
     </tr>
     <tr>
       <th>LFmap/GMOSS</th>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
-      <td>1.09</td>
+      <td>0.093638</td>
+      <td>0.090348</td>
+      <td>0.089666</td>
+      <td>0.089946</td>
+      <td>0.090446</td>
+      <td>0.090834</td>
+      <td>0.090969</td>
+      <td>0.090803</td>
+      <td>0.090337</td>
+      <td>0.089591</td>
+      <td>0.088593</td>
     </tr>
     <tr>
       <th>LFmap/ULSA</th>
-      <td>0.93</td>
-      <td>0.94</td>
-      <td>0.96</td>
-      <td>0.97</td>
-      <td>0.98</td>
-      <td>0.99</td>
-      <td>0.99</td>
-      <td>1.00</td>
-      <td>1.00</td>
-      <td>1.01</td>
-      <td>1.01</td>
+      <td>-0.073433</td>
+      <td>-0.056187</td>
+      <td>-0.042156</td>
+      <td>-0.030620</td>
+      <td>-0.021079</td>
+      <td>-0.013168</td>
+      <td>-0.006613</td>
+      <td>-0.001193</td>
+      <td>0.003265</td>
+      <td>0.006907</td>
+      <td>0.009853</td>
     </tr>
     <tr>
       <th>SSM/GMOSS</th>
-      <td>1.14</td>
-      <td>1.12</td>
-      <td>1.11</td>
-      <td>1.10</td>
-      <td>1.09</td>
-      <td>1.08</td>
-      <td>1.08</td>
-      <td>1.07</td>
-      <td>1.07</td>
-      <td>1.06</td>
-      <td>1.06</td>
+      <td>0.143889</td>
+      <td>0.123921</td>
+      <td>0.108645</td>
+      <td>0.096497</td>
+      <td>0.087792</td>
+      <td>0.080591</td>
+      <td>0.074582</td>
+      <td>0.069542</td>
+      <td>0.065305</td>
+      <td>0.061740</td>
+      <td>0.058743</td>
     </tr>
     <tr>
       <th>SSM/ULSA</th>
-      <td>0.97</td>
-      <td>0.97</td>
-      <td>0.97</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
-      <td>0.98</td>
+      <td>-0.030859</td>
+      <td>-0.027125</td>
+      <td>-0.025472</td>
+      <td>-0.024793</td>
+      <td>-0.023461</td>
+      <td>-0.022435</td>
+      <td>-0.021534</td>
+      <td>-0.020662</td>
+      <td>-0.019769</td>
+      <td>-0.018831</td>
+      <td>-0.017838</td>
     </tr>
     <tr>
       <th>GMOSS/ULSA</th>
-      <td>0.85</td>
-      <td>0.87</td>
-      <td>0.88</td>
-      <td>0.89</td>
-      <td>0.90</td>
-      <td>0.90</td>
-      <td>0.91</td>
-      <td>0.91</td>
-      <td>0.92</td>
-      <td>0.92</td>
-      <td>0.93</td>
+      <td>-0.152766</td>
+      <td>-0.134392</td>
+      <td>-0.120974</td>
+      <td>-0.110616</td>
+      <td>-0.102274</td>
+      <td>-0.095342</td>
+      <td>-0.089444</td>
+      <td>-0.084338</td>
+      <td>-0.079858</td>
+      <td>-0.075885</td>
+      <td>-0.072332</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">compare_DF</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">compare_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
-<span class="n">err</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">err</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">pos</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
     <span class="n">df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">pos</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="n">err</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&lt;IR&gt;$_{</span><span class="se">\\</span><span class="s2">nu}$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&lt;RDIS&gt;$_{</span><span class="se">\\</span><span class="s2">nu}$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 0, &#39;&lt;RDIS&gt;$_{\\nu}$&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_galactic_models_comparison_extended_19_1.png" src="../_images/examples_galactic_models_comparison_extended_19_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_data1</span> <span class="o">=</span> <span class="n">compare_DF</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">input_data2</span> <span class="o">=</span> <span class="n">compare_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">7</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">input_data1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">input_data2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;RDIS&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="c1"># fig.suptitle(&#39;Blue: all models, Red: without LFSS&#39;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;RDIS&quot;</span><span class="p">)</span>
+<span class="n">apply_KDE</span><span class="p">(</span><span class="n">input_data1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">data_in_relative_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">apply_KDE</span><span class="p">(</span><span class="n">input_data2</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">data_in_relative_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Test1: p0.5=0.00028759959500590515
+Test2: p0.5=-0.00028760123860060993
+Test3: p0.5+/-0.341=0.0004670674246128881
+0.011255627813906877 -0.07128564282141076 0.12031015507753873
+Normalization test:  (1.0000000656061603, 1.7338160114522588e-07)
+Test1: p0.5=-0.0004944879269374591
+Test2: p0.5=0.0004944879268439228
+Test3: p0.5+/-0.341=0.0006370680887922697
+-0.010755377688844436 -0.08329164582291149 0.068784392196098
+Normalization test:  (0.9999997813929312, 9.503192452523278e-06)
+</pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
@@ -1299,88 +1358,29 @@ Text(0, 0.5, &#39;&lt;IR&gt;$_{\\mathrm{models}}$&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Text(0.5, 0, &#39;&lt;IR&gt;$_{\\nu}$&#39;)
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_20_1.png" src="../_images/examples_galactic_models_comparison_extended_20_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_data1</span> <span class="o">=</span> <span class="n">compare_DF</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-<span class="n">input_data2</span> <span class="o">=</span> <span class="n">compare_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">7</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">input_data1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">input_data2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&lt;IR&gt;&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
-
-
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&lt;IR&gt;&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="c1"># fig.suptitle(&#39;Blue: all models, Red: without LFSS&#39;)</span>
-<span class="n">create_KDE_plot</span><span class="p">(</span><span class="n">input_data1</span><span class="p">)</span>
-<span class="n">create_KDE_plot</span><span class="p">(</span><span class="n">input_data2</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Test1: p0.5=-0.0001195222004182761
-Test2: p0.5=0.00011952063739861796
-Test3: p0.5+/-0.341=-0.0007281676244693669
-1.0112556278139069 0.9287143571785892 1.1198099049524761
-Normalization test:  (0.9999996212231103, 7.26571020814859e-06)
-Test1: p0.5=-0.0008435959263912718
-Test2: p0.5=0.0008435959262110826
-Test3: p0.5+/-0.341=0.000880959138852444
-0.9892446223111555 0.9167083541770885 1.0692846423211604
-Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(array([0.5       , 0.50050025, 0.5010005 , ..., 1.4989995 , 1.49949975,
-        1.5       ]),
- array([-24.95771278, -24.89100805, -24.82440072, ..., -27.47316562,
-        -27.54365417, -27.61424088]))
+(array([-0.5       , -0.49949975, -0.4989995 , ...,  0.4989995 ,
+         0.49949975,  0.5       ]),
+ array([-24.75638554, -24.69010646, -24.62392474, ..., -27.34904866,
+        -27.41952959, -27.4901091 ]),
+ (-0.08329164582291149, 0.0692846423211605, -0.010755377688844436))
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_21_2.png" src="../_images/examples_galactic_models_comparison_extended_21_2.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_20_2.png" src="../_images/examples_galactic_models_comparison_extended_20_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_21_3.png" src="../_images/examples_galactic_models_comparison_extended_21_3.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_20_3.png" src="../_images/examples_galactic_models_comparison_extended_20_3.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">input_data1</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
@@ -1409,7 +1409,7 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 <section id="Local-obsever">
 <h2>Local obsever<a class="headerlink" href="#Local-obsever" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lst</span> <span class="o">=</span> <span class="mi">18</span>
@@ -1425,7 +1425,7 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># some plot settings</span>
@@ -1435,7 +1435,7 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Prints all maps</span>
@@ -1467,60 +1467,60 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_0.png" src="../_images/examples_galactic_models_comparison_extended_26_0.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_0.png" src="../_images/examples_galactic_models_comparison_extended_25_0.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_1.png" src="../_images/examples_galactic_models_comparison_extended_26_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_1.png" src="../_images/examples_galactic_models_comparison_extended_25_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_2.png" src="../_images/examples_galactic_models_comparison_extended_26_2.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_2.png" src="../_images/examples_galactic_models_comparison_extended_25_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_3.png" src="../_images/examples_galactic_models_comparison_extended_26_3.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_3.png" src="../_images/examples_galactic_models_comparison_extended_25_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_4.png" src="../_images/examples_galactic_models_comparison_extended_26_4.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_4.png" src="../_images/examples_galactic_models_comparison_extended_25_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_5.png" src="../_images/examples_galactic_models_comparison_extended_26_5.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_5.png" src="../_images/examples_galactic_models_comparison_extended_25_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_6.png" src="../_images/examples_galactic_models_comparison_extended_26_6.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_6.png" src="../_images/examples_galactic_models_comparison_extended_25_6.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_26_7.png" src="../_images/examples_galactic_models_comparison_extended_26_7.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_25_7.png" src="../_images/examples_galactic_models_comparison_extended_25_7.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create mask, at local coordinates we see only a hemisphere</span>
@@ -1529,7 +1529,7 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test</span>
@@ -1580,20 +1580,20 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_28_0.png" src="../_images/examples_galactic_models_comparison_extended_28_0.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_27_0.png" src="../_images/examples_galactic_models_comparison_extended_27_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_28_1.png" src="../_images/examples_galactic_models_comparison_extended_28_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_27_1.png" src="../_images/examples_galactic_models_comparison_extended_27_1.png" />
 </div>
 </div>
 <section id="In-local-coordinates">
 <h3>In local coordinates<a class="headerlink" href="#In-local-coordinates" title="Permalink to this heading">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_maps</span><span class="p">(</span>
@@ -1603,53 +1603,53 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;LFSS/GSM08&#39;: [1.07],
- &#39;LFSS/GSM16&#39;: [1.02],
- &#39;LFSS/Haslam&#39;: [1.0],
- &#39;LFSS/LFmap&#39;: [0.99],
- &#39;LFSS/SSM&#39;: [1.02],
- &#39;LFSS/GMOSS&#39;: [1.09],
- &#39;LFSS/ULSA&#39;: [1.02],
- &#39;GSM08/GSM16&#39;: [0.95],
- &#39;GSM08/Haslam&#39;: [0.94],
- &#39;GSM08/LFmap&#39;: [0.93],
- &#39;GSM08/SSM&#39;: [0.95],
- &#39;GSM08/GMOSS&#39;: [1.02],
- &#39;GSM08/ULSA&#39;: [0.95],
- &#39;GSM16/Haslam&#39;: [0.98],
- &#39;GSM16/LFmap&#39;: [0.97],
- &#39;GSM16/SSM&#39;: [1.0],
- &#39;GSM16/GMOSS&#39;: [1.07],
- &#39;GSM16/ULSA&#39;: [1.0],
- &#39;Haslam/LFmap&#39;: [0.99],
- &#39;Haslam/SSM&#39;: [1.02],
- &#39;Haslam/GMOSS&#39;: [1.09],
- &#39;Haslam/ULSA&#39;: [1.01],
- &#39;LFmap/SSM&#39;: [1.03],
- &#39;LFmap/GMOSS&#39;: [1.1],
- &#39;LFmap/ULSA&#39;: [1.02],
- &#39;SSM/GMOSS&#39;: [1.07],
- &#39;SSM/ULSA&#39;: [1.0],
- &#39;GMOSS/ULSA&#39;: [0.93]}
+{&#39;LFSS/GSM08&#39;: [0.0697014364597286],
+ &#39;LFSS/GSM16&#39;: [0.020495520208995366],
+ &#39;LFSS/Haslam&#39;: [0.004455862956272538],
+ &#39;LFSS/LFmap&#39;: [-0.008330799565943514],
+ &#39;LFSS/SSM&#39;: [0.020960864878340812],
+ &#39;LFSS/GMOSS&#39;: [0.09465288148876283],
+ &#39;LFSS/ULSA&#39;: [0.01628783362788977],
+ &#39;GSM08/GSM16&#39;: [-0.045999672968173644],
+ &#39;GSM08/Haslam&#39;: [-0.06099419078971413],
+ &#39;GSM08/LFmap&#39;: [-0.07294767807728353],
+ &#39;GSM08/SSM&#39;: [-0.04556465002299992],
+ &#39;GSM08/GMOSS&#39;: [0.023325616081823153],
+ &#39;GSM08/ULSA&#39;: [-0.049933187907661325],
+ &#39;GSM16/Haslam&#39;: [-0.015717518533974517],
+ &#39;GSM16/LFmap&#39;: [-0.028247375127168906],
+ &#39;GSM16/SSM&#39;: [0.00045599873799551105],
+ &#39;GSM16/GMOSS&#39;: [0.07266799296147819],
+ &#39;GSM16/ULSA&#39;: [-0.004123179864860105],
+ &#39;Haslam/LFmap&#39;: [-0.01272993965566882],
+ &#39;Haslam/SSM&#39;: [0.016431784143796424],
+ &#39;Haslam/GMOSS&#39;: [0.08979689587059214],
+ &#39;Haslam/ULSA&#39;: [0.011779482910074135],
+ &#39;LFmap/SSM&#39;: [0.029537737414314424],
+ &#39;LFmap/GMOSS&#39;: [0.10384882479926771],
+ &#39;LFmap/ULSA&#39;: [0.02482544903386885],
+ &#39;SSM/GMOSS&#39;: [0.07217908065379497],
+ &#39;SSM/ULSA&#39;: [-0.004577091454928461],
+ &#39;GMOSS/ULSA&#39;: [-0.07158894768019441]}
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_30_1.png" src="../_images/examples_galactic_models_comparison_extended_30_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_29_1.png" src="../_images/examples_galactic_models_comparison_extended_29_1.png" />
 </div>
 </div>
 </section>
 <section id="In-galactic-coordinates-(masked)">
 <h3>In galactic coordinates (masked)<a class="headerlink" href="#In-galactic-coordinates-(masked)" title="Permalink to this heading">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_maps</span><span class="p">(</span><span class="n">map_dict</span><span class="p">,</span> <span class="n">rotation_parameters</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">main_title</span><span class="o">=</span><span class="n">main_title</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
@@ -1657,53 +1657,53 @@ Normalization test:  (0.9999996443696912, 5.608808627544093e-06)
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;LFSS/GSM08&#39;: [1.07],
- &#39;LFSS/GSM16&#39;: [1.02],
- &#39;LFSS/Haslam&#39;: [1.0],
- &#39;LFSS/LFmap&#39;: [0.99],
- &#39;LFSS/SSM&#39;: [1.02],
- &#39;LFSS/GMOSS&#39;: [1.09],
- &#39;LFSS/ULSA&#39;: [1.02],
- &#39;GSM08/GSM16&#39;: [0.95],
- &#39;GSM08/Haslam&#39;: [0.94],
- &#39;GSM08/LFmap&#39;: [0.93],
- &#39;GSM08/SSM&#39;: [0.95],
- &#39;GSM08/GMOSS&#39;: [1.02],
- &#39;GSM08/ULSA&#39;: [0.95],
- &#39;GSM16/Haslam&#39;: [0.98],
- &#39;GSM16/LFmap&#39;: [0.97],
- &#39;GSM16/SSM&#39;: [1.0],
- &#39;GSM16/GMOSS&#39;: [1.07],
- &#39;GSM16/ULSA&#39;: [1.0],
- &#39;Haslam/LFmap&#39;: [0.99],
- &#39;Haslam/SSM&#39;: [1.02],
- &#39;Haslam/GMOSS&#39;: [1.09],
- &#39;Haslam/ULSA&#39;: [1.01],
- &#39;LFmap/SSM&#39;: [1.03],
- &#39;LFmap/GMOSS&#39;: [1.1],
- &#39;LFmap/ULSA&#39;: [1.02],
- &#39;SSM/GMOSS&#39;: [1.07],
- &#39;SSM/ULSA&#39;: [1.0],
- &#39;GMOSS/ULSA&#39;: [0.93]}
+{&#39;LFSS/GSM08&#39;: [0.0697014364597286],
+ &#39;LFSS/GSM16&#39;: [0.020495520208995366],
+ &#39;LFSS/Haslam&#39;: [0.004455862956272538],
+ &#39;LFSS/LFmap&#39;: [-0.008330799565943514],
+ &#39;LFSS/SSM&#39;: [0.020960864878340812],
+ &#39;LFSS/GMOSS&#39;: [0.09465288148876283],
+ &#39;LFSS/ULSA&#39;: [0.01628783362788977],
+ &#39;GSM08/GSM16&#39;: [-0.045999672968173644],
+ &#39;GSM08/Haslam&#39;: [-0.06099419078971413],
+ &#39;GSM08/LFmap&#39;: [-0.07294767807728353],
+ &#39;GSM08/SSM&#39;: [-0.04556465002299992],
+ &#39;GSM08/GMOSS&#39;: [0.023325616081823153],
+ &#39;GSM08/ULSA&#39;: [-0.049933187907661325],
+ &#39;GSM16/Haslam&#39;: [-0.015717518533974517],
+ &#39;GSM16/LFmap&#39;: [-0.028247375127168906],
+ &#39;GSM16/SSM&#39;: [0.00045599873799551105],
+ &#39;GSM16/GMOSS&#39;: [0.07266799296147819],
+ &#39;GSM16/ULSA&#39;: [-0.004123179864860105],
+ &#39;Haslam/LFmap&#39;: [-0.01272993965566882],
+ &#39;Haslam/SSM&#39;: [0.016431784143796424],
+ &#39;Haslam/GMOSS&#39;: [0.08979689587059214],
+ &#39;Haslam/ULSA&#39;: [0.011779482910074135],
+ &#39;LFmap/SSM&#39;: [0.029537737414314424],
+ &#39;LFmap/GMOSS&#39;: [0.10384882479926771],
+ &#39;LFmap/ULSA&#39;: [0.02482544903386885],
+ &#39;SSM/GMOSS&#39;: [0.07217908065379497],
+ &#39;SSM/ULSA&#39;: [-0.004577091454928461],
+ &#39;GMOSS/ULSA&#39;: [-0.07158894768019441]}
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_32_1.png" src="../_images/examples_galactic_models_comparison_extended_32_1.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_31_1.png" src="../_images/examples_galactic_models_comparison_extended_31_1.png" />
 </div>
 </div>
 </section>
 <section id="Complex-comparison">
 <h3>Complex comparison<a class="headerlink" href="#Complex-comparison" title="Permalink to this heading">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -1958,7 +1958,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_DF</span>
@@ -1968,7 +1968,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">default_color_cycle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
@@ -1992,7 +1992,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
             <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">LST</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">temp</span><span class="o">.</span><span class="n">ratio</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;LST&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ratio&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;RDIS&#39;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">lst</span> <span class="ow">in</span> <span class="n">lst_range</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">models_ratio</span> <span class="ow">in</span> <span class="n">models_ratio_list</span><span class="p">:</span>
@@ -2005,7 +2005,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="s1">&#39;frequency [MHz]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">temp</span><span class="o">.</span><span class="n">ratio</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;frequency [MHz]&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ratio&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;RDIS&#39;</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
@@ -2020,11 +2020,11 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_36_0.png" src="../_images/examples_galactic_models_comparison_extended_36_0.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_35_0.png" src="../_images/examples_galactic_models_comparison_extended_35_0.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">center_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -2032,7 +2032,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 <span class="n">left_DF</span> <span class="o">=</span> <span class="n">center_DF</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">right_DF</span> <span class="o">=</span> <span class="n">center_DF</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">frequency</span> <span class="ow">in</span> <span class="n">f_range</span><span class="p">:</span>
     <span class="n">center</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2061,7 +2061,7 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">font</span> <span class="o">=</span> <span class="s2">&quot;Arial Black&quot;</span>
@@ -2079,7 +2079,9 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
         <span class="n">tickvals</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lst_range</span><span class="p">))),</span>
         <span class="n">ticktext</span><span class="o">=</span><span class="n">center_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
     <span class="p">),</span>
-    <span class="n">zaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;average ratio&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">),</span> <span class="n">dtick</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+    <span class="n">zaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&lt;RDIS&gt;&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="n">dtick</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+    <span class="n">aspectratio</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.75</span><span class="p">),</span>  <span class="c1"># Adjust the aspect ratio as needed</span>
+    <span class="n">camera</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">eye</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)),</span>  <span class="c1"># Adjust the camera position as needed</span>
 <span class="p">)</span>
 
 <span class="c1"># layout = go.Layout(scene=scene)</span>
@@ -2094,16 +2096,27 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">scene</span><span class="o">=</span><span class="n">scene</span><span class="p">,</span>
-    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
     <span class="n">autosize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">family</span><span class="o">=</span><span class="n">font</span><span class="p">,</span>
-        <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
-    <span class="p">),</span>
+    <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">family</span><span class="o">=</span><span class="n">font</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">),</span>
 <span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span>
+        <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&lt;RDIS&gt;&lt;/b&gt;&quot;</span><span class="p">,</span>
+        <span class="n">titleside</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">),</span>
+        <span class="nb">len</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>  <span class="c1"># Adjust the length of the colorbar</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">################################################################</span>
+<span class="c1">################################################################</span>
+<span class="c1">################################################################</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="p">[</span>
@@ -2113,21 +2126,26 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
     <span class="p">],</span>
 <span class="p">)</span>
 
-
-<span class="n">scene</span><span class="p">[</span><span class="s2">&quot;zaxis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;b&gt;average ratio error&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;dtick&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>
+<span class="n">scene</span><span class="p">[</span><span class="s2">&quot;zaxis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;b&gt;&lt;RDIS&gt; errors&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;dtick&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">scene</span><span class="o">=</span><span class="n">scene</span><span class="p">,</span>
     <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
     <span class="n">autosize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">family</span><span class="o">=</span><span class="n">font</span><span class="p">,</span>
-        <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
-    <span class="p">),</span>
+    <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">family</span><span class="o">=</span><span class="n">font</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="n">fig</span><span class="o">.</span><span class="n">update_coloraxes</span><span class="p">(</span><span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span><span class="n">ticksuffix</span> <span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span>  <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">tickprefix</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&quot;</span><span class="p">,</span>
+        <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">&quot;&lt;/b&gt;&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;&lt;RDIS&gt; errors&lt;/b&gt;&quot;</span><span class="p">,</span>
+        <span class="n">titleside</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">),</span>
+        <span class="nb">len</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>  <span class="c1"># Adjust the length of the colorbar</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -2136,9 +2154,9 @@ WARNING: AstropyDeprecationWarning: &#34;verbose&#34; was deprecated in version 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<div>                            <div id="03ff6c5b-d0a1-44cb-8de0-3c96ddf353ac" class="plotly-graph-div" style="height:600px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("03ff6c5b-d0a1-44cb-8de0-3c96ddf353ac")) {                    Plotly.newPlot(                        "03ff6c5b-d0a1-44cb-8de0-3c96ddf353ac",                        [{"opacity":0.9,"showscale":true,"z":[[0.9582291145572785,0.9757378689344671,0.9917458729364682,1.0042521260630315,1.0087543771885943,1.0167583791895947,1.0212606303151577,1.020760380190095,1.022761380690345,1.0242621310655329,1.0232616308154077],[0.9667333666833416,0.9877438719359679,1.0052526263131565,1.0177588794397199,1.02176088044022,1.0242621310655329,1.0257628814407203,1.0242621310655329,1.0257628814407203,1.0247623811905953,1.0237618809404703],[0.9677338669334667,0.9892446223111555,1.006753376688344,1.0212606303151577,1.022761380690345,1.0267633816908455,1.027263631815908,1.0252626313156576,1.0267633816908455,1.0257628814407203,1.0257628814407203],[0.9672336168084041,0.9897448724362181,1.0062531265632817,1.0192596298149073,1.02176088044022,1.0262631315657829,1.0252626313156576,1.0257628814407203,1.0247623811905953,1.0252626313156576,1.0257628814407203],[0.965232616308154,0.9877438719359679,1.003751875937969,1.0177588794397199,1.0197598799399699,1.0242621310655329,1.0247623811905953,1.0252626313156576,1.0257628814407203,1.0252626313156576,1.027263631815908],[0.963231615807904,0.9857428714357178,1.0022511255627813,1.0137568784392195,1.0182591295647825,1.0242621310655329,1.0252626313156576,1.0257628814407203,1.0262631315657829,1.0252626313156576,1.0267633816908455],[0.9642321160580289,0.9827413706853426,0.9992496248124061,1.012256128064032,1.0152576288144073,1.0222611305652824,1.0262631315657829,1.0267633816908455,1.0277638819409705,1.0282641320660328,1.0282641320660328],[0.9637318659329664,0.9807403701850925,0.9952476238119059,1.007753876938469,1.0127563781890945,1.0202601300650325,1.0262631315657829,1.0262631315657829,1.0277638819409705,1.0277638819409705,1.030265132566283],[0.9642321160580289,0.9802401200600299,0.9957478739369685,1.007753876938469,1.014257128564282,1.0222611305652824,1.0252626313156576,1.0267633816908455,1.0282641320660328,1.0282641320660328,1.0307653826913457],[0.9642321160580289,0.9787393696848423,0.9947473736868434,1.006753376688344,1.013256628314157,1.02176088044022,1.0257628814407203,1.0257628814407203,1.0267633816908455,1.029264632316158,1.0307653826913457],[0.9602301150575288,0.9767383691845923,0.9927463731865933,1.0052526263131565,1.012256128064032,1.0202601300650325,1.0257628814407203,1.0252626313156576,1.0257628814407203,1.0277638819409705,1.030265132566283],[0.9607303651825913,0.9762381190595297,0.9932466233116558,1.0047523761880939,1.0117558779389695,1.0182591295647825,1.0242621310655329,1.0242621310655329,1.0242621310655329,1.0267633816908455,1.030265132566283]],"type":"surface"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"scene":{"xaxis":{"title":{"text":"<b>frequency [MHz]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10],"ticktext":[30,35,40,45,50,55,60,65,70,75,80]},"yaxis":{"title":{"text":"<b>LST [hour]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10,11],"ticktext":[0,2,4,6,8,10,12,14,16,18,20,22]},"zaxis":{"title":{"text":"<b>average ratio</b>"},"range":[0.9,1.05],"dtick":0.05}},"margin":{"r":20,"b":10,"l":10,"t":10},"font":{"family":"Arial Black","size":15,"color":"black"},"height":600,"autosize":false},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="00d608ac-202e-4d40-a301-ecb5d66e14d5" class="plotly-graph-div" style="height:600px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("00d608ac-202e-4d40-a301-ecb5d66e14d5")) {                    Plotly.newPlot(                        "00d608ac-202e-4d40-a301-ecb5d66e14d5",                        [{"opacity":0.9,"showscale":true,"z":[[-0.041270635317658844,-0.02376188094047027,-0.007753876938469295,0.003751875937968996,0.009254627313656782,0.016758379189594774,0.020760380190094962,0.02126063031515757,0.02226113056528256,0.02376188094047016,0.024762381190595262],[-0.0342671335667834,-0.012256128064032035,0.006253126563281586,0.01875937968984487,0.021760880440220065,0.025262631315657758,0.025762881440720364,0.025262631315657758,0.024762381190595262,0.024762381190595262,0.024762381190595262],[-0.032766383191595805,-0.01025512756378194,0.008754377188594287,0.020760380190094962,0.02376188094047016,0.027263631815907963,0.027263631815907963,0.026763381690845356,0.02626313156578286,0.025762881440720364,0.025762881440720364],[-0.0342671335667834,-0.011755877938969539,0.0067533766883440816,0.019259629814907364,0.021760880440220065,0.025262631315657758,0.025262631315657758,0.025262631315657758,0.024762381190595262,0.024762381190595262,0.025262631315657758],[-0.035767883941971,-0.013756878439219633,0.004752376188093987,0.017758879439719877,0.020260130065032467,0.02376188094047016,0.024762381190595262,0.024762381190595262,0.025262631315657758,0.025762881440720364,0.02626313156578286],[-0.03626813406703355,-0.01475737868934468,0.0027513756878438933,0.015257628814407176,0.01875937968984487,0.023261630815407663,0.024762381190595262,0.025262631315657758,0.025762881440720364,0.026763381690845356,0.027263631815907963],[-0.035267633816908506,-0.01725862931465738,-0.0007503751875938547,0.011255627813906877,0.01575787893946967,0.022761380690345168,0.025762881440720364,0.026763381690845356,0.027263631815907963,0.028264132066032954,0.029264632316158057],[-0.03626813406703355,-0.019759879939970026,-0.004252126063031547,0.007753876938469184,0.013256628314157082,0.02126063031515757,0.025762881440720364,0.026763381690845356,0.027263631815907963,0.02876438219109556,0.03026513256628305],[-0.035767883941971,-0.020260130065032578,-0.0047523761880940985,0.007253626813406688,0.013256628314157082,0.02126063031515757,0.025762881440720364,0.02626313156578286,0.027263631815907963,0.02876438219109556,0.03026513256628305],[-0.03626813406703355,-0.020760380190095074,-0.005252626313156594,0.007253626813406688,0.013756878439219578,0.021760880440220065,0.025762881440720364,0.026763381690845356,0.02776388194097046,0.029264632316158057,0.030765382691345655],[-0.0382691345672837,-0.022261130565282672,-0.006753376688344193,0.00575287643821909,0.01225612806403198,0.020260130065032467,0.024762381190595262,0.025762881440720364,0.026763381690845356,0.028264132066032954,0.029764882441220553],[-0.039769884942471245,-0.02326163081540772,-0.007253626813406744,0.004752376188093987,0.01075537768884438,0.019259629814907364,0.02376188094047016,0.024262131065532766,0.025262631315657758,0.027263631815907963,0.02876438219109556]],"type":"surface","colorbar":{"title":{"text":"<b><RDIS></b>","side":"right"},"tickfont":{"size":18},"len":0.75,"tickprefix":"<b>","ticksuffix":"</b>"}}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"scene":{"xaxis":{"title":{"text":"<b>frequency [MHz]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10],"ticktext":[30,35,40,45,50,55,60,65,70,75,80]},"yaxis":{"title":{"text":"<b>LST [hour]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10,11],"ticktext":[0,2,4,6,8,10,12,14,16,18,20,22]},"zaxis":{"title":{"text":"<b><RDIS></b>"},"range":[-0.1,0.05],"dtick":0.05},"aspectratio":{"x":0.75,"y":0.75,"z":0.75},"camera":{"eye":{"x":1.2,"y":1.2,"z":0.6}}},"margin":{"r":50,"b":10,"l":10,"t":10},"font":{"family":"Arial Black","size":18,"color":"black"},"height":600,"autosize":false},                        {"responsive": true}                    ).then(function(){
 
-var gd = document.getElementById('03ff6c5b-d0a1-44cb-8de0-3c96ddf353ac');
+var gd = document.getElementById('00d608ac-202e-4d40-a301-ecb5d66e14d5');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -2166,9 +2184,9 @@ if (outputEl) {{
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<div>                            <div id="e734d9e1-40e1-45a0-999d-37941bc6dda8" class="plotly-graph-div" style="height:600px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("e734d9e1-40e1-45a0-999d-37941bc6dda8")) {                    Plotly.newPlot(                        "e734d9e1-40e1-45a0-999d-37941bc6dda8",                        [{"opacity":0.5,"z":[[0.12056028014007003,0.09754877438719367,0.08304152076038018,0.0755377688844423,0.0735367683841921,0.08254127063531769,0.09404702351175587,0.09804902451225606,0.09854927463731888,0.10605302651325643,0.11655827913956962],[0.13106553276638333,0.11855927963982005,0.11205602801400705,0.10805402701350664,0.10855427713856924,0.12256128064032001,0.14557278639319682,0.15607803901950956,0.1600800400200102,0.17758879439719855,0.19109554777388693],[0.1410705352676338,0.1305652826413206,0.12606303151575804,0.12306153076538262,0.12256128064032024,0.1380690345172586,0.16108054027013496,0.17258629314657337,0.17908954477238614,0.19509754877438734,0.2076038019009505],[0.1395697848924462,0.12806403201600802,0.12456228114057022,0.12156078039019524,0.12106053026513242,0.136568284142071,0.1610805402701352,0.17008504252126055,0.17608804402201095,0.19409704852426213,0.20710355177588813],[0.1400700350175087,0.12706353176588303,0.12006003001500742,0.11455727863931964,0.11655827913956984,0.1320660330165082,0.15557778889444718,0.16258129064532278,0.16858429214607318,0.18409204602301177,0.1980990495247621],[0.13156578289144583,0.11605802901450712,0.10705352676338187,0.10205102551275647,0.10205102551275624,0.1155577788894444,0.13606803401700862,0.14207103551775901,0.14807403701850919,0.16158079039519757,0.17408704352176074],[0.11805902951475744,0.09954977488744376,0.08904452226113069,0.08254127063531769,0.08254127063531769,0.09154577288644328,0.10955477738869446,0.11155577788894444,0.11605802901450724,0.12556278139069543,0.13756878439219622],[0.11405702851425714,0.09354677338669348,0.08304152076038007,0.0770385192596299,0.07603801900950491,0.08454227113556767,0.09754877438719367,0.09954977488744365,0.10155077538769386,0.11205602801400683,0.11955977988994504],[0.11305652826413226,0.09254627313656827,0.08104052026013009,0.07453726863431731,0.07453726863431731,0.0820410205102553,0.0960480240120063,0.09804902451225606,0.09904952476238127,0.10755377688844447,0.11655827913956984],[0.11055527763881945,0.09104552276138067,0.07903951975988,0.0720360180090045,0.07153576788394189,0.08104052026013009,0.09654827413706846,0.09804902451225628,0.09904952476238105,0.10655327663831926,0.11655827913956984],[0.11255627813906943,0.09154577288644328,0.07903951975987988,0.07203601800900472,0.07153576788394189,0.07953976988494249,0.09304652326163088,0.09354677338669348,0.09654827413706846,0.10405202601300645,0.11155577788894466],[0.11305652826413215,0.09204602301150588,0.07853926963481739,0.07203601800900472,0.07103551775887951,0.07953976988494249,0.09104552276138067,0.09404702351175587,0.09654827413706846,0.10205102551275624,0.11105552776388206]],"type":"surface"},{"opacity":0.5,"showscale":false,"z":[[0.09704852426213106,0.08204102051025508,0.0735367683841921,0.0690345172586293,0.0685342671335668,0.07353676838419199,0.0750375187593798,0.0750375187593797,0.07603801900950469,0.0765382691345674,0.07853926963481739],[0.10155077538769386,0.10005002501250626,0.10105052526263125,0.10405202601300656,0.10005002501250626,0.09754877438719367,0.09404702351175587,0.09054527263631829,0.08954477238619307,0.08754377188594298,0.08704352176088048],[0.11105552776388206,0.11055527763881945,0.11305652826413204,0.11805902951475744,0.11155577788894444,0.10855427713856936,0.10605302651325677,0.10155077538769364,0.09954977488744388,0.09654827413706846,0.09454727363681825],[0.10905452726363185,0.10905452726363185,0.10955477738869446,0.11205602801400683,0.10755377688844425,0.10755377688844425,0.10255127563781874,0.09954977488744365,0.09654827413706846,0.09554777388694324,0.09454727363681825],[0.10355177588794395,0.10055027513756876,0.10055027513756887,0.10505252626313166,0.10005002501250615,0.10005002501250637,0.09804902451225606,0.09504752376188086,0.09304652326163076,0.09254627313656816,0.09204602301150588],[0.09754877438719367,0.09204602301150577,0.08904452226113047,0.09004502251125546,0.0895447723861933,0.09054527263631829,0.08854427213606786,0.08804402201100547,0.08754377188594298,0.08754377188594287,0.08704352176088048],[0.09404702351175587,0.08204102051025508,0.07653826913456718,0.07603801900950491,0.07603801900950491,0.07903951975987977,0.08204102051025508,0.08204102051025519,0.08204102051025508,0.08354177088544257,0.08404202101050506],[0.09454727363681836,0.08104052026013009,0.0735367683841921,0.07203601800900439,0.0705352676338169,0.07703851925962979,0.08054027013506748,0.08154077038519258,0.08154077038519258,0.08354177088544268,0.08654327163581788],[0.09404702351175587,0.08004002001000488,0.0725362681340671,0.0700350175087543,0.072536268134067,0.07653826913456707,0.07903951975987977,0.0805402701350676,0.08154077038519247,0.08254127063531747,0.08654327163581788],[0.09404702351175587,0.08104052026012998,0.0710355177588794,0.0685342671335667,0.06953476738369191,0.07603801900950469,0.07803901950975478,0.07903951975987988,0.07953976988494249,0.08204102051025508,0.08454227113556778],[0.09354677338669337,0.07953976988494249,0.0700350175087544,0.0675337668834417,0.06953476738369191,0.072536268134067,0.07803901950975478,0.07703851925962968,0.07853926963481728,0.08004002001000499,0.08404202101050517],[0.09404702351175587,0.07953976988494249,0.0710355177588794,0.06753376688344159,0.06803401700850431,0.07203601800900461,0.0755377688844423,0.0755377688844423,0.0765382691345674,0.0775387693846924,0.08154077038519247]],"type":"surface"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"scene":{"xaxis":{"title":{"text":"<b>frequency [MHz]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10],"ticktext":[30,35,40,45,50,55,60,65,70,75,80]},"yaxis":{"title":{"text":"<b>LST [hour]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10,11],"ticktext":[0,2,4,6,8,10,12,14,16,18,20,22]},"zaxis":{"title":{"text":"<b>average ratio error</b>"},"dtick":0.05}},"margin":{"r":20,"b":10,"l":10,"t":10},"font":{"family":"Arial Black","size":15,"color":"black"},"height":600,"autosize":false,"coloraxis":{"colorbar":{"tickfont":{"size":1},"tickprefix":"<b>","ticksuffix":"</b>"}}},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="e737b3c0-c956-4b47-8d4a-b460c343d9e8" class="plotly-graph-div" style="height:600px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("e737b3c0-c956-4b47-8d4a-b460c343d9e8")) {                    Plotly.newPlot(                        "e737b3c0-c956-4b47-8d4a-b460c343d9e8",                        [{"opacity":0.5,"z":[[0.11905952976488243,0.09754877438719356,0.08354177088544279,0.07553776888444219,0.0730365182591296,0.08054027013506748,0.09454727363681847,0.09654827413706846,0.09804902451225617,0.10605302651325665,0.11605802901450724],[0.13256628314157076,0.11805902951475739,0.11055527763881945,0.10705352676338165,0.10755377688844425,0.12256128064032024,0.1465732866433216,0.15357678839419708,0.16108054027013508,0.17558779389694845,0.18959479739869933],[0.14057028514257125,0.12956478239119557,0.12456228114057022,0.12156078039019513,0.12206103051525763,0.1360680340170084,0.16108054027013496,0.16908454227113556,0.17808904452226115,0.19359679839919952,0.2081040520260129],[0.14207103551775885,0.13056528264132067,0.12456228114057033,0.12056028014007003,0.12156078039019513,0.1360680340170085,0.16108054027013508,0.16958479239619817,0.17858929464732365,0.19359679839919963,0.20710355177588802],[0.14157078539269635,0.12806403201600797,0.12006003001500754,0.11405702851425703,0.11555777888944474,0.13056528264132072,0.15357678839419708,0.16108054027013508,0.16858429214607307,0.18209104552276134,0.19559779889944973],[0.1320660330165082,0.11605802901450724,0.10705352676338165,0.10055027513756876,0.10105052526263136,0.11455727863931964,0.1360680340170085,0.1415707853926964,0.1475737868934467,0.15957978989494748,0.17208604302151065],[0.11755877938969489,0.10005002501250626,0.08904452226113063,0.08304152076038018,0.08254127063531769,0.09204602301150566,0.10955477738869435,0.11255627813906954,0.11605802901450724,0.12556278139069532,0.136568284142071],[0.11355677838919465,0.09454727363681842,0.08304152076038013,0.0765382691345673,0.07603801900950469,0.08404202101050517,0.09854927463731866,0.10005002501250626,0.10255127563781885,0.11055527763881934,0.11955977988994504],[0.1115557778889445,0.09254627313656827,0.0805402701350676,0.07453726863431709,0.07403701850925459,0.08254127063531758,0.09654827413706846,0.09854927463731866,0.10005002501250615,0.10805402701350675,0.11705852926463234],[0.11105552776388194,0.09104552276138067,0.07903951975987988,0.072536268134067,0.0720360180090045,0.08104052026013009,0.09554777388694347,0.09654827413706857,0.09804902451225606,0.10605302651325665,0.11555777888944474],[0.111055527763882,0.09104552276138067,0.07853926963481739,0.0720360180090045,0.0710355177588794,0.07903951975988,0.09304652326163076,0.09404702351175587,0.09554777388694347,0.10305152576288146,0.11255627813906954],[0.11305652826413204,0.09254627313656821,0.07903951975987994,0.0720360180090045,0.0710355177588794,0.07803901950975489,0.09154577288644328,0.09304652326163076,0.09504752376188097,0.10205102551275635,0.11155577788894444]],"type":"surface","colorbar":{"title":{"text":"<b><RDIS> errors</b>","side":"right"},"tickfont":{"size":18},"len":0.75,"tickprefix":"<b>","ticksuffix":"</b>"}},{"opacity":0.5,"showscale":false,"z":[[0.09704852426213106,0.08304152076038018,0.07403701850925459,0.06953476738369191,0.0690345172586293,0.07253626813406705,0.07453726863431709,0.0745372686343172,0.07503751875937964,0.07653826913456724,0.07753876938469234],[0.10155077538769386,0.09954977488744371,0.10055027513756876,0.1030515257628814,0.09904952476238116,0.09754877438719356,0.09404702351175592,0.09104552276138067,0.08854427213606803,0.08704352176088043,0.08604302151075538],[0.1100550275137569,0.11005502751375684,0.1130565282641321,0.11605802901450718,0.11155577788894444,0.1095547773886944,0.10505252626313161,0.10105052526263125,0.09804902451225611,0.09554777388694352,0.09404702351175592],[0.10805402701350675,0.10705352676338165,0.10955477738869429,0.11255627813906949,0.10805402701350675,0.1060530265132566,0.10205102551275635,0.09904952476238116,0.09604802401200602,0.09454727363681842,0.09354677338669332],[0.10305152576288146,0.10005002501250626,0.10105052526263131,0.10405202601300656,0.10005002501250626,0.09904952476238116,0.09654827413706851,0.09404702351175587,0.09254627313656827,0.09154577288644328,0.09104552276138067],[0.09804902451225611,0.09154577288644322,0.08954477238619307,0.09104552276138067,0.08904452226113052,0.08954477238619307,0.08854427213606803,0.08704352176088043,0.08654327163581793,0.08654327163581788,0.08654327163581793],[0.09404702351175587,0.08254127063531763,0.07653826913456724,0.07603801900950469,0.07553776888444219,0.08004002001000504,0.08154077038519264,0.08154077038519258,0.08204102051025519,0.08304152076038018,0.08404202101050529],[0.09504752376188091,0.08154077038519258,0.07303651825912955,0.0710355177588794,0.071535767883942,0.07703851925962985,0.08004002001000504,0.08104052026013003,0.08154077038519264,0.08354177088544279,0.08554277138569277],[0.09454727363681842,0.08054027013506748,0.0720360180090045,0.06953476738369185,0.07053526763381696,0.0760380190095048,0.07953976988494249,0.08004002001000499,0.08104052026013009,0.08304152076038024,0.08554277138569277],[0.09454727363681842,0.08004002001000499,0.07103551775887945,0.0685342671335668,0.06953476738369185,0.07453726863431714,0.07803901950975489,0.07853926963481739,0.08004002001000499,0.08204102051025514,0.08454227113556778],[0.09404702351175587,0.08004002001000499,0.0705352676338169,0.06753376688344176,0.06853426713356675,0.07303651825912955,0.0765382691345673,0.0775387693846924,0.07853926963481739,0.08054027013506748,0.08254127063531763],[0.09404702351175587,0.08004002001000504,0.0705352676338169,0.06703351675837915,0.06703351675837915,0.07203601800900444,0.07503751875937964,0.07553776888444225,0.07653826913456724,0.07853926963481744,0.0805402701350676]],"type":"surface","colorbar":{"title":{"text":"<b><RDIS> errors</b>","side":"right"},"tickfont":{"size":18},"len":0.75,"tickprefix":"<b>","ticksuffix":"</b>"}}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"scene":{"xaxis":{"title":{"text":"<b>frequency [MHz]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10],"ticktext":[30,35,40,45,50,55,60,65,70,75,80]},"yaxis":{"title":{"text":"<b>LST [hour]</b>"},"color":"black","tickvals":[0,1,2,3,4,5,6,7,8,9,10,11],"ticktext":[0,2,4,6,8,10,12,14,16,18,20,22]},"zaxis":{"title":{"text":"<b><RDIS> errors</b>"},"dtick":0.05},"aspectratio":{"x":0.75,"y":0.75,"z":0.75},"camera":{"eye":{"x":1.2,"y":1.2,"z":0.6}}},"margin":{"r":20,"b":10,"l":10,"t":10},"font":{"family":"Arial Black","size":18,"color":"black"},"height":600,"autosize":false},                        {"responsive": true}                    ).then(function(){
 
-var gd = document.getElementById('e734d9e1-40e1-45a0-999d-37941bc6dda8');
+var gd = document.getElementById('e737b3c0-c956-4b47-8d4a-b460c343d9e8');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -2193,7 +2211,7 @@ if (outputEl) {{
                         })                };                });            </script>        </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ratio</span><span class="o">.</span><span class="n">values</span>
@@ -2203,14 +2221,14 @@ if (outputEl) {{
 <span class="c1">########################################</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 
-<span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 <span class="n">hist_data</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="n">xax_kde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2000</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 <span class="n">kde</span> <span class="o">=</span> <span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">input_data</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>
 <span class="n">log_dens</span> <span class="o">=</span> <span class="n">kde</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">xax_kde</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;ratio&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;RDIS&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;entries&#39;</span><span class="p">)</span>
 <span class="c1">########################################</span>
 
@@ -2236,7 +2254,7 @@ if (outputEl) {{
         <span class="n">alpha</span><span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">xax_</span><span class="p">[</span><span class="n">center_i</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;ratio&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;RDIS&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;PDF&#39;</span><span class="p">)</span>
 
 <span class="n">textstr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
@@ -2255,7 +2273,7 @@ if (outputEl) {{
 
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xax_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_dens</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">xax_</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;ratio&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;RDIS&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;CDF&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -2265,14 +2283,14 @@ if (outputEl) {{
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test1: p0.5=0.0002794558929617441
-Test2: p0.5=-0.00028223376729313854
-Test3: p0.5+/-0.341=8.582093193232332e-05
-1.0117558779389695 0.923711855927964 1.1243121560780391
+Test1: p0.5=-0.00010159188406011488
+Test2: p0.5=9.924391268190114e-05
+Test3: p0.5+/-0.341=-0.0007047107930630014
+0.011755877938969483 -0.0757878939469735 0.12381190595297642
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -2284,25 +2302,25 @@ Text(0, 0.5, &#39;CDF&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_39_2.png" src="../_images/examples_galactic_models_comparison_extended_39_2.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_38_2.png" src="../_images/examples_galactic_models_comparison_extended_38_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_39_3.png" src="../_images/examples_galactic_models_comparison_extended_39_3.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_38_3.png" src="../_images/examples_galactic_models_comparison_extended_38_3.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_39_4.png" src="../_images/examples_galactic_models_comparison_extended_39_4.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_38_4.png" src="../_images/examples_galactic_models_comparison_extended_38_4.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_data1</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ratio</span><span class="o">.</span><span class="n">values</span>
@@ -2313,18 +2331,15 @@ Text(0, 0.5, &#39;CDF&#39;)
 <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">input_data1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">input_data2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&lt;IR&gt;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;RDIS&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
 
-
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&lt;IR&gt;&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="c1"># fig.suptitle(&#39;Blue: all models, Red: without LFSS&#39;)</span>
-<span class="n">create_KDE_plot</span><span class="p">(</span><span class="n">input_data1</span><span class="p">)</span>
-<span class="n">create_KDE_plot</span><span class="p">(</span><span class="n">input_data2</span><span class="p">)</span>
-<br/><br/></pre></div>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;RDIS&#39;</span><span class="p">)</span>
+<span class="n">apply_KDE</span><span class="p">(</span><span class="n">input_data1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">data_in_relative_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">apply_KDE</span><span class="p">(</span><span class="n">input_data2</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">data_in_relative_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -2332,42 +2347,51 @@ Text(0, 0.5, &#39;CDF&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test1: p0.5=0.0002794558929617441
-Test2: p0.5=-0.00028223376729313854
-Test3: p0.5+/-0.341=8.582093193232332e-05
-1.0117558779389695 0.923711855927964 1.1243121560780391
-Normalization test:  (0.9999458783813944, 1.0222836135387325e-06)
-Test1: p0.5=0.0010215842694417665
-Test2: p0.5=-0.0010215842731487457
-Test3: p0.5+/-0.341=0.0004973617251978757
-0.9892446223111555 0.9112056028014006 1.0747873936968484
-Normalization test:  (0.9999996016922741, 2.7997680946967307e-06)
+Test1: p0.5=-0.00010159188406011488
+Test2: p0.5=9.924391268190114e-05
+Test3: p0.5+/-0.341=-0.0007047107930630014
+0.011755877938969483 -0.0757878939469735 0.12381190595297642
+Normalization test:  (0.9999976670604551, 6.907967674860936e-07)
+Test1: p0.5=-8.931958917285376e-05
+Test2: p0.5=8.931958436264598e-05
+Test3: p0.5+/-0.341=-0.000663997002828487
+-0.010755377688844436 -0.08829414707353678 0.0742871435717859
+Normalization test:  (1.0000001037452317, 3.4314029703712523e-06)
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(array([0.5       , 0.50050025, 0.5010005 , ..., 1.4989995 , 1.49949975,
-        1.5       ]),
- array([-21.54579454, -21.48654284, -21.42738644, ..., -24.6263996 ,
-        -24.6921186 , -24.75793368]))
+(array([-0.5       , -0.49949975, -0.4989995 , ...,  0.4989995 ,
+         0.49949975,  0.5       ]),
+ array([-21.25758547, -21.19916014, -21.14083015, ..., -24.79169581,
+        -24.8578397 , -24.92408044]),
+ (-0.08829414707353678, 0.07478739369684839, -0.010755377688844436))
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_40_2.png" src="../_images/examples_galactic_models_comparison_extended_40_2.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_39_2.png" src="../_images/examples_galactic_models_comparison_extended_39_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_galactic_models_comparison_extended_40_3.png" src="../_images/examples_galactic_models_comparison_extended_40_3.png" />
+<img alt="../_images/examples_galactic_models_comparison_extended_39_3.png" src="../_images/examples_galactic_models_comparison_extended_39_3.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
 </div>
 </div>
 </section>

@@ -117,7 +117,16 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">healpy</span> <span class="k">as</span> <span class="nn">hp</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pygdsm</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GlobalSkyModel2016</span><span class="p">,</span>
+    <span class="n">GlobalSkyModel</span><span class="p">,</span>
+    <span class="n">LowFrequencySkyModel</span><span class="p">,</span>
+    <span class="n">HaslamSkyModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pylfmap</span> <span class="kn">import</span> <span class="n">LFmap</span>
 <span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">CMB_temp</span> <span class="o">=</span> <span class="mf">2.7255</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">SSM.SSM</span> <span class="k">as</span> <span class="nn">ssm_func</span>
@@ -144,7 +153,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_hdf</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_path</span><span class="p">,</span> <span class="s2">&quot;tabulated/gmoss_spectra_1-125MHz.h5&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_path</span><span class="p">,</span> <span class="s2">&quot;tabulated/gmoss_spectra_1-400MHz.h5&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span>
@@ -169,7 +178,7 @@
 <span class="sd">            The generated Galactic diffuse emission map for the given frequency.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">frequency_MHz</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="p">[</span><span class="n">frequency_MHz</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="p">[</span><span class="n">frequency_MHz</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">CMB_temp</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="s2">&quot;[ERROR] Frequency </span><span class="si">{}</span><span class="s2"> was not tabulated! Run first GMOSS, update the table, and then call.&quot;</span>
@@ -256,6 +265,49 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">ssm_func</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;del&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;del.hdf5&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="add_CMB_decorator"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.add_CMB_decorator">[docs]</a><span class="k">def</span> <span class="nf">add_CMB_decorator</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator function to add the Cosmic Microwave Background (CMB) temperature to the output of a class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cls : class</span>
+<span class="sd">        The original class to be decorated.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    class</span>
+<span class="sd">        The decorated class that adds the CMB temperature to the output.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    The CMB temperature (2.7255 K) is added to the output generated by the decorated class.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    @add_CMB_decorator</span>
+<span class="sd">    OriginalClass</span>
+
+<span class="sd">    # Decorate the class</span>
+<span class="sd">    ModifiedClass = add_CMB_decorator(OriginalClass)</span>
+
+<span class="sd">    # Create an instance of the modified class</span>
+<span class="sd">    modified = ModifiedClass()</span>
+
+<span class="sd">    # Generate the output with added CMB temperature</span>
+<span class="sd">    result = modified.generate(freq)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">AddCMB</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="o">+</span> <span class="n">CMB_temp</span>
+
+    <span class="k">return</span> <span class="n">AddCMB</span></div>
+
+
+<span class="n">GlobalSkyModel</span> <span class="o">=</span> <span class="n">add_CMB_decorator</span><span class="p">(</span><span class="n">GlobalSkyModel</span><span class="p">)</span>
+<span class="n">HaslamSkyModel</span> <span class="o">=</span> <span class="n">add_CMB_decorator</span><span class="p">(</span><span class="n">HaslamSkyModel</span><span class="p">)</span>
 </pre></div>
 
            </div>

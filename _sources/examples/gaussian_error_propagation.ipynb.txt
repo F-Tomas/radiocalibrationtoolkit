@@ -1,0 +1,719 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Statistical error propagation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from radiocalibrationtoolkit import *\n",
+    "from IPython.display import Markdown as md"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# some global plot settings\n",
+    "plt.rcParams[\"axes.labelweight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.weight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.size\"] = 16\n",
+    "plt.rcParams[\"legend.fontsize\"] = 14\n",
+    "\n",
+    "plt.rcParams[\"xtick.major.width\"] = 2\n",
+    "plt.rcParams[\"ytick.major.width\"] = 2\n",
+    "\n",
+    "plt.rcParams[\"xtick.major.size\"] = 5\n",
+    "plt.rcParams[\"ytick.major.size\"] = 5\n",
+    "\n",
+    "plt.rcParams[\"xtick.labelsize\"] = 14\n",
+    "plt.rcParams[\"ytick.labelsize\"] = 14"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# create class instances\n",
+    "galactic_map_inst = GlobalSkyModel2016(freq_unit=\"MHz\")\n",
+    "antenna_inst = AntennaPattern(\"./antenna_setup_files/SALLA_EW.xml\")\n",
+    "\n",
+    "# some constants\n",
+    "update_antenna_conventions = {\n",
+    "    \"shift_phi\": -90,\n",
+    "    \"flip_theta\": True,\n",
+    "    \"flip_phi\": False,\n",
+    "    \"in_degrees\": True,\n",
+    "    \"add_invisible_sky\": True,\n",
+    "}\n",
+    "LATITUDE = -35.206667\n",
+    "NSIDE = 64\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# first part of this examples will use this frequency and LST\n",
+    "frequency_MHz = 45\n",
+    "lst = 22"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# create maps\n",
+    "rotation_parameters = create_rotation_parameters(lst, LATITUDE)\n",
+    "rotator = Rotator(coord=[\"G\", \"C\"], rot=rotation_parameters)\n",
+    "\n",
+    "antenna_map_inst = antenna_inst.convert2hp(\n",
+    "    frequency=frequency_MHz, quantity=\"absolute\", **update_antenna_conventions\n",
+    ")\n",
+    "antenna_map = antenna_map_inst.get_map(rotator=rotator)\n",
+    "\n",
+    "galactic_map = hp.ma(\n",
+    "    hp.pixelfunc.ud_grade(galactic_map_inst.generate(frequency_MHz), NSIDE)\n",
+    ").copy()\n",
+    "galactic_map.mask = create_local_mask(NSIDE, rotation_parameters)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Propagation to effective temperature and voltage squared spectral denisty"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# set up the relative standard deviations on galactic emission and the antenna gain\n",
+    "rstd_galactic_map = 0.5\n",
+    "rstd_antenna_map = 0."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Error propagation from sky temperature and antenna gain to effective temperature"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# analytical calculation\n",
+    "rstd_teff = np.sqrt(rstd_galactic_map**2 + 4*rstd_antenna_map**2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
+    " \\begin{equation}\n",
+    "\\rho_{T\\mathrm{eff}}(t,f,\\alpha,\\delta) = \\frac{\\sigma_{T\\mathrm{eff}}(t,f,\\alpha,\\delta)}{T_{\\mathrm{eff}}(t,f,\\alpha,\\delta)} = \\sqrt{ \\rho_{T}^2(t,\\alpha,\\delta) + 4 \\rho_H^2 (t,f,\\alpha,\\delta) \t}\n",
+    "\\end{equation}\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# experimental test by distorting the galactic and antenna maps\n",
+    "r = (\n",
+    "    distort_array(galactic_map, rstd_galactic_map)\n",
+    "    * distort_array(antenna_map, rstd_antenna_map) ** 2\n",
+    ") / (galactic_map * antenna_map**2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# compare\n",
+    "print('Experimentally propagated: {:.2f}'.format(np.std(r)))\n",
+    "print('Analytical calculation: ', rstd_teff)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# just a plot comparison of how the distorted effective temperature by 50% looks like\n",
+    "teff = galactic_map * antenna_map**2\n",
+    "teff_distored = distort_array(teff, rstd=rstd_teff)\n",
+    "\n",
+    "fontsize = {\n",
+    "    \"xlabel\": 22,\n",
+    "    \"ylabel\": 22,\n",
+    "    \"title\": 14,\n",
+    "    \"xtick_label\": 22,\n",
+    "    \"ytick_label\": 22,\n",
+    "    \"cbar_label\": 22,\n",
+    "    \"cbar_tick_label\": 22,\n",
+    "}\n",
+    "\n",
+    "for m in [teff, teff_distored]:\n",
+    "    projview(\n",
+    "        m,\n",
+    "        cmap=\"jet\",\n",
+    "        min=3500,\n",
+    "        max=100000,\n",
+    "        norm=\"log\",\n",
+    "        graticule=True,\n",
+    "        graticule_labels=True,\n",
+    "        unit=\"[$m^2$K]\",\n",
+    "        xlabel=\"RA\",\n",
+    "        ylabel=\"DEC\",\n",
+    "        cb_orientation=\"vertical\",\n",
+    "        latitude_grid_spacing=30,\n",
+    "        xtick_label_color=\"white\",\n",
+    "        title='',\n",
+    "        override_plot_properties={'cbar_shrink':1},\n",
+    "        fontsize=fontsize\n",
+    "    )\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Integrated effective temperature and the voltage square spectral density\n",
+    "\n",
+    "- this is done in loop 100x"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def propagate_errors(rstd_teff, rstd_galactic_map, rstd_antenna_map):\n",
+    "    # calculate the effective temperature\n",
+    "    teff = galactic_map * antenna_map**2\n",
+    "\n",
+    "    ratios_teff = np.array([])\n",
+    "    for i in range(100):\n",
+    "        # teff_distored = distort_array(teff, rstd=rstd_teff)\n",
+    "        teff_distored = (\n",
+    "            distort_array(galactic_map, rstd_galactic_map)\n",
+    "            * distort_array(antenna_map, rstd_antenna_map) ** 2\n",
+    "        )\n",
+    "        ratios_teff = np.append(\n",
+    "            ratios_teff, integrate_hpmap(teff) / integrate_hpmap(teff_distored)\n",
+    "        )\n",
+    "\n",
+    "    # do the same with voltage square density, this should give the same results as before (more-less)\n",
+    "    # this is to check that there the extra constants have no effect\n",
+    "    ratios_v2sp = np.array([])\n",
+    "    v2sp = voltage_squared_spectral_density(antenna_map, galactic_map, frequency_MHz)\n",
+    "\n",
+    "    for i in range(100):\n",
+    "        galactic_map_distorted = distort_array(galactic_map, rstd_galactic_map)\n",
+    "        antenna_map_distorted = distort_array(antenna_map, rstd_antenna_map)\n",
+    "\n",
+    "        v2sp_distorted = voltage_squared_spectral_density(\n",
+    "            antenna_map_distorted, galactic_map_distorted, frequency_MHz\n",
+    "        )\n",
+    "\n",
+    "        ratios_v2sp = np.append(ratios_v2sp, v2sp / v2sp_distorted)\n",
+    "\n",
+    "    # figure\n",
+    "    fig, ax = plt.subplots()\n",
+    "    bins = np.histogram_bin_edges(np.concatenate([ratios_teff, ratios_v2sp]), bins=20)\n",
+    "    ax.set_title(\n",
+    "        \"Error on sky temperature: {:.2f}, error on antenna gain: {:.2f}\".format(\n",
+    "            rstd_galactic_map, rstd_antenna_map\n",
+    "        )\n",
+    "    )\n",
+    "\n",
+    "    ax.hist(\n",
+    "        ratios_teff,\n",
+    "        bins=bins,\n",
+    "        alpha=0.5,\n",
+    "        label=r\"T$_{{\\mathrm{{eff}}}}$: Mean={:.2f}, Std={:.1e}\".format(\n",
+    "            np.mean(ratios_teff), np.std(ratios_teff)\n",
+    "        ),\n",
+    "    )\n",
+    "    ax.hist(\n",
+    "        ratios_v2sp,\n",
+    "        bins=bins,\n",
+    "        alpha=0.5,\n",
+    "        label=r\"V$^2_f$: Mean={:.2f}, Std={:.1e}\".format(\n",
+    "            np.mean(ratios_v2sp), np.std(ratios_v2sp)\n",
+    "        ),\n",
+    "    )\n",
+    "    ax.legend()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "From the histograms bellow we conclude two things:\n",
+    "\n",
+    "- there is virtually no effect of the constants on the relative error propagation (as expected)\n",
+    "- the error on the antenna gains is causing a bias, i.e. the whole distributions is shifted"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "propagate_errors(rstd_teff=0.5, rstd_galactic_map=0.3, rstd_antenna_map=0.2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "propagate_errors(rstd_teff=0.5, rstd_galactic_map=0.5, rstd_antenna_map=0.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "propagate_errors(rstd_teff=0.5, rstd_galactic_map=0., rstd_antenna_map=0.25)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Analytical calculations of the error propagation to the integrated sky temperature"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We attempt to calculate the following equation other assumption of isotropic effective temperature distorted by 50%\n",
+    "\n",
+    "  \\begin{equation}\n",
+    "\\rho_{G\\mathrm{sky}} (t,f) = \\sqrt{ \\frac{\\sum_{\\delta}  \\sin^2{\\delta}  }{N_{\\alpha} \\left( \\sum_{\\delta} \\sin{\\delta} \\right)^2} } \\rho_{T\\mathrm{eff}}(t,f,\\alpha,\\delta)\n",
+    "\\end{equation}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# check what is the size of the theta and phi when integrating (should be 1000x500)\n",
+    "# so, for half sphere it is 1000x250\n",
+    "# check the value of the propagated error at 250 then\n",
+    "PHI, THETA, grid_map = hpmap2grid(galactic_map)\n",
+    "phi_delta = abs(np.diff(PHI[0, :])[0])\n",
+    "phi_theta = abs(np.diff(THETA[:, 0])[0])\n",
+    "print(PHI[0, :].size, THETA[:, 0].size)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "propagated_err_analytical = np.array([])\n",
+    "\n",
+    "Ns = [10, 100, 250, 500, 1000, 10000, 50000, 100000]\n",
+    "for N in Ns:\n",
+    "    sum_1 = 0\n",
+    "    sum_2 = 0 \n",
+    "    for x in np.linspace(0, np.pi/2, N):\n",
+    "        sum_1 += np.sin(x)**2\n",
+    "        sum_2 += np.sin(x)\n",
+    "\n",
+    "    propagated_err_analytical = np.append(propagated_err_analytical, np.sqrt(sum_1/sum_2**2 /(N*4))*rstd_teff)\n",
+    "    \n",
+    "print(propagated_err_analytical)\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots()\n",
+    "ax.plot(Ns, np.log10(propagated_err_analytical))\n",
+    "ax.scatter(Ns[2], np.log10(propagated_err_analytical)[2], c='r', label='our used resolution')\n",
+    "ax.set_xlabel('N$_{\\\\theta}$')\n",
+    "ax.set_ylabel('propagated log$_{10}$($\\\\rho$)')\n",
+    "ax.legend()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Propagation to the power"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# check the propagation to the finally calculated power at a range of LST and frequency values\n",
+    "lst_range = np.asarray(list(range(24))) + 0.5\n",
+    "freq_Mhz_range = range(30, 81, 1)\n",
+    "\n",
+    "hw_file_path = \"./antenna_setup_files/HardwareProfileList_realistic.xml\"\n",
+    "hw_dict = read_hw_file(hw_file_path, interp_args={'fill_value':'extrapolate'})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def propagated_errors_2_power(rstd_antenna_map=0.2, rstd_galactic_map=0.3):\n",
+    "\n",
+    "    lst_range = np.asarray(list(range(24))) + 0.5\n",
+    "    freq_Mhz_range = range(30, 81, 1)\n",
+    "    impedance_func = hw_dict[\"IImpedance\"][\n",
+    "        \"antenna_EW\"\n",
+    "    ]\n",
+    "\n",
+    "    power_density_DF = calculate_power_spectral_density(\n",
+    "        antenna_inst=antenna_inst,\n",
+    "        galactic_map_inst=galactic_map_inst,\n",
+    "        lst_range=lst_range,\n",
+    "        freq_Mhz_range=freq_Mhz_range,\n",
+    "        latitude=LATITUDE,\n",
+    "        update_antenna_conventions=update_antenna_conventions,\n",
+    "        impedance_func=impedance_func,\n",
+    "        distort_antenna_map=rstd_antenna_map,\n",
+    "        distort_galactic_map=rstd_galactic_map\n",
+    "    )\n",
+    "\n",
+    "    power_DF = integrate_spectral_density(power_density_DF, integrated_MHz_bands=power_density_DF.columns.values)\n",
+    "\n",
+    "    hw_reponse_1 = dB2PowerAmp(\n",
+    "        hw_dict[\"RResponse\"][\"LNA\"](power_DF.columns)\n",
+    "    )\n",
+    "    hw_reponse_2 = dB2PowerAmp(\n",
+    "        hw_dict[\"RResponse\"][\"digitizer\"](power_DF.columns)\n",
+    "    )\n",
+    "    hw_reponse_3 = dB2PowerAmp(\n",
+    "        hw_dict[\"RResponse\"][\"cable_fromLNA2digitizer\"](power_DF.columns)\n",
+    "    )\n",
+    "    hw_reponse_4 = dB2PowerAmp(\n",
+    "        hw_dict[\"RResponse\"][\n",
+    "            \"impedance_matching_EW\"\n",
+    "        ](power_DF.columns)\n",
+    "    )\n",
+    "\n",
+    "\n",
+    "    power_in_HW_DF = power_DF.multiply(\n",
+    "        hw_reponse_1 * hw_reponse_2 * hw_reponse_3 * hw_reponse_4\n",
+    "    )\n",
+    "\n",
+    "    # to piko and round\n",
+    "    power_in_HW_DF_distorted = (power_in_HW_DF*1e+12).round(3)\n",
+    "\n",
+    "\n",
+    "    power_DF_normal = pd.read_csv('./simulated_power_datasets/Salla_EW_GSM16.csv', index_col=0)\n",
+    "    power_DF_normal.columns = power_DF_normal.columns.astype(float)\n",
+    "\n",
+    "    ratio_DF = power_DF_normal/power_in_HW_DF_distorted.values\n",
+    "\n",
+    "    # figures\n",
+    "\n",
+    "    fig = px.imshow(\n",
+    "        ratio_DF.T - 1, width=600, aspect=\"cube\", color_continuous_scale=\"jet\"\n",
+    "    )\n",
+    "    fig.update_layout(\n",
+    "    #    title=\"<b></b>\",\n",
+    "        xaxis=dict(title=\"<b>LST</b>\", tickprefix=\"<b>\", ticksuffix=\"</b>\", dtick=2),\n",
+    "        yaxis=dict(\n",
+    "            title=\"<b>frequency [MHz]</b>\",\n",
+    "            tickprefix=\"<b>\",\n",
+    "            ticksuffix=\"</b>\",\n",
+    "            range=(30, 80),\n",
+    "            tick0=0,\n",
+    "            dtick=10,\n",
+    "            autorange=False,\n",
+    "        ),\n",
+    "        coloraxis=dict(\n",
+    "            colorbar=dict(\n",
+    "                title=dict(\n",
+    "                    text=\"<b>power [pW]</b>\",\n",
+    "                    side=\"right\",\n",
+    "                ),\n",
+    "                tickprefix=\"<b>\",\n",
+    "                ticksuffix=\"</b>\",\n",
+    "            ),\n",
+    "        ),\n",
+    "        font=dict(\n",
+    "            # family=font,\n",
+    "            size=20,\n",
+    "            color=\"black\",\n",
+    "        ),\n",
+    "    )\n",
+    "    fig.update_layout(\n",
+    "        coloraxis=dict(\n",
+    "            colorbar=dict(title=dict(text=\"<b>undistorted/distorted power - 1</b>\", side=\"right\")),\n",
+    "            # cmin=0,\n",
+    "            # cmax=40,\n",
+    "        )\n",
+    "    )\n",
+    "    fig.show()\n",
+    "\n",
+    "    # fig, ax = plt.subplots()\n",
+    "    # ax.plot(ratio_DF.mean(axis=0).values)\n",
+    "    # ax.set_xlabel('frequency [MHz]')\n",
+    "\n",
+    "    # fig, ax = plt.subplots()\n",
+    "    # ax.plot(ratio_DF.mean(axis=1).values)\n",
+    "    # ax.set_xlabel('LST')\n",
+    "\n",
+    "    # ratios_power = ratio_DF.values.flatten()\n",
+    "\n",
+    "    # fig, ax = plt.subplots()\n",
+    "\n",
+    "    # ax.hist(\n",
+    "    #     ratios_power,\n",
+    "    #     bins=20,\n",
+    "    #     alpha=0.5,\n",
+    "    #     label=r\"Mean={:.2f}, Std={:.1e}\".format(\n",
+    "    #         np.mean(ratios_power), np.std(ratios_power)\n",
+    "    #     ),\n",
+    "    # )\n",
+    "\n",
+    "    # ax.legend()\n",
+    "    # ax.set_xlabel(r'$\\frac{\\mathrm{undistorted}}{\\mathrm{distorted}}$ power')\n",
+    "    # ax.set_ylabel('entries')\n",
+    "    return ratio_DF"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ratio_DF_1 = propagated_errors_2_power(rstd_antenna_map=0.2, rstd_galactic_map=0.3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ratio_DF_2 = propagated_errors_2_power(rstd_antenna_map=0.25, rstd_galactic_map=0.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ratio_DF_3 = propagated_errors_2_power(rstd_antenna_map=0., rstd_galactic_map=0.5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ratio_DF_2aa = propagated_errors_2_power(rstd_antenna_map=0.20, rstd_galactic_map=0.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ratio_DF_2a = propagated_errors_2_power(rstd_antenna_map=0.15, rstd_galactic_map=0.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ratio_DF_2b = propagated_errors_2_power(rstd_antenna_map=0.10, rstd_galactic_map=0.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ratio_DF_2c = propagated_errors_2_power(rstd_antenna_map=0.05, rstd_galactic_map=0.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots()\n",
+    "\n",
+    "labels = [\n",
+    "    r\"$\\rho_{ant}$=0.20, $\\rho_{sky}$=0.30\",\n",
+    "    r\"$\\rho_{ant}$=0.00, $\\rho_{sky}$=0.50\",\n",
+    "    r\"$\\rho_{ant}$=0.25, $\\rho_{sky}$=0.00\",\n",
+    "    r\"$\\rho_{ant}$=0.20, $\\rho_{sky}$=0.00\",\n",
+    "    r\"$\\rho_{ant}$=0.15, $\\rho_{sky}$=0.00\",\n",
+    "    r\"$\\rho_{ant}$=0.10, $\\rho_{sky}$=0.00\",\n",
+    "    r\"$\\rho_{ant}$=0.05, $\\rho_{sky}$=0.00\",\n",
+    "]\n",
+    "\n",
+    "bins = np.histogram_bin_edges(\n",
+    "    np.concatenate(\n",
+    "        [\n",
+    "            ratio_DF_1.values.flatten(),\n",
+    "            ratio_DF_3.values.flatten(),\n",
+    "            ratio_DF_2.values.flatten(),\n",
+    "            ratio_DF_2aa.values.flatten(),\n",
+    "            ratio_DF_2a.values.flatten(),\n",
+    "            ratio_DF_2b.values.flatten(),\n",
+    "            ratio_DF_2c.values.flatten(),\n",
+    "        ]\n",
+    "    ),\n",
+    "    bins=100,\n",
+    ")\n",
+    "bins -= 1\n",
+    "results = []\n",
+    "\n",
+    "for i, df in enumerate(\n",
+    "    [\n",
+    "        ratio_DF_1,\n",
+    "        ratio_DF_3,\n",
+    "        ratio_DF_2,\n",
+    "        ratio_DF_2aa,\n",
+    "        ratio_DF_2a,\n",
+    "        ratio_DF_2b,\n",
+    "        ratio_DF_2c,\n",
+    "    ]\n",
+    "):\n",
+    "    ratios_power = df.values.flatten() - 1\n",
+    "    ax.hist(ratios_power, bins=bins, alpha=0.5, label=labels[i])\n",
+    "    stats = r\"$\\sigma$={:.1e}, $\\mu$={:.3f}\".format(\n",
+    "        np.abs(np.std(ratios_power)/np.mean(ratios_power)), round(np.mean(ratios_power), 2)+0\n",
+    "    )\n",
+    "    # print(labels[i] +',  '+ stats)\n",
+    "    temp = labels[i] + \",  \" + stats\n",
+    "    numbers = re.findall(r\"[-+]?\\d*\\.?\\d+(?:[eE][-+]?\\d+)?\", temp)\n",
+    "    # print(numbers)\n",
+    "    results.append([float(i) for i in numbers])\n",
+    "\n",
+    "ax.legend()\n",
+    "ax.set_xlabel(r\"$\\frac{\\mathrm{undistorted}}{\\mathrm{distorted}}$ power - 1\")\n",
+    "ax.set_ylabel(\"entries\")\n",
+    "\n",
+    "s = (\n",
+    "    r\"\"\"| $\\rho_{{ant}}$ | $\\rho_{{sky}}$ | $\\rho$  | $b$     |\n",
+    "|----------------|----------------|---------|---------|\n",
+    "| {:.2f}         | {:.2f}         | {:.1e}  | {:.2f}  |\n",
+    "| {:.2f}         | {:.2f}         | {:.1e}  | {:.2f}  |\n",
+    "| {:.2f}         | {:.2f}         | {:.1e}  | {:.2f}  |\n",
+    "| {:.2f}         | {:.2f}         | {:.1e}  | {:.2f}  |\n",
+    "| {:.2f}         | {:.2f}         | {:.1e}  | {:.2f}  |\n",
+    "| {:.2f}         | {:.2f}         | {:.1e}  | {:.2f}  |\n",
+    "| {:.2f}         | {:.2f}         | {:.1e}  | {:.2f}  |\"\"\"\n",
+    ").format(*np.asarray(results).flatten())\n",
+    "\n",
+    "md(print(\"RESULTS:\"))\n",
+    "md(s)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "From the distributions above we see that:\n",
+    "    \n",
+    "- the error on the antenna gain is indeed causing a bias\n",
+    "- the propagated error is of order of $10^{-3}$ just like was analytically calculated\n",
+    "\n",
+    "And from the color maps we learned that there is no LST or frequency correlation after propagating the error to the power."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.6"
+  },
+  "toc": {
+   "base_numbering": 1,
+   "nav_menu": {},
+   "number_sections": true,
+   "sideBar": true,
+   "skip_h1_title": false,
+   "title_cell": "Table of Contents",
+   "title_sidebar": "Contents",
+   "toc_cell": false,
+   "toc_position": {},
+   "toc_section_display": true,
+   "toc_window_display": false
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

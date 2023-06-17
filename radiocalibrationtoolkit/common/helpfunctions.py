@@ -27,6 +27,7 @@ from collections import OrderedDict
 from lxml import etree as ET
 from io import StringIO
 
+
 def compare_maps(
     map_dict: dict,
     main_title: str = "",
@@ -37,7 +38,7 @@ def compare_maps(
     cmap: str = "jet",
     show_plot_comparison: bool = True,
     verbose: bool = False,
-    figsize: Tuple = (6, 6.5) 
+    figsize: Tuple = (6, 6.5),
 ) -> dict:
     """
     Compare maps in a dictionary using matplotlib and return an integrated comparison dictionary.
@@ -110,12 +111,11 @@ def compare_maps(
                 title = keys[row] + "/" + keys[col]
                 min_t = -0.5
                 max_t = 0.5
-                xlabel = "{:.2f}".format(
-                    integrate_hpmap(m_row) / integrate_hpmap(m_col)
-                )
+                integrated_ratio = integrate_hpmap(m_row) / integrate_hpmap(m_col) - 1
+                xlabel = f"{integrated_ratio:+.2f}"
                 cbar = True
             if col > row:
-                integrated_comparison_dict[title] = [float(xlabel)]
+                integrated_comparison_dict[title] = [integrated_ratio]
             if col == 0:
                 ylabel = keys[row]
             else:
@@ -150,18 +150,22 @@ def compare_maps(
                     # cbar=cbar,
                 )
                 ax = plt.gca()
-                ax.set_title(title, size=12, weight='bold')
+                ax.set_title(title, size=12, weight="bold")
                 if i == 2:
-                    cax = fig.add_axes([0.2, 0., 0.5, 0.025])  # [left, bottom, width, height]
+                    cax = fig.add_axes(
+                        [0.2, 0.0, 0.5, 0.025]
+                    )  # [left, bottom, width, height]
                     cbar = plt.colorbar(
                         # label="Colorbar Label",
                         cmap=cmap,
                         norm=plt.Normalize(vmin=-0.5, vmax=0.5),
                         cax=cax,
                         orientation="horizontal",
-                        extend='both'
+                        extend="both",
                     )
-                    cbar.set_ticks([min_t, 0, max_t])  # Replace with desired tick values
+                    cbar.set_ticks(
+                        [min_t, 0, max_t]
+                    )  # Replace with desired tick values
             else:
                 pass
             i += 1
@@ -170,119 +174,10 @@ def compare_maps(
         plt.subplots_adjust(top=0.9, wspace=0.05, hspace=0.1)
     return integrated_comparison_dict
 
-def apply_KDE(input_data: pd.DataFrame, bounds: list | tuple | np.ndarray = [0.5, 1.5], show_plots: bool = True) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Apply Kernel Density Estimation (KDE) on input data and calculate relevant statistics.
 
-    Parameters:
-    -----------
-    input_data : pd.DataFrame
-        Input data for KDE estimation.
-
-    bounds : np.ndarray, optional
-        Bounds of the KDE estimation range. Default is (0.5, 1.5).
-
-    show_plots : bool, optional
-        Flag to indicate whether to show the resulting plots. Default is True.
-
-    Returns:
-    --------
-    tuple[np.ndarray, np.ndarray]
-        Tuple containing the x-axis values, log densities, and calculated statistics.
-
-    Notes:
-    ------
-    - This function applies Kernel Density Estimation (KDE) on the input data using a Gaussian kernel and bandwidth of 0.05.
-    - It calculates the log densities and relevant statistics based on the KDE estimation.
-    - If show_plots is True, it displays the KDE plot along with relevant annotations and fills the area within +/- one standard deviation.
-
-    Example:
-    --------
-    # Example usage
-    xax_, log_dens, stats = apply_KDE(input_data, bounds=(0.2, 1.8), show_plots=True)
-    """
-    xax_kde = np.linspace(bounds[0], bounds[-1], 2000)[:, np.newaxis]
-    kde = KernelDensity(kernel="gaussian", bandwidth=0.05).fit(
-        input_data[:, np.newaxis]
-    )
-    log_dens = kde.score_samples(xax_kde)
-
-
-    xax_ = xax_kde.flatten()
-
-    center_i = find_index_on_CDF(log_dens, xax_kde, 0.5)
-    left_i = find_index_on_CDF(log_dens, xax_kde, 0.5 - 0.341)
-    right_i = find_index_on_CDF(log_dens, xax_kde, 0.5 + 0.341)
-
-    textstr = "\n".join(
-        (
-            r"$\mu$  ={:.2f}".format(xax_[center_i], 2),
-            r"$\sigma_-$={:.2f}".format(xax_[left_i + 1]),
-            r"$\sigma_+$={:.2f}".format(xax_[right_i + 1]),
-        )
-    )
-    stats = (xax_[left_i + 1], xax_[right_i + 1], xax_[center_i])
-    
-
-
-    print(
-        "Test1: p0.5={}".format(
-            np.sum(np.exp(log_dens[: center_i + 1]) * np.diff(xax_)[0]) - 0.5
-        )
-    )
-    print(
-        "Test2: p0.5={}".format(
-            np.sum(np.exp(log_dens[center_i + 1 :]) * np.diff(xax_)[0]) - 0.5
-        )
-    )
-    print(
-        "Test3: p0.5+/-0.341={}".format(
-            np.sum(np.exp(log_dens[left_i + 1 : right_i + 1]) * np.diff(xax_)[0])
-            - 2 * 0.341
-        )
-    )
-    print(xax_[center_i], xax_[left_i + 1], xax_[right_i])
-
-    if show_plots:
-        fig = plt.gcf()
-        if not fig.axes:
-            ax = fig.add_subplot(111)
-        else:
-            ax = fig.axes[0]
-        
-        ax.plot(xax_, np.exp(log_dens), label=textstr)
-
-        ax.fill_between(
-            x=xax_,
-            y1=np.exp(log_dens),
-            where=(xax_ >= xax_[left_i + 1]) & (xax_ < xax_[right_i + 1]),
-            # color="b",
-            alpha=0.2,
-        )
-
-        # ax.axes.axvline(xax_[center_i], ls='--')
-        ax.set_xlabel("<IR>")
-        ax.set_ylabel("PDF")
-
-        # props = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
-        # place a text box in upper left in axes coords
-        ax.legend()
-        # ax.text(
-        # 	0.05,
-        # 	0.95,
-        # 	textstr,
-        # 	transform=ax.transAxes,
-        # 	fontsize=14,
-        # 	verticalalignment="top",
-        # 	bbox=props,
-        # )
-        
-    # test if area under the curve is "1"
-    print("Normalization test: ", quad(interp1d(xax_, np.exp(log_dens)), bounds[0], bounds[-1], epsabs=1e-5, epsrel=1e-5))
-    return xax_, log_dens, stats
-
-
-def create_local_mask(nside: int, rotation_parameters: Tuple[float, float]) -> np.ndarray:
+def create_local_mask(
+    nside: int, rotation_parameters: Tuple[float, float]
+) -> np.ndarray:
     """
     Creates a mask that is True for pixels above the equator and False for those below.
 
@@ -322,7 +217,11 @@ def print_map_properties(map_: np.ndarray) -> None:
     -------
     None
     """
-    print(map_.size, hp.get_nside(map_), np.rad2deg(hp.pixelfunc.nside2resol(hp.get_nside(map_))))
+    print(
+        map_.size,
+        hp.get_nside(map_),
+        np.rad2deg(hp.pixelfunc.nside2resol(hp.get_nside(map_))),
+    )
 
 
 def find_index_on_CDF(log_dens: np.ndarray, X: np.ndarray, p: float) -> int:
@@ -368,7 +267,10 @@ def create_rotation_parameters(lst: float, latitude: float) -> Tuple[float, floa
 
 # def create_rotator(lst, latitude, coord=["G"], inv=False):
 def create_rotator(
-    lst: Optional[float], latitude: Optional[float], coord: List[str] = ["G"], inv: bool = False
+    lst: Optional[float],
+    latitude: Optional[float],
+    coord: List[str] = ["G"],
+    inv: bool = False,
 ) -> Rotator:
     """
     Creates a Rotator object for converting between Galactic and celestial (e.g., equatorial) coordinates.
@@ -392,12 +294,18 @@ def create_rotator(
     if (lst == None) or (latitude == None):
         return Rotator(coord=coord)
     else:
-        return Rotator(coord=coord, rot=create_rotation_parameters(lst, latitude), inv=inv)
+        return Rotator(
+            coord=coord, rot=create_rotation_parameters(lst, latitude), inv=inv
+        )
 
 
 # def rotate_default_hpmap_array_from_galactic2local_coordinates(m, lst, latitude, inv=False, nside_transform = 512):
 def rotate_default_hpmap_array_from_galactic2local_coordinates(
-    m: np.ndarray, lst: Optional[float], latitude: Optional[float], inv: bool = False, nside_transform: int = 512
+    m: np.ndarray,
+    lst: Optional[float],
+    latitude: Optional[float],
+    inv: bool = False,
+    nside_transform: int = 512,
 ) -> np.ndarray:
     """
     Rotates a Healpix map from Galactic to local coordinates.
@@ -414,7 +322,9 @@ def rotate_default_hpmap_array_from_galactic2local_coordinates(
     """
     nside_original = hp.npix2nside(len(m))
     m = hp.ma(hp.pixelfunc.ud_grade(m, nside_transform))
-    pixel_theta, pixel_phi = hp.pix2ang(nside_transform, np.arange(hp.nside2npix(nside_transform)))
+    pixel_theta, pixel_phi = hp.pix2ang(
+        nside_transform, np.arange(hp.nside2npix(nside_transform))
+    )
     rotator = create_rotator(lst, latitude, coord=["G", "C"], inv=bool(1 - inv))
     pixel_rot_theta, pixel_rot_phi = rotator(pixel_theta, pixel_phi)
     new_pix_order = hp.ang2pix(nside_transform, pixel_rot_theta, pixel_rot_phi)
@@ -545,7 +455,9 @@ class Data2hpmap:
         if isinstance(data, pd.DataFrame):
             df = data.copy(deep=True)
         else:
-            if isinstance(phi, (list, np.ndarray)) and isinstance(theta, (list, np.ndarray)):
+            if isinstance(phi, (list, np.ndarray)) and isinstance(
+                theta, (list, np.ndarray)
+            ):
                 df = pd.DataFrame(data, columns=theta, index=phi)
             else:
                 print("[ERROR] Data are not a pandas dataframe. Define theta= and phi=")
@@ -604,7 +516,9 @@ class Data2hpmap:
 
         # return df_complete
         # internally healpy has different ordering, the 'theta' is in descending order, starting with pi, flipping it here
-        self._interp2d_func = RegularGridInterpolator((phi_g, theta_g), df_complete.values[:, ::-1])
+        self._interp2d_func = RegularGridInterpolator(
+            (phi_g, theta_g), df_complete.values[:, ::-1]
+        )
         self.df_complete = df_complete
 
     def get_grid_df(self) -> pd.DataFrame:
@@ -619,7 +533,9 @@ class Data2hpmap:
         """
         return self.df_complete
 
-    def get_map(self, nside: int = 64, rotator: type(Rotator) = Rotator(rot=[0, 0])) -> np.ndarray:
+    def get_map(
+        self, nside: int = 64, rotator: type(Rotator) = Rotator(rot=[0, 0])
+    ) -> np.ndarray:
         """
         Interpolate the input data onto a full-sky map with the specified `nside` and `rotator`.
 
@@ -643,7 +559,9 @@ class Data2hpmap:
             return self._interp2d_func((pixel_rot_phi, pixel_rot_theta))
         except Exception:
             traceback.print_exc()
-            print("[ERROR] Is the input map for the whole sky? If it is only for half, use 'add_invisible_sky=True'")
+            print(
+                "[ERROR] Is the input map for the whole sky? If it is only for half, use 'add_invisible_sky=True'"
+            )
 
     def get_interp_func(self):
         """
@@ -732,7 +650,10 @@ def GetXMLRoot(XMLFile):
 
 
 def read_hw_file(
-    hw_file_path: str, return_tabulated: bool = False, return_interp_func: bool = True, interp_args: dict = {}
+    hw_file_path: str,
+    return_tabulated: bool = False,
+    return_interp_func: bool = True,
+    interp_args: dict = {},
 ) -> dict:
     """
     Reads an XML file containing hierarchical data, extracts data into a nested dictionary of NumPy arrays and/or interpolation functions.
@@ -769,7 +690,9 @@ def read_hw_file(
                 if return_interp_func:
                     x = convert_xml_string_to_floats(ssub_branch.getchildren()[0].text)
                     y = convert_xml_string_to_floats(ssub_branch.getchildren()[1].text)
-                    xml_dict[sub_branch.tag][sub_branch.attrib["id"]] = interp1d(x, y, **interp_args)
+                    xml_dict[sub_branch.tag][sub_branch.attrib["id"]] = interp1d(
+                        x, y, **interp_args
+                    )
                 if return_tabulated:
                     for sssub_branch in ssub_branch:
                         xml_dict[sub_branch.tag][sub_branch.attrib["id"]][
@@ -906,11 +829,13 @@ def generate_one_sided_random_phase(size: int) -> np.ndarray:
 
     """
     random_phase = np.random.uniform(low=np.pi, high=-np.pi, size=size)
-  #  phase_ramp = np.linspace(np.pi, -np.pi, size)
+    #  phase_ramp = np.linspace(np.pi, -np.pi, size)
     phase_ramp = np.linspace(-np.pi, np.pi, size)
-    random_ramped_phase = random_phase + phase_ramp*0
+    random_ramped_phase = random_phase + phase_ramp * 0
     random_ramped_phase_wrapped = np.unwrap(random_ramped_phase)
-    random_ramped_phase_wrapped -= 2 * np.pi * np.floor((random_ramped_phase_wrapped + np.pi) / (2 * np.pi))
+    random_ramped_phase_wrapped -= (
+        2 * np.pi * np.floor((random_ramped_phase_wrapped + np.pi) / (2 * np.pi))
+    )
     return random_ramped_phase_wrapped
 
 
@@ -960,7 +885,9 @@ def find_closest_index(arr: np.ndarray, value: float) -> int:
     return np.argmin(np.abs(arr - value))
 
 
-def bin_df_rows(df: pd.DataFrame, binning_column: str, bins: Union[list, np.ndarray]) -> pd.DataFrame:
+def bin_df_rows(
+    df: pd.DataFrame, binning_column: str, bins: Union[list, np.ndarray]
+) -> pd.DataFrame:
     """
     Bin DataFrame rows based on a given column.
 
@@ -983,7 +910,9 @@ def bin_df_rows(df: pd.DataFrame, binning_column: str, bins: Union[list, np.ndar
     return df.groupby("bins").mean()
 
 
-def abs_fft(timeTrace: Union[np.ndarray, pd.Series], fs: float = 250.0, window: float = 1.0) -> np.ndarray:
+def abs_fft(
+    timeTrace: Union[np.ndarray, pd.Series], fs: float = 250.0, window: float = 1.0
+) -> np.ndarray:
     """
     Compute one-sided Fourier transform of a time series.
 
@@ -1021,8 +950,8 @@ class AppendOnlyIfMore(argparse.Action):
     """
     Custom action class for argparse that appends values to a list only if more than one value is provided.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     parser : argparse.ArgumentParser
         The argument parser object.
     namespace : argparse.Namespace
@@ -1032,8 +961,8 @@ class AppendOnlyIfMore(argparse.Action):
     option_string : str, optional
         The option string.
 
-    Returns:
-    --------
+    Returns
+    -------
     None
 
     Notes:
@@ -1043,15 +972,15 @@ class AppendOnlyIfMore(argparse.Action):
     - If only one value is provided, it replaces the list attribute with that single value.
     - It is intended for use with options that can accept multiple values.
 
-    Example:
-    --------
+    Example
+    -------
     # Example usage
     parser = argparse.ArgumentParser()
     parser.add_argument("--values", action=AppendOnlyIfMore, default=[], dest="values", nargs="+")
     args = parser.parse_args()
     print(args.values)
-    ```
     """
+
     def __call__(self, parser, namespace, values, option_string=None):
         items = getattr(namespace, self.dest, [])
         if items == self.default:
@@ -1102,7 +1031,9 @@ def distort_array(arr: np.ndarray, rstd: float = 0.5) -> np.ndarray:
         masked = True
     else:
         masked = False
-    distorted_arr = np.asarray([np.random.normal(mu, rstd * abs(mu), size=1)[0] for mu in arr])
+    distorted_arr = np.asarray(
+        [np.random.normal(mu, rstd * abs(mu), size=1)[0] for mu in arr]
+    )
 
     if masked:
         distorted_arr = np.ma.array(distorted_arr, mask=mask)
@@ -1122,6 +1053,7 @@ def autoscale_y(ax: axes.Axes, margin: float = 0.1) -> None:
     Returns:
         None
     """
+
     def get_bottom_top(line: np.ndarray) -> tuple[float, float]:
         """
         Calculates the bottom and top values of the y-data displayed within the x-limits.
@@ -1212,4 +1144,3 @@ def dropnans(arr: np.ndarray) -> np.ndarray:
 
     """
     return arr[~np.isnan(arr)]
-

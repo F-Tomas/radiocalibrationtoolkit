@@ -24,31 +24,51 @@ CONSTANT_FACTOR = (2 * constants.k / constants.c**2) * constants.physical_consta
 ][0]
 
 
-def voltage_squared_spectral_density(antenna_map: np.array, galactic_map: np.array, frequency_MHz: float) -> float:
+def voltage_squared_spectral_density(
+    antenna_map: np.array, galactic_map: np.array, frequency_MHz: float
+) -> float:
     """
-    Calculates the voltage squared spectral density.
+    Calculate the voltage squared spectral density for a given antenna map and galactic map at a specific frequency.
 
-    Args:
-        antenna_map (np.array): Array of antenna data.
-        galactic_map (np.array): Array of galactic data.
-        frequency_MHz (float): Frequency in MHz.
+    Parameters
+    ----------
+    antenna_map : np.array
+        Array representing the antenna map.
+    galactic_map : np.array
+        Array representing the galactic map.
+    frequency_MHz : float
+        Frequency in MHz.
 
-    Returns:
-        float: Voltage squared spectral density.
+    Returns
+    -------
+    float
+        Result of the voltage squared spectral density calculation.
+
     """
-    return (frequency_MHz * 1e6) ** 2 * CONSTANT_FACTOR * integrate_hpmap(galactic_map * antenna_map**2)
+    return (
+        (frequency_MHz * 1e6) ** 2
+        * CONSTANT_FACTOR
+        * integrate_hpmap(galactic_map * antenna_map**2)
+    )
 
 
-def add_integral_edges_to_x_axis(x: Union[list, np.ndarray], integral_edges: Union[list, np.ndarray]) -> np.ndarray:
+def add_integral_edges_to_x_axis(
+    x: Union[list, np.ndarray], integral_edges: Union[list, np.ndarray]
+) -> np.ndarray:
     """
-    Adds integral edges to the x-axis.
+    Add integral edges to the x-axis values and return the sorted unique array.
 
-    Args:
-        x: List or NumPy array of x-axis values.
-        integral_edges: List or NumPy array of integral edges.
+    Parameters
+    ----------
+    x : list or np.ndarray
+        Input array representing the x-axis values.
+    integral_edges : list or np.ndarray
+        Integral edges to be added to the x-axis values.
 
-    Returns:
-        NumPy array with the x-axis values including the integral edges.
+    Returns
+    -------
+    np.ndarray
+        Sorted unique array of the x-axis values with integral edges.
 
     """
     x_new = np.hstack((x, integral_edges))
@@ -64,23 +84,32 @@ def integrate_on_a_part_of_an_array(
     upper_integral_boundary: float,
 ) -> float:
     """
-    Integrates a function over a part of the array.
+    Perform numerical integration on a specific part of an array using the given interpolation function.
 
-    Args:
-        x: List or NumPy array of x-axis values.
-        interp_func: Interpolating function.
-        lower_integral_boundary: Lower boundary of the integration interval.
-        upper_integral_boundary: Upper boundary of the integration interval.
+    Parameters
+    ----------
+    x : list or np.ndarray
+        Array representing the x-axis values.
+    interp_func : interp1d
+        Interpolation function that maps x-values to y-values.
+    lower_integral_boundary : float
+        Lower boundary of the integral.
+    upper_integral_boundary : float
+        Upper boundary of the integral.
 
-    Returns:
-        The value of the integral of the function over the specified interval.
+    Returns
+    -------
+    float
+        Result of the numerical integration.
 
     """
     value_filter = (x >= lower_integral_boundary) & (x <= upper_integral_boundary)
     return integrate.trapz(interp_func(x[value_filter]), x[value_filter])
 
 
-def integrate_spectral_density(sd_DF, integrated_MHz_bands, integrating_method="quad", point=None):
+def integrate_spectral_density(
+    sd_DF, integrated_MHz_bands, integrating_method="quad", point=None
+):
     """
     Compute the integrated spectral density for each row of a given pandas DataFrame across specified frequency bands.
 
@@ -114,7 +143,9 @@ def integrate_spectral_density(sd_DF, integrated_MHz_bands, integrating_method="
     0  2.621005  9.453482
     """
     if sd_DF.shape[1] <= 1:
-        print("[ERROR] Not enough frequencies to integrate, calculate at least two frequency bins.")
+        print(
+            "[ERROR] Not enough frequencies to integrate, calculate at least two frequency bins."
+        )
     mega = 1e6
     freq_Hz = sd_DF.columns.values * mega
     freq_new_Hz = add_integral_edges_to_x_axis(freq_Hz, integrated_MHz_bands * mega)
@@ -166,7 +197,7 @@ def calculate_power_spectral_density(
     transform_hpmaps2_local_cs: bool = False,
     nside_transform: int = 512,
     distort_antenna_map: float = 0,
-    distort_galactic_map: float = 0
+    distort_galactic_map: float = 0,
 ) -> pd.DataFrame:
     """Calculate the power spectral density of the sky signal as received by an antenna.
 
@@ -208,16 +239,21 @@ def calculate_power_spectral_density(
         print("[INFO] No impedance function, assuming it is equal to '1'")
         impedance_func = interp1d(freq_Mhz_range, np.ones(len(freq_Mhz_range)))
 
-    power_density_DF = pd.DataFrame(index=list(lst_range), columns=freq_Mhz_range, dtype="float64")
+    power_density_DF = pd.DataFrame(
+        index=list(lst_range), columns=freq_Mhz_range, dtype="float64"
+    )
 
     temp = []
     for frequency_MHz in tqdm(freq_Mhz_range):
 
-        galactic_map = hp.ma(hp.pixelfunc.ud_grade(galactic_map_inst.generate(frequency_MHz), NSIDE)).copy()
+        galactic_map = hp.ma(
+            hp.pixelfunc.ud_grade(galactic_map_inst.generate(frequency_MHz), NSIDE)
+        ).copy()
         # these to two aproaches are equivalent, but the second is ~25% faster
         # antenna_map_inst = antenna_inst.convert2hp(frequency=frequency_MHz, quantity='absolute', **update_antenna_conventions)
         antenna_map_inst = Data2hpmap(
-            antenna_inst.get(frequency=frequency_MHz, quantity="absolute"), **update_antenna_conventions
+            antenna_inst.get(frequency=frequency_MHz, quantity="absolute"),
+            **update_antenna_conventions,
         )
         if transform_hpmaps2_local_cs:
             # create the antenna hp map array in local coordinates (not recommened, all maps should be by default in galactic coordinates)
@@ -231,11 +267,13 @@ def calculate_power_spectral_density(
             if transform_hpmaps2_local_cs:
                 # permanently alter galactic map array to local coordinates
                 # now, it this map is a function of LST!
-                galactic_map = rotate_default_hpmap_array_from_galactic2local_coordinates(
-                    galactic_map_in_galactic_cs,
-                    lst,
-                    latitude,
-                    nside_transform=nside_transform,
+                galactic_map = (
+                    rotate_default_hpmap_array_from_galactic2local_coordinates(
+                        galactic_map_in_galactic_cs,
+                        lst,
+                        latitude,
+                        nside_transform=nside_transform,
+                    )
                 )
             else:
                 galactic_map.mask = create_local_mask(NSIDE, rotation_parameters)
@@ -275,12 +313,14 @@ def time_trace_df_2_spectra_df(time_trace_df, DSC=0, sampling_frequency_MHz=250)
         DataFrame containing the spectral density of the signal. The frequency values are stored in the columns.
     """
     N = time_trace_df.columns[DSC:].size
-    spectra_df = pd.DataFrame([i for i in time_trace_df.iloc[:, DSC:].apply(abs_fft, axis=1)])
+    spectra_df = pd.DataFrame(
+        [i for i in time_trace_df.iloc[:, DSC:].apply(abs_fft, axis=1)]
+    )
     spectra_df.columns = np.arange(N // 2 + 1) / (N / 2) * sampling_frequency_MHz / 2
     return spectra_df
 
 
-def get_bootstrap_CI(data, B=5000, alpha=1-0.6826, statistic_func=np.median):
+def get_bootstrap_CI(data, B=5000, alpha=1 - 0.6826, statistic_func=np.median):
     """
     Calculates the bootstrap confidence interval for the median of the given data.
 
@@ -381,7 +421,7 @@ def powerAmp2dB(powerAmp):
         Value converted to decibel scale.
     """
     return 10 * np.log10(powerAmp)
-    
+
 
 def voltageAmp2dB(voltageAmp):
     """
@@ -410,7 +450,7 @@ def get_energy_from_two_sided_spectrum(spectrum: np.ndarray) -> float:
     Returns:
         float: Energy calculated from the spectrum.
     """
-    return np.sum(spectrum ** 2) / spectrum.size
+    return np.sum(spectrum**2) / spectrum.size
 
 
 def get_energy_from_time_trace(time_trace: np.ndarray) -> float:
@@ -423,7 +463,7 @@ def get_energy_from_time_trace(time_trace: np.ndarray) -> float:
     Returns:
         float: Energy calculated from the time trace.
     """
-    return np.sum(time_trace ** 2)
+    return np.sum(time_trace**2)
 
 
 def get_energy_from_one_sided_spectrum(rspectrum: np.ndarray) -> float:
@@ -436,10 +476,14 @@ def get_energy_from_one_sided_spectrum(rspectrum: np.ndarray) -> float:
     Returns:
         float: Energy calculated from the one-sided spectrum.
     """
-    return (2 * np.sum(rspectrum[1:-1] ** 2) + rspectrum[0] ** 2 + rspectrum[-1] ** 2) / (2 * (rspectrum.size - 1))
+    return (
+        2 * np.sum(rspectrum[1:-1] ** 2) + rspectrum[0] ** 2 + rspectrum[-1] ** 2
+    ) / (2 * (rspectrum.size - 1))
 
 
-def get_energy_from_one_sided_spectrum_corrected4one_side(r2spectrum: np.ndarray) -> float:
+def get_energy_from_one_sided_spectrum_corrected4one_side(
+    r2spectrum: np.ndarray,
+) -> float:
     """
     Calculates the energy from a one-sided spectrum with correction for one side.
 
@@ -467,7 +511,9 @@ def correct_energy_of_one_sided_spectrum(spectrum: np.ndarray) -> np.ndarray:
     return r2spectrum
 
 
-def linspace_with_middle_value(middle: float, radius: float, num_samples: int) -> np.ndarray:
+def linspace_with_middle_value(
+    middle: float, radius: float, num_samples: int
+) -> np.ndarray:
     """
     Generates a 1-D array of evenly spaced values centered around a middle value.
 
@@ -482,7 +528,9 @@ def linspace_with_middle_value(middle: float, radius: float, num_samples: int) -
     return np.linspace(middle - radius, middle + radius, num_samples)
 
 
-def calculate_truncated_stats(data: np.ndarray, lower_percentile: float, upper_percentile: float) -> tuple:
+def calculate_truncated_stats(
+    data: np.ndarray, lower_percentile: float, upper_percentile: float
+) -> tuple:
     """
     Calculates the truncated mean and standard deviation of the given data within the specified percentiles.
 
@@ -504,7 +552,9 @@ def calculate_truncated_stats(data: np.ndarray, lower_percentile: float, upper_p
     return truncated_mean, truncated_std
 
 
-def truncate_data(data: np.ndarray,  lower_percentile: float, upper_percentile: float) -> np.ndarray:
+def truncate_data(
+    data: np.ndarray, lower_percentile: float, upper_percentile: float
+) -> np.ndarray:
 
     # Calculate the lower and upper thresholds
     lower_threshold = np.percentile(data, lower_percentile)
@@ -512,7 +562,7 @@ def truncate_data(data: np.ndarray,  lower_percentile: float, upper_percentile: 
 
     # Filter the data within the specified percentiles
     return data[(data >= lower_threshold) & (data <= upper_threshold)]
-    
+
 
 def get_fitted_voltage_calibration_params_and_noise_offsets(
     power_sim_DF: pd.DataFrame, power_rec_DF: pd.DataFrame
@@ -545,7 +595,7 @@ def get_fitted_voltage_calibration_params_and_noise_offsets(
         slopes.append(slope)
 
     slopes = np.asarray(slopes) ** (1 / 2)
-    intercepts = np.asarray(intercepts) ** (1 / 2)
+    intercepts = np.asarray(intercepts)
     return pd.DataFrame([slopes], columns=freqs), pd.DataFrame(
         [intercepts], columns=freqs
     )
@@ -621,6 +671,9 @@ def get_frequency_independent_calibration_param(
     i = 1
     norm_test_list = []
     stats_list = []
+    if show_plots:
+        fig, ax = plt.subplots()
+        ax.set_xlabel("voltage calibration constant")
     while (np.abs(norm_test - 1) > tolerance) & (trunc < 50):
         print("Truncating data to {}, {} percentils".format(trunc, 100 - trunc))
         print("Iteration number: {} out of max 9 iterations".format(i))
@@ -726,7 +779,7 @@ def get_and_plot_calibration_results(
     bounds_total_central_value = stats[:2]
 
     # plot
-    fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+    fig, ax = plt.subplots(1, 2, figsize=(14, 5))
     fig.suptitle(title)
 
     # for a single map, this does not make sense to do
@@ -738,8 +791,6 @@ def get_and_plot_calibration_results(
             label="$\mu(f)$",
             color="k",
         )
-        ax[0].set_xlabel("frequency [MHz]")
-        ax[0].set_ylabel("voltage \ncalibration parameter")
 
     if labels == "":
         glabels = [k.split("_")[2] for k in slopes_DF.index.values]
@@ -781,21 +832,24 @@ def get_and_plot_calibration_results(
                 label=glabels[i],
                 width=1,
             )
-        ax[1].set_ylim(0, 5)
-        ax[1].set_xlabel("frequency [MHz]")
-        ax[1].set_ylabel("voltage \nnoise offset ")
-        ax[1].xaxis.set_major_locator(MultipleLocator(10))
-        if labels is not None:
-            ax[1].legend(fontsize=12, ncol=2)
+    ax[0].set_xlabel("frequency [MHz]")
+    ax[0].set_ylabel("voltage \ncalibration parameter")
+    ax[1].set_ylim(1, 1000)
+    ax[1].set_xlabel("frequency [MHz]")
+    ax[1].set_ylabel("noise offset [pW]")
+    ax[1].set_yscale('log')
+    ax[1].xaxis.set_major_locator(MultipleLocator(10))
+    if labels is not None:
+        ax[1].legend(fontsize=12, ncol=2)
 
     ax[0].axes.axhline(
         total_central_value,
         color="grey",
         lw=3,
-        label=r"$\mu_{{\mathrm{{trun}}}}^{{\mathrm{{KDE}}}}={:.2f}_{{-{:.2f}\%}}^{{+{:.2f}\%}}$".format(
+        label=r"$\mu_{{\mathrm{{trun}}}}^{{\mathrm{{KDE}}}}={:.2f}_{{-{:.1f}\%}}^{{+{:.1f}\%}}$".format(
             total_central_value,
-            abs(bounds_total_central_value[0] / total_central_value - 1),
-            abs(bounds_total_central_value[1] / total_central_value - 1),
+            abs(bounds_total_central_value[0] / total_central_value - 1) * 100,
+            abs(bounds_total_central_value[1] / total_central_value - 1) * 100,
         ),
     )
     ax[0].axes.axhspan(
@@ -810,7 +864,137 @@ def get_and_plot_calibration_results(
     fig.subplots_adjust(
         left=0.2,
         bottom=0.2,
-        wspace=0.3,
+        wspace=0.5,
     )
 
     return total_central_value, *bounds_total_central_value
+
+
+def apply_KDE(
+    input_data: pd.DataFrame,
+    bounds: list | tuple | np.ndarray = [0.5, 1.5],
+    show_plots: bool = True,
+    data_in_relative_values: bool = False,
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Apply Kernel Density Estimation (KDE) on input data and calculate relevant statistics.
+
+    Parameters:
+    -----------
+    input_data : pd.DataFrame
+        Input data for KDE estimation.
+
+    bounds : np.ndarray, optional
+        Bounds of the KDE estimation range. Default is (0.5, 1.5).
+
+    show_plots : bool, optional
+        Flag to indicate whether to show the resulting plots. Default is True.
+
+    data_in_relative_values : bool, optional
+        Flag to indicate whether the input data is in relative values. Default is False.
+
+    Returns:
+    --------
+    tuple[np.ndarray, np.ndarray]
+        Tuple containing the x-axis values, log densities, and calculated statistics.
+
+    Notes:
+    ------
+    - This function applies Kernel Density Estimation (KDE) on the input data using a Gaussian kernel and bandwidth of 0.05.
+    - It calculates the log densities and relevant statistics based on the KDE estimation.
+    - If show_plots is True, it displays the KDE plot along with relevant annotations and fills the area within +/- one standard deviation.
+
+    Example:
+    --------
+    # Example usage
+    xaxis_values, log_densities, statistics = apply_KDE(input_data, bounds=(0.2, 1.8), show_plots=True)
+    """
+    xax_kde = np.linspace(bounds[0], bounds[-1], 2000)[:, np.newaxis]
+    kde = KernelDensity(kernel="gaussian", bandwidth=0.05).fit(
+        input_data[:, np.newaxis]
+    )
+    log_dens = kde.score_samples(xax_kde)
+
+    xax_ = xax_kde.flatten()
+
+    center_i = find_index_on_CDF(log_dens, xax_kde, 0.5)
+    left_i = find_index_on_CDF(log_dens, xax_kde, 0.5 - 0.341)
+    right_i = find_index_on_CDF(log_dens, xax_kde, 0.5 + 0.341)
+
+    if data_in_relative_values:
+        label = r"$\mu={:.2f}_{{-{:.2f}}}^{{+{:.2f}}}$".format(
+            xax_[center_i],
+            abs(xax_[left_i + 1] - xax_[center_i]),
+            abs(xax_[right_i + 1] - xax_[center_i]),
+        )
+    else:
+        label = r"$\mu={:.2f}_{{-{:.2f}\%}}^{{+{:.2f}\%}}$".format(
+            xax_[center_i],
+            abs(xax_[left_i + 1] / xax_[center_i] - 1) * 100,
+            abs(xax_[right_i + 1] / xax_[center_i] - 1) * 100,
+        )
+    stats = (xax_[left_i + 1], xax_[right_i + 1], xax_[center_i])
+
+    print(
+        "Test1: p0.5={}".format(
+            np.sum(np.exp(log_dens[: center_i + 1]) * np.diff(xax_)[0]) - 0.5
+        )
+    )
+    print(
+        "Test2: p0.5={}".format(
+            np.sum(np.exp(log_dens[center_i + 1 :]) * np.diff(xax_)[0]) - 0.5
+        )
+    )
+    print(
+        "Test3: p0.5+/-0.341={}".format(
+            np.sum(np.exp(log_dens[left_i + 1 : right_i + 1]) * np.diff(xax_)[0])
+            - 2 * 0.341
+        )
+    )
+    print(xax_[center_i], xax_[left_i + 1], xax_[right_i])
+
+    if show_plots:
+        fig = plt.gcf()
+        if not fig.axes:
+            ax = fig.add_subplot(111)
+        else:
+            ax = fig.axes[0]
+        ax.plot(xax_, np.exp(log_dens), label=label)
+
+        ax.fill_between(
+            x=xax_,
+            y1=np.exp(log_dens),
+            where=(xax_ >= xax_[left_i + 1]) & (xax_ < xax_[right_i + 1]),
+            # color="b",
+            alpha=0.2,
+        )
+        ax.set_ylabel("PDF")
+        ax.legend()
+
+        # ax.axes.axvline(xax_[center_i], ls='--')
+
+        # props = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+        # place a text box in upper left in axes coords
+
+        # ax.text(
+        # 	0.05,
+        # 	0.95,
+        # 	textstr,
+        # 	transform=ax.transAxes,
+        # 	fontsize=14,
+        # 	verticalalignment="top",
+        # 	bbox=props,
+        # )
+
+    # test if area under the curve is "1"
+    print(
+        "Normalization test: ",
+        quad(
+            interp1d(xax_, np.exp(log_dens)),
+            bounds[0],
+            bounds[-1],
+            epsabs=1e-5,
+            epsrel=1e-5,
+        ),
+    )
+    return xax_, log_dens, stats

@@ -47,7 +47,7 @@ def save_figure(df, ylabel):
         ),
         font=dict(
             # family=font,
-            size=16,
+            size=20,
             color="black",
         ),
     )

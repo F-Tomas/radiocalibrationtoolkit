@@ -18,6 +18,12 @@ for GMAP in $GMAPS; do
     echo =================================================================
 done
 
+#for GMAP in $GMAPS; do
+#    echo $GMAP;
+#    python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/SALLA_NS.xml -w ${base}/#antenna_setup_files/HardwareProfileList_realistic.xml -s Salla_NS -o ${base}/simulated_power_datasets/ -r NS -z -180
+#    echo =================================================================
+#done
+
 # idealistic
 for GMAP in $GMAPS; do
     echo $GMAP;

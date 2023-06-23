@@ -70,10 +70,15 @@ def main():
         lst_range = np.asarray(list(range(lst_range_arg))) + shift_LST_bins
 
         # read hw file
+        # read impedance
         hw_file_path = args["hwmodel"]
         hw_dict = read_hw_file(hw_file_path)
         impedance_func = hw_dict["IImpedance"]["antenna_{}".format(orientation)]
+        
+        print('[INFO] HW file contains: ')
+        print([[(main_key, j) for j in hw_dict[main_key]] for main_key in hw_dict])
 
+        # calculate the power dataset
         power_density_DF = calculate_power_spectral_density(
             antenna_inst=antenna_inst,
             galactic_map_inst=galactic_map_inst,
@@ -90,11 +95,12 @@ def main():
             impedance_func=impedance_func,
         )
 
+        # integrate the power spectrum density to power
         power_DF = integrate_spectral_density(
             power_density_DF, integrated_MHz_bands=power_density_DF.columns
         )
 
-        # apply HW response
+        # read HW response
         hw_reponse_1 = dB2PowerAmp(hw_dict["RResponse"]["LNA"](power_DF.columns))
         hw_reponse_2 = dB2PowerAmp(hw_dict["RResponse"]["digitizer"](power_DF.columns))
         hw_reponse_3 = dB2PowerAmp(
@@ -106,6 +112,7 @@ def main():
             )
         )
 
+        # apply response (i.e. propagate through HW signal chain)s
         power_DF = power_DF.multiply(
             hw_reponse_1 * hw_reponse_2 * hw_reponse_3 * hw_reponse_4
         )
@@ -294,5 +301,6 @@ if __name__ == "__main__":
         sys.exit()
 
     mkdir(args["outputpath"])
+    print('[INFO] ARGS: ', args)
 
     sys.exit(main())

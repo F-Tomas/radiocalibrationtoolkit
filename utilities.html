@@ -357,10 +357,15 @@
         <span class="n">lst_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">lst_range_arg</span><span class="p">)))</span> <span class="o">+</span> <span class="n">shift_LST_bins</span>
 
         <span class="c1"># read hw file</span>
+        <span class="c1"># read impedance</span>
         <span class="n">hw_file_path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;hwmodel&quot;</span><span class="p">]</span>
         <span class="n">hw_dict</span> <span class="o">=</span> <span class="n">read_hw_file</span><span class="p">(</span><span class="n">hw_file_path</span><span class="p">)</span>
         <span class="n">impedance_func</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;IImpedance&quot;</span><span class="p">][</span><span class="s2">&quot;antenna_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">orientation</span><span class="p">)]</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] HW file contains: &#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">([[(</span><span class="n">main_key</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">hw_dict</span><span class="p">[</span><span class="n">main_key</span><span class="p">]]</span> <span class="k">for</span> <span class="n">main_key</span> <span class="ow">in</span> <span class="n">hw_dict</span><span class="p">])</span>
 
+        <span class="c1"># calculate the power dataset</span>
         <span class="n">power_density_DF</span> <span class="o">=</span> <span class="n">calculate_power_spectral_density</span><span class="p">(</span>
             <span class="n">antenna_inst</span><span class="o">=</span><span class="n">antenna_inst</span><span class="p">,</span>
             <span class="n">galactic_map_inst</span><span class="o">=</span><span class="n">galactic_map_inst</span><span class="p">,</span>
@@ -377,11 +382,12 @@
             <span class="n">impedance_func</span><span class="o">=</span><span class="n">impedance_func</span><span class="p">,</span>
         <span class="p">)</span>
 
+        <span class="c1"># integrate the power spectrum density to power</span>
         <span class="n">power_DF</span> <span class="o">=</span> <span class="n">integrate_spectral_density</span><span class="p">(</span>
             <span class="n">power_density_DF</span><span class="p">,</span> <span class="n">integrated_MHz_bands</span><span class="o">=</span><span class="n">power_density_DF</span><span class="o">.</span><span class="n">columns</span>
         <span class="p">)</span>
 
-        <span class="c1"># apply HW response</span>
+        <span class="c1"># read HW response</span>
         <span class="n">hw_reponse_1</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span><span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;LNA&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
         <span class="n">hw_reponse_2</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span><span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;digitizer&quot;</span><span class="p">](</span><span class="n">power_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
         <span class="n">hw_reponse_3</span> <span class="o">=</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
@@ -393,6 +399,7 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
+        <span class="c1"># apply response (i.e. propagate through HW signal chain)s</span>
         <span class="n">power_DF</span> <span class="o">=</span> <span class="n">power_DF</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
             <span class="n">hw_reponse_1</span> <span class="o">*</span> <span class="n">hw_reponse_2</span> <span class="o">*</span> <span class="n">hw_reponse_3</span> <span class="o">*</span> <span class="n">hw_reponse_4</span>
         <span class="p">)</span>
@@ -581,6 +588,7 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
     <span class="n">mkdir</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;outputpath&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] ARGS: &#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>

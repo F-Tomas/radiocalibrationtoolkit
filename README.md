@@ -45,3 +45,34 @@ To compile the documentation manually, go to `docs` and execute:
 
 `sphinx-build -b html . ./html`
 
+
+## Some tips on installing the ULSA
+
+Installing the [ULSA](https://github.com/Yanping-Cong/ULSA/tree/v2.0) package was not quite straightforward for me. Hence I share briefly some of my experience from the installation.
+
+First:
+- download and install: l_fortran-compiler_p_XXXX.X.X.XXXXX_offline.sh from [here]( https://registrationcenter-download.intel.com/akdlm/IRC_NAS/150e0430-63df-48a0-8469-ecebff0a1858/). I worked with this version: l_fortran-compiler_p_2023.0.0.25394_offline.sh. Once installed, `source setvars.sh` from the `oneapi` directory,
+
+- clone [caput](https://github.com/zuoshifan/caput.git) and switch to branch `origin/zuo/develop` and after fixing it to work with `Python 3` install it,
+ 
+- to make ULSA work with `Python 3`, it is good to install [2to3](https://docs.python.org/3/library/2to3.html) convertor and run it on all `.py` files in ULSA and caput. Some changes you will need to do manually, for example, exchange `np.int` for just `int` and fix slicing of arrays in file `mpiutil.py` from `[start:stop]` to `[int(start):int(stop)]`,
+
+- install all other required dependencies.
+
+To create the `libNE2001.so` file, once unpacked NE2001_4python.zip go to src.NE2001 directory and in all `.f` files, replace the relative path with the absolute path to the required files.
+
+E.g. in file `nevoidN.f`, change 
+```
+	  open(luvoid, file='nevoidN.NE2001.dat', status='old')
+```
+to
+```
+	  open(luvoid, file='/vol/astro6/auger-radiodigitizer/'
+     &//'skymaps/ULSA/ULSA/NE2001/NE2001_4python/'
+     &//'NE2001_4python/bin_NE2001/nevoidN.NE2001.dat',
+     &status='old')
+```
+and so on. The `&//` is the Fortran way of splitting the path into multiple lines. Once fixed, you can run `make so` to generate the `libNE2001.so` file. Then find all references to this file in ULSA `.py` files and rewrite them to your path.
+
+Install ULSA, and it should work now.
+

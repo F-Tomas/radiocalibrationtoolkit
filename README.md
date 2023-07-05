@@ -22,7 +22,7 @@ The LFmap is in C++, but I wrote a wrapper/interface to import the model as a Py
 
 Thus, you need to install pygdsm (pip install pygdsm); the SSM and ULSA can be installed by cloning them and using the setup.py. The pylfmap is now available at pip: `pip install pylfmap`.
 
-The ULSA is currently tabulated only in the 1-125 MHz range for frequency dependant index. The GMOSS up to 400 MHz.
+The ULSA maps with frequency dependent index and GMOSS maps are tabulated up to 400 MHz in 1 MHz steps.
 
 GMOSS, Haslam, and GSM2008 are without CMB. To fix this issue, a value of 2.7255 is added to GMOSS upon reading the tabulated values. The Haslam and GSM2008 are fixed for the CMB using a decorator around their `pygdsm` classes. So, do not import them manually from `pygdsm`; their fixed versions are imported by 
 

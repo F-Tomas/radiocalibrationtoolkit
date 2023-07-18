@@ -52,6 +52,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#some-tips-on-installing-the-ulsa">Some tips on installing the ULSA</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
@@ -105,7 +106,7 @@
 <p>The GMOSS maps are tabulated because the code is in C++, ULSA takes very long to generate one map, so I pre-generate and tabulate them. The SSM and pyGDSM are fast and in Python, so tabulating these maps is unnecessary.</p>
 <p>The LFmap is in C++, but I wrote a wrapper/interface to import the model as a Python package.</p>
 <p>Thus, you need to install pygdsm (pip install pygdsm); the SSM and ULSA can be installed by cloning them and using the setup.py. The pylfmap is now available at pip: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pylfmap</span></code>.</p>
-<p>The ULSA is currently tabulated only in the 1-125 MHz range for frequency dependant index. The GMOSS up to 400 MHz.</p>
+<p>The ULSA maps with frequency dependent index and GMOSS maps are tabulated up to 400 MHz in 1 MHz steps.</p>
 <p>GMOSS, Haslam, and GSM2008 are without CMB. To fix this issue, a value of 2.7255 is added to GMOSS upon reading the tabulated values. The Haslam and GSM2008 are fixed for the CMB using a decorator around their <code class="docutils literal notranslate"><span class="pre">pygdsm</span></code> classes. So, do not import them manually from <code class="docutils literal notranslate"><span class="pre">pygdsm</span></code>; their fixed versions are imported by</p>
 <p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">radiocalibrationtoolkit</span> <span class="pre">import</span> <span class="pre">*</span></code></p>
 <p>All the example’s data files are pre-generated, so each example should work out of the box. Also, all of these data files can be reproduced by running the scripts.</p>
@@ -120,6 +121,31 @@
 <p>Documentation and tutorial for version <code class="docutils literal notranslate"><span class="pre">v0.1.0-alpha</span></code> is available <a class="reference external" href="https://f-tomas.github.io/radiocalibrationtoolkit/index.html">here</a></p>
 <p>To compile the documentation manually, go to <code class="docutils literal notranslate"><span class="pre">docs</span></code> and execute:</p>
 <p><code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">.</span> <span class="pre">./html</span></code></p>
+</section>
+<section id="some-tips-on-installing-the-ulsa">
+<h1>Some tips on installing the ULSA<a class="headerlink" href="#some-tips-on-installing-the-ulsa" title="Permalink to this heading">¶</a></h1>
+<p>Installing the <a class="reference external" href="https://github.com/Yanping-Cong/ULSA/tree/v2.0">ULSA</a> package was not quite straightforward for me. Hence I share briefly some of my experience from the installation.</p>
+<p>First:</p>
+<ul class="simple">
+<li><p>download and install: l_fortran-compiler_p_XXXX.X.X.XXXXX_offline.sh from <a class="reference external" href="https://registrationcenter-download.intel.com/akdlm/IRC_NAS/150e0430-63df-48a0-8469-ecebff0a1858/">here</a>. I worked with this version: l_fortran-compiler_p_2023.0.0.25394_offline.sh. Once installed, <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">setvars.sh</span></code> from the <code class="docutils literal notranslate"><span class="pre">oneapi</span></code> directory,</p></li>
+<li><p>clone <a class="reference external" href="https://github.com/zuoshifan/caput.git">caput</a> and switch to branch <code class="docutils literal notranslate"><span class="pre">origin/zuo/develop</span></code> and after fixing it to work with <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3</span></code> install it,</p></li>
+<li><p>to make ULSA work with <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3</span></code>, it is good to install <a class="reference external" href="https://docs.python.org/3/library/2to3.html">2to3</a> convertor and run it on all <code class="docutils literal notranslate"><span class="pre">.py</span></code> files in ULSA and caput. Some changes you will need to do manually, for example, exchange <code class="docutils literal notranslate"><span class="pre">np.int</span></code> for just <code class="docutils literal notranslate"><span class="pre">int</span></code> and fix slicing of arrays in file <code class="docutils literal notranslate"><span class="pre">mpiutil.py</span></code> from <code class="docutils literal notranslate"><span class="pre">[start:stop]</span></code> to <code class="docutils literal notranslate"><span class="pre">[int(start):int(stop)]</span></code>,</p></li>
+<li><p>install all other required dependencies.</p></li>
+</ul>
+<p>To create the <code class="docutils literal notranslate"><span class="pre">libNE2001.so</span></code> file, once unpacked NE2001_4python.zip go to src.NE2001 directory and in all <code class="docutils literal notranslate"><span class="pre">.f</span></code> files, replace the relative path with the absolute path to the required files.</p>
+<p>E.g. in file <code class="docutils literal notranslate"><span class="pre">nevoidN.f</span></code>, change</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>          <span class="nb">open</span><span class="p">(</span><span class="n">luvoid</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="s1">&#39;nevoidN.NE2001.dat&#39;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s1">&#39;old&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>          <span class="nb">open</span><span class="p">(</span><span class="n">luvoid</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="s1">&#39;/vol/astro6/auger-radiodigitizer/&#39;</span>
+     <span class="o">&amp;//</span><span class="s1">&#39;skymaps/ULSA/ULSA/NE2001/NE2001_4python/&#39;</span>
+     <span class="o">&amp;//</span><span class="s1">&#39;NE2001_4python/bin_NE2001/nevoidN.NE2001.dat&#39;</span><span class="p">,</span>
+     <span class="o">&amp;</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;old&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and so on. The <code class="docutils literal notranslate"><span class="pre">&amp;//</span></code> is the Fortran way of splitting the path into multiple lines. Once fixed, you can run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">so</span></code> to generate the <code class="docutils literal notranslate"><span class="pre">libNE2001.so</span></code> file. Then find all references to this file in ULSA <code class="docutils literal notranslate"><span class="pre">.py</span></code> files and rewrite them to your path.</p>
+<p>Install ULSA, and it should work now.</p>
 </section>
 
 

@@ -1,3 +1,20 @@
+"""
+Module Description:
+--------------------
+
+The `antennareader` module provides functionalities for reading antenna pattern data
+from an XML file format and performing various operations on the data. It includes a
+class `AntennaPattern` that allows users to read antenna pattern data from an XML file,
+interpolate the data for finer spacing, and convert it to a healpix format.
+
+The module is designed to work with Pandas DataFrames and supports data manipulation,
+interpolation, and conversion to healpix format, which is useful for antenna pattern
+analysis and visualization.
+
+It also offers methods to retrieve volume data for a given quantity and frequencies.
+"""
+
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -19,10 +36,10 @@ from scipy.interpolate import interp1d
 from ..common import *
 
 
-
 class AntennaPattern:
     """
-    This class reads the antenna pattern from an XML file format and can interpolate the pattern for a finer spacing or convert it to a healpy format.
+    This class reads the antenna pattern from an XML file format and can interpolate the pattern for a
+    finer spacing or convert it to a healpy format.
 
     Parameters
     ----------
@@ -39,33 +56,49 @@ class AntennaPattern:
         A list of the different quantities available in the antenna pattern data.
     show_quantities : method
         Prints the list of available quantities.
-    
+
     Methods
     -------
     get_raw() -> dict:
         Returns the antenna pattern data as a dictionary.
     get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None, return_interp_func: bool = False) -> pd.DataFrame:
-        Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity. 
+        Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity.
         Interpolates the data based on interp_phi and interp_theta if provided.
-    
+    get_volumetric_dataset(quantity: str, frequencies: Union[List[float], np.ndarray, None] = None) -> pd.DataFrame:
+        Get volume data for a given quantity and frequencies.
+    convert2hp(
+        frequency: float,
+        shift_phi: float = 0,
+        flip_theta: bool = False,
+        flip_phi: bool = False,
+        in_degrees: bool = True,
+        quantity: str = "absolute",
+        add_invisible_sky: bool = True,
+    ) -> Data2hpmap:
+        Convert the antenna pattern data to healpix format at a given frequency.
+
     Returns
     -------
-    pd.DataFrame
-        A pandas DataFrame of the antenna pattern data.
+    Data2hpmap
+        A Data2hpmap object containing the antenna pattern data in healpix format.
     """
-    def __init__(self, antennaPath: str, frange:Tuple[float, float]=[0, np.inf]):
+
+    def __init__(self, antennaPath: str, frange: Tuple[float, float] = (0, np.inf)):
+        """Constructor method for AntennaPattern class."""
         self._xml_dict = collections.defaultdict(dict)
         root_ = GetXMLRoot(antennaPath)
         for topBranch in root_:
-            # print(topBranch)
             if "idfreq" in topBranch.attrib.keys():
-                # print('e')
                 freq = float(topBranch.attrib["idfreq"])
                 if (freq >= frange[0]) and (freq <= frange[1]):
-                    self._xml_dict[topBranch.tag][freq] = convert_xml_string_to_floats(topBranch.text)
+                    self._xml_dict[topBranch.tag][freq] = convert_xml_string_to_floats(
+                        topBranch.text
+                    )
             else:
-                values = np.asarray(list(dict.fromkeys(convert_xml_string_to_floats(topBranch.text))))
-                if topBranch.tag == 'frequency':
+                values = np.asarray(
+                    list(dict.fromkeys(convert_xml_string_to_floats(topBranch.text)))
+                )
+                if topBranch.tag == "frequency":
                     values = values[(values >= frange[0]) & (values <= frange[1])]
                 self._xml_dict["parameters"][topBranch.tag] = values
         self._quantity_list = list(self._xml_dict.keys())
@@ -86,7 +119,7 @@ class AntennaPattern:
     def get_raw(self) -> dict:
         """
         Returns the antenna pattern data as a dictionary.
-        
+
         Returns
         -------
         dict
@@ -100,31 +133,34 @@ class AntennaPattern:
         quantity: str,
         interp_phi: list = None,
         interp_theta: list = None,
-        return_interp_func: bool = False
+        return_interp_func: bool = False,
     ) -> pd.DataFrame:
         """
         Get the antenna pattern data for a given frequency and quantity.
 
-        Parameters:
-            frequency (float): The frequency for which to retrieve the antenna pattern data.
-            quantity (str): The quantity to retrieve. Valid values are "absolute", "theta_amp", "phi_amp", "theta_phase", and "phi_phase".
-            interp_phi (list, optional): A list of phi values for which to interpolate the data. Defaults to None.
-            interp_theta (list, optional): A list of theta values for which to interpolate the data. Defaults to None.
-            return_interp_func (bool, optional): Whether to return the interpolation function. Defaults to False.
+        Parameters
+        ----------
+        frequency : float
+            The frequency for which to retrieve the antenna pattern data.
+        quantity : str
+            The quantity to retrieve. Valid values are "absolute", "theta_amp", "phi_amp", "theta_phase", and "phi_phase".
+        interp_phi : list, optional
+            A list of phi values for which to interpolate the data. Defaults to None.
+        interp_theta : list, optional
+            A list of theta values for which to interpolate the data. Defaults to None.
+        return_interp_func : bool, optional
+            Whether to return the interpolation function. Defaults to False.
 
-        Returns:
-            pd.DataFrame: A pandas dataframe containing the antenna pattern data for the chosen frequency and quantity. The rows are the phi angles and columns the theta angles.
+        Returns
+        -------
+        pd.DataFrame
+            A pandas DataFrame containing the antenna pattern data for the chosen frequency and quantity. The rows are the phi angles and columns are the theta angles.
         """
         if quantity not in self._quantity_list:
             self.show_quantities()
         if quantity == "absolute":
-            # print(
-            #    "[INFO] Trying to identify keys in the dictionary representing amplitudes of theta and phi polarization"
-            # )
-            # print("[INFO] This identification is based on which keys end with 'amp'")
             amp_keys = [k for k in self._xml_dict.keys() if k.endswith("amp")]
             if len(amp_keys) == 2:
-                # print("[INFO] I found these keys: {} It should work.".format(amp_keys))
                 values = np.sqrt(
                     (1 / 2)
                     * (
@@ -134,15 +170,9 @@ class AntennaPattern:
                 )
             else:
                 print(
-                    "[INFO] Tried to identify keys in the dictionary representing amplitudes of theta and phi polarization"
+                    "[INFO] No keys found, do your absolute value manually or fix the tags in the XML so that the polarization amplitudes end with 'amp'"
                 )
-                print(
-                    "[INFO] This identification was based on which keys end with 'amp'"
-                )
-                print(
-                    "[ERROR] No keys found, do your absolute value manually or fix the tags in the XML so that the polarization amplitudes end with 'amp'\
-                      The formula is (1/2*theta_amp**2+phi_amp**2)^(1/2)  "
-                )
+                print("[INFO] The formula is (1/2 * theta_amp**2 + phi_amp**2)^(1/2)")
         else:
             values = self._xml_dict[quantity][frequency]
 
@@ -165,6 +195,40 @@ class AntennaPattern:
         temporary_DF.index.name = "phi"
         temporary_DF.columns.name = "theta"
         return temporary_DF
+
+    def get_volumetric_dataset(
+        self, quantity: str, frequencies: Union[List[float], np.ndarray, None] = None
+    ) -> pd.DataFrame:
+        """
+        Get volume data for a given quantity and frequencies.
+
+        Parameters
+        ----------
+        quantity : str
+            The quantity to retrieve volume data for.
+        frequencies : Union[List[float], np.ndarray, None], optional
+            Frequencies for which volume data is requested.
+            It can be either a list or a numpy array of floats.
+            If not provided (None), the method will use default frequencies from the `antenna_inst` object.
+
+        Returns
+        -------
+        pd.DataFrame
+            A Pandas DataFrame containing volume data for the specified quantity and frequencies.
+            The DataFrame is indexed by the frequencies and may have multiple columns depending on the structure of the data retrieved.
+        """
+        if frequencies is None:
+            frequencies = self._xml_dict["parameters"]["frequency"].astype(float)
+
+        df_list = []
+        for f in frequencies:
+            df = self.get(frequency=f, quantity=quantity)
+            df_list.append(df)
+
+        volume_data_df = pd.concat(df_list, keys=frequencies)
+        volume_data_df.index.names = ["freq", volume_data_df.index.names[1]]
+
+        return volume_data_df
 
     def _interpolate(
         self,
@@ -195,7 +259,7 @@ class AntennaPattern:
         )
 
     def _flip_array(self, arr, yes):
-        if yes == True:
+        if yes:
             return arr[::-1]
         else:
             return arr
@@ -209,7 +273,7 @@ class AntennaPattern:
         in_degrees: bool = True,
         quantity: str = "absolute",
         add_invisible_sky: bool = True,
-    ):
+    ) -> Data2hpmap:
         """
         Convert the antenna pattern data to healpix format at a given frequency.
 
@@ -239,7 +303,6 @@ class AntennaPattern:
         """
         args = locals().copy()
         del args["self"]
-        # print(args)
         return AntennaPattern._Convert2hp(self, **args)
 
     class _Convert2hp(Data2hpmap):
@@ -253,4 +316,3 @@ class AntennaPattern:
 
         def get_frequency(self):
             return self._frequency
-

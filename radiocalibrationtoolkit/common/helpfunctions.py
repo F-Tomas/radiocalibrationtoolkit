@@ -1,3 +1,10 @@
+"""
+Module Description:
+--------------------
+
+This module provides some Python helping functions for the package.
+
+"""
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -43,8 +50,8 @@ def compare_maps(
     """
     Compare maps in a dictionary using matplotlib and return an integrated comparison dictionary.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     map_dict : dict
         A dictionary containing maps to compare.
 
@@ -72,13 +79,13 @@ def compare_maps(
     verbose : bool, optional (default=False)
         Whether to print verbose output during the function execution.
 
-    Returns:
-    --------
+    Returns
+    -------
     dict
         An integrated comparison dictionary.
 
-    Raises:
-    -------
+    Raises
+    ------
     None
 
     """
@@ -361,13 +368,13 @@ def mkdir(directory):
     """
     Create a directory if it doesn't already exist.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     directory : str
         Directory path to be created.
 
-    Returns:
-    --------
+    Returns
+    -------
     None
 
     Notes:
@@ -585,13 +592,13 @@ def fig_to_image(fig):
     """
     Converts a Matplotlib figure object to a NumPy array of RGB values.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     fig : matplotlib.figure.Figure object
         Matplotlib figure object to be converted.
 
-    Returns:
-    --------
+    Returns
+    -------
     image_from_plot : ndarray
         3D NumPy array of RGB values representing the image.
     """
@@ -607,13 +614,13 @@ def convert_xml_string_to_floats(xml_string):
     """
     Converts an XML string containing whitespace-separated float values to a NumPy array of float values.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     xml_string : str
         XML string containing whitespace-separated float values.
 
-    Returns:
-    --------
+    Returns
+    -------
     floats : ndarray
         NumPy array of float values extracted from the XML string.
     """
@@ -625,13 +632,13 @@ def GetXMLRoot(XMLFile):
     """
     Reads an XML file and returns the root element of the parsed XML tree.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     XMLFile : str
         Path to the XML file to be read.
 
-    Returns:
-    --------
+    Returns
+    -------
     root : xml.etree.ElementTree.Element
         Root element of the parsed XML tree.
     """
@@ -658,8 +665,8 @@ def read_hw_file(
     """
     Reads an XML file containing hierarchical data, extracts data into a nested dictionary of NumPy arrays and/or interpolation functions.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     hw_file_path : str
         Path to the XML file to be read.
     return_tabulated : bool, optional
@@ -672,8 +679,8 @@ def read_hw_file(
         Dictionary of optional arguments to be passed to the `interp1d` function of NumPy.
         Default is an empty dictionary.
 
-    Returns:
-    --------
+    Returns
+    -------
     xml_dict : dict
         A nested dictionary containing the extracted data. If `return_tabulated` is True, values in the dictionary are NumPy arrays.
         Else, values are interpolation functions.
@@ -705,15 +712,15 @@ def hpmap2grid(m: List, xsize: int = 1000) -> Tuple:
     """
     Interpolate a HEALPix map onto a regular grid.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     m : List
         HEALPix map array.
     xsize : int, optional (default=1000)
         The size of the x-axis of the interpolated map.
 
-    Returns:
-    --------
+    Returns
+    -------
     PHI : numpy.ndarray
         2D array of azimuthal angles (longitude).
     THETA : numpy.ndarray
@@ -741,13 +748,13 @@ def integrate_hpmap(m: List) -> float:
     """
     Integrate the HEALPix map over the sky.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     m : List
         HEALPix map array.
 
-    Returns:
-    --------
+    Returns
+    -------
     flux : float
         The integrated flux of the map.
     """
@@ -761,8 +768,8 @@ def del_keys(d: dict, keys: Union[str, List[str]]) -> None:
     """
     Remove one or more keys from a dictionary.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     d : dict
         The dictionary to modify.
     keys : str or List[str]
@@ -778,15 +785,15 @@ def add_deviation(mu: float, error: float) -> float:
     """
     Add a random deviation to a value based on a fractional error.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     mu : float
         The mean value.
     error : float
         The fractional error of the value.
 
-    Returns:
-    --------
+    Returns
+    -------
     new_mu : float
         The new mean value with the deviation added.
     """
@@ -798,15 +805,15 @@ def one_sided_2_two_sided(spectrum: np.ndarray, sign: int = 1) -> np.ndarray:
     """
     Convert a one-sided power spectrum into a two-sided power spectrum.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     spectrum : numpy.ndarray
         One-sided power spectrum.
     sign : int, optional (default=1)
         The sign to use when computing the negative frequencies in the two-sided spectrum.
 
-    Returns:
-    --------
+    Returns
+    -------
     two_sided_spectrum : numpy.ndarray
         Two-sided power spectrum.
     """
@@ -996,15 +1003,15 @@ def distort_array(arr: np.ndarray, rstd: float = 0.5) -> np.ndarray:
     """
     Distort the values of a NumPy array by adding Gaussian noise.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     arr : np.ndarray
         The input NumPy array.
     rstd : float, optional
         The relative standard deviation of the Gaussian noise.
 
-    Returns:
-    --------
+    Returns
+    -------
     np.ndarray
         The distorted array.
 

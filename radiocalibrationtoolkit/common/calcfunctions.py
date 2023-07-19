@@ -1,3 +1,10 @@
+"""
+Module Description:
+----------------
+
+This module provides calculation functions for the package.
+
+"""
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -136,7 +143,7 @@ def integrate_spectral_density(
         If the input DataFrame has fewer than 2 frequency bins.
 
     Examples
-    --------
+    -------
     >>> df = pd.DataFrame({'f1': [1, 2, 3], 'f2': [4, 5, 6]})
     >>> integrate_spectral_density(df, [1.5, 4.5])
            1.5       4.5
@@ -298,8 +305,8 @@ def time_trace_df_2_spectra_df(time_trace_df, DSC=0, sampling_frequency_MHz=250)
     """
     Converts a time trace DataFrame to a spectral density DataFrame using FFT.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     time_trace_df : pandas.DataFrame
         DataFrame containing the time trace data. The signal should be stored in columns.
     DSC : int, optional (default = 0)
@@ -307,8 +314,8 @@ def time_trace_df_2_spectra_df(time_trace_df, DSC=0, sampling_frequency_MHz=250)
     sampling_frequency_MHz : float, optional (default = 250)
         Sampling frequency of the signal in MHz.
 
-    Returns:
-    --------
+    Returns
+    -------
     pandas.DataFrame
         DataFrame containing the spectral density of the signal. The frequency values are stored in the columns.
     """
@@ -324,8 +331,8 @@ def get_bootstrap_CI(data, B=5000, alpha=1 - 0.6826, statistic_func=np.median):
     """
     Calculates the bootstrap confidence interval for the median of the given data.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     data : numpy.ndarray
         One-dimensional array containing the data.
     B : int, optional (default = 1000)
@@ -333,8 +340,8 @@ def get_bootstrap_CI(data, B=5000, alpha=1 - 0.6826, statistic_func=np.median):
     alpha : float, optional (default = 0.32)
         The level of significance, i.e., the proportion of the confidence interval to be calculated.
 
-    Returns:
-    --------
+    Returns
+    -------
     tuple
         Lower and upper bounds of the confidence interval.
     """
@@ -355,15 +362,15 @@ def robust_regression(x_arr, y_arr):
     """
     Calculates the robust regression coefficients for the given data using the HuberT norm.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     x_arr : numpy.ndarray
         One-dimensional array containing the predictor data.
     y_arr : numpy.ndarray
         One-dimensional array containing the response data.
 
-    Returns:
-    --------
+    Returns
+    -------
     numpy.ndarray
         Array containing the intercept and slope of the regression model.
     """
@@ -376,13 +383,13 @@ def dB2PowerAmp(dB):
     """
     Converts the given value from decibel scale to power amplitude scale.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     dB : float
         Value to be converted in decibel scale.
 
-    Returns:
-    --------
+    Returns
+    -------
     float
         Value converted to power amplitude scale.
     """
@@ -393,13 +400,13 @@ def dB2VoltageAmp(dB):
     """
     Converts the given value from decibel scale to voltage amplitude scale.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     dB : float
         Value to be converted in decibel scale.
 
-    Returns:
-    --------
+    Returns
+    -------
     float
         Value converted to voltage amplitude scale.
     """
@@ -410,13 +417,13 @@ def powerAmp2dB(powerAmp):
     """
     Converts the given value from power amplitude scale to decibel scale.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     powerAmp : float
         Value to be converted in power amplitude scale.
 
-    Returns:
-    --------
+    Returns
+    -------
     float
         Value converted to decibel scale.
     """
@@ -427,13 +434,13 @@ def voltageAmp2dB(voltageAmp):
     """
     Converts the given value from voltage amplitude scale to decibel scale.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     voltageAmp : float
         Value to be converted in voltage amplitude scale.
 
-    Returns:
-    --------
+    Returns
+    -------
     float
         Value converted to decibel scale.
     """
@@ -444,10 +451,10 @@ def get_energy_from_two_sided_spectrum(spectrum: np.ndarray) -> float:
     """
     Calculates the energy from a two-sided spectrum.
 
-    Parameters:
+    Parameters
         spectrum (np.ndarray): Two-sided spectrum array.
 
-    Returns:
+    Returns
         float: Energy calculated from the spectrum.
     """
     return np.sum(spectrum**2) / spectrum.size
@@ -457,10 +464,10 @@ def get_energy_from_time_trace(time_trace: np.ndarray) -> float:
     """
     Calculates the energy from a time trace.
 
-    Parameters:
+    Parameters
         time_trace (np.ndarray): Time trace array.
 
-    Returns:
+    Returns
         float: Energy calculated from the time trace.
     """
     return np.sum(time_trace**2)
@@ -470,10 +477,10 @@ def get_energy_from_one_sided_spectrum(rspectrum: np.ndarray) -> float:
     """
     Calculates the energy from a one-sided spectrum.
 
-    Parameters:
+    Parameters
         rspectrum (np.ndarray): One-sided spectrum array.
 
-    Returns:
+    Returns
         float: Energy calculated from the one-sided spectrum.
     """
     return (
@@ -487,10 +494,10 @@ def get_energy_from_one_sided_spectrum_corrected4one_side(
     """
     Calculates the energy from a one-sided spectrum with correction for one side.
 
-    Parameters:
+    Parameters
         r2spectrum (np.ndarray): One-sided spectrum array.
 
-    Returns:
+    Returns
         float: Energy calculated from the one-sided spectrum with correction.
     """
     return np.sum((r2spectrum) ** 2) / (2 * (r2spectrum.size - 1))
@@ -500,10 +507,10 @@ def correct_energy_of_one_sided_spectrum(spectrum: np.ndarray) -> np.ndarray:
     """
     Corrects the energy of a one-sided spectrum.
 
-    Parameters:
+    Parameters
         spectrum (np.ndarray): One-sided spectrum array.
 
-    Returns:
+    Returns
         np.ndarray: Corrected one-sided spectrum array.
     """
     r2spectrum = spectrum.copy()
@@ -517,12 +524,12 @@ def linspace_with_middle_value(
     """
     Generates a 1-D array of evenly spaced values centered around a middle value.
 
-    Parameters:
+    Parameters
         middle (float): The middle value.
         radius (float): The radius around the middle value.
         num_samples (int): The number of samples to generate.
 
-    Returns:
+    Returns
         np.ndarray: An array of evenly spaced values.
     """
     return np.linspace(middle - radius, middle + radius, num_samples)
@@ -534,12 +541,12 @@ def calculate_truncated_stats(
     """
     Calculates the truncated mean and standard deviation of the given data within the specified percentiles.
 
-    Parameters:
+    Parameters
         data (np.ndarray): Input data array.
         lower_percentile (float): Lower percentile threshold.
         upper_percentile (float): Upper percentile threshold.
 
-    Returns:
+    Returns
         tuple: A tuple containing the truncated mean and standard deviation.
     """
     # Filter the data within the specified percentiles
@@ -570,13 +577,13 @@ def get_fitted_voltage_calibration_params_and_noise_offsets(
     """
     Calculate the fitted voltage calibration parameters and noise offsets.
 
-    Parameters:
+    Parameters
         power_sim_DF : pd.DataFrame
             Simulated power DataFrame with frequency columns.
         power_rec_DF : pd.DataFrame
             Recorded power DataFrame with frequency columns.
 
-    Returns:
+    Returns
         tuple
             A tuple containing two DataFrames:
             - First DataFrame: Fitted voltage calibration parameters with frequency columns.
@@ -657,7 +664,7 @@ def get_frequency_independent_calibration_param(
     Returns
     -------
     tuple
-        A tuple containing the statistics of the frequency-independent calibration parameters:
+        A tuple containing the statistics of the frequency-independent calibration Parameters
         - Total central value
         - Lower bound of the central value
         - Upper bound of the central value
@@ -879,8 +886,8 @@ def apply_KDE(
     """
     Apply Kernel Density Estimation (KDE) on input data and calculate relevant statistics.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     input_data : pd.DataFrame
         Input data for KDE estimation.
 
@@ -893,8 +900,8 @@ def apply_KDE(
     data_in_relative_values : bool, optional
         Flag to indicate whether the input data is in relative values. Default is False.
 
-    Returns:
-    --------
+    Returns
+    -------
     tuple[np.ndarray, np.ndarray]
         Tuple containing the x-axis values, log densities, and calculated statistics.
 
@@ -905,7 +912,7 @@ def apply_KDE(
     - If show_plots is True, it displays the KDE plot along with relevant annotations and fills the area within +/- one standard deviation.
 
     Example:
-    --------
+    -------
     # Example usage
     xaxis_values, log_densities, statistics = apply_KDE(input_data, bounds=(0.2, 1.8), show_plots=True)
     """

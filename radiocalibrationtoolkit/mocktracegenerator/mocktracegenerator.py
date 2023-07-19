@@ -1,3 +1,21 @@
+"""
+Module Description:
+--------------------
+
+The `mocktracegenerator` module provides functionalities for generating mock voltage
+time traces. It includes a class `Mock_trace_generator` that allows users to generate
+mock voltage traces based on voltage-to-density conversion values as a function of
+sidereal time and frequency.
+
+The module uses interpolation functions for the hardware response and impedance, along
+with additional noise, to create realistic mock time traces. It also supports adding
+non-background interference (NBI) to the traces and temperature-varying additional noise.
+
+Users can specify various parameters, such as the size of the time trace, sampling
+frequency, temperature range, and more, to customize the generated mock traces. The
+module is useful for testing and simulating voltage time traces for antenna pattern
+analysis and other related applications.
+"""
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 

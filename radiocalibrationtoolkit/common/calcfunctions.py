@@ -1,6 +1,6 @@
 """
-Module Description:
-----------------
+Module Description
+------------------
 
 This module provides calculation functions for the package.
 
@@ -143,7 +143,7 @@ def integrate_spectral_density(
         If the input DataFrame has fewer than 2 frequency bins.
 
     Examples
-    -------
+    --------
     >>> df = pd.DataFrame({'f1': [1, 2, 3], 'f2': [4, 5, 6]})
     >>> integrate_spectral_density(df, [1.5, 4.5])
            1.5       4.5
@@ -905,13 +905,13 @@ def apply_KDE(
     tuple[np.ndarray, np.ndarray]
         Tuple containing the x-axis values, log densities, and calculated statistics.
 
-    Notes:
-    ------
+    Notes
+    -----
     - This function applies Kernel Density Estimation (KDE) on the input data using a Gaussian kernel and bandwidth of 0.05.
     - It calculates the log densities and relevant statistics based on the KDE estimation.
     - If show_plots is True, it displays the KDE plot along with relevant annotations and fills the area within +/- one standard deviation.
 
-    Example:
+    Example
     -------
     # Example usage
     xaxis_values, log_densities, statistics = apply_KDE(input_data, bounds=(0.2, 1.8), show_plots=True)

@@ -1,6 +1,6 @@
 """
-Module Description:
---------------------
+Module Description
+------------------
 
 This module provides some Python helping functions for the package.
 

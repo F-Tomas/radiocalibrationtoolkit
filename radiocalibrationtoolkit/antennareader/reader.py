@@ -1,6 +1,6 @@
 """
-Module Description:
---------------------
+Module Description
+------------------
 
 The `antennareader` module provides functionalities for reading antenna pattern data
 from an XML file format and performing various operations on the data. It includes a

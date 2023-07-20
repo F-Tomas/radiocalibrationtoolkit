@@ -1,6 +1,6 @@
 """
-Module Description:
---------------------
+Module Description
+------------------
 
 The `mocktracegenerator` module provides functionalities for generating mock voltage
 time traces. It includes a class `Mock_trace_generator` that allows users to generate

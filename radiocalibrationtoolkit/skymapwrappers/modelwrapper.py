@@ -1,4 +1,7 @@
 """
+Module Description
+------------------
+
 This module contains three classes: GMOSS, ULSA, and SSM.
 
 GMOSS - Generates the Galactic and extragalactic sky brightness temperature at frequencies ranging from 30 MHz to 80 MHz based on a table of precomputed values.

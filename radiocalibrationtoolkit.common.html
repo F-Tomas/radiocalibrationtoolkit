@@ -69,6 +69,7 @@
 <li class="toctree-l1"><a class="reference internal" href="radiocalibrationtoolkit.mocktracegenerator.html">mocktracegenerator</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">common</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-radiocalibrationtoolkit.common.calcfunctions">common.calcfunctions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-description">Module Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.calcfunctions.add_integral_edges_to_x_axis"><code class="docutils literal notranslate"><span class="pre">add_integral_edges_to_x_axis()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.calcfunctions.apply_KDE"><code class="docutils literal notranslate"><span class="pre">apply_KDE()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.calcfunctions.calculate_power_spectral_density"><code class="docutils literal notranslate"><span class="pre">calculate_power_spectral_density()</span></code></a></li>
@@ -98,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-radiocalibrationtoolkit.common.helpfunctions">common.helpfunctions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id33">Module Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.helpfunctions.AppendOnlyIfMore"><code class="docutils literal notranslate"><span class="pre">AppendOnlyIfMore</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap"><code class="docutils literal notranslate"><span class="pre">Data2hpmap</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_grid_df"><code class="docutils literal notranslate"><span class="pre">Data2hpmap.get_grid_df()</span></code></a></li>
@@ -166,6 +168,10 @@
 <h1>common<a class="headerlink" href="#common" title="Permalink to this heading">¶</a></h1>
 <section id="module-radiocalibrationtoolkit.common.calcfunctions">
 <span id="common-calcfunctions"></span><h2>common.calcfunctions<a class="headerlink" href="#module-radiocalibrationtoolkit.common.calcfunctions" title="Permalink to this heading">¶</a></h2>
+<section id="module-description">
+<h3>Module Description<a class="headerlink" href="#module-description" title="Permalink to this heading">¶</a></h3>
+<p>This module provides calculation functions for the package.</p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.calcfunctions.add_integral_edges_to_x_axis">
 <span class="sig-name descname"><span class="pre">add_integral_edges_to_x_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integral_edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#add_integral_edges_to_x_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.add_integral_edges_to_x_axis" title="Permalink to this definition">¶</a></dt>
@@ -193,7 +199,7 @@
 <span class="sig-name descname"><span class="pre">apply_KDE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">1.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_in_relative_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#apply_KDE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.apply_KDE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply Kernel Density Estimation (KDE) on input data and calculate relevant statistics.</p>
 <section id="id1">
-<h3>Parameters:<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>input_data<span class="classifier">pd.DataFrame</span></dt><dd><p>Input data for KDE estimation.</p>
 </dd>
@@ -206,14 +212,14 @@
 </dl>
 </section>
 <section id="id2">
-<h3>Returns:<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>tuple[np.ndarray, np.ndarray]</dt><dd><p>Tuple containing the x-axis values, log densities, and calculated statistics.</p>
 </dd>
 </dl>
 </section>
 <section id="notes">
-<h3>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h3>
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>This function applies Kernel Density Estimation (KDE) on the input data using a Gaussian kernel and bandwidth of 0.05.</p></li>
 <li><p>It calculates the log densities and relevant statistics based on the KDE estimation.</p></li>
@@ -221,7 +227,7 @@
 </ul>
 </section>
 <section id="example">
-<h3>Example:<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h3>
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h3>
 <p># Example usage
 xaxis_values, log_densities, statistics = apply_KDE(input_data, bounds=(0.2, 1.8), show_plots=True)</p>
 </section>
@@ -276,11 +282,11 @@ frequencies, and the rows correspond to local sidereal times.</p>
 <span class="sig-name descname"><span class="pre">calculate_truncated_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_percentile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_percentile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#calculate_truncated_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.calculate_truncated_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the truncated mean and standard deviation of the given data within the specified percentiles.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>data (np.ndarray): Input data array.
+<dt>Parameters</dt><dd><p>data (np.ndarray): Input data array.
 lower_percentile (float): Lower percentile threshold.
 upper_percentile (float): Upper percentile threshold.</p>
 </dd>
-<dt>Returns:</dt><dd><p>tuple: A tuple containing the truncated mean and standard deviation.</p>
+<dt>Returns</dt><dd><p>tuple: A tuple containing the truncated mean and standard deviation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -290,9 +296,9 @@ upper_percentile (float): Upper percentile threshold.</p>
 <span class="sig-name descname"><span class="pre">correct_energy_of_one_sided_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spectrum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#correct_energy_of_one_sided_spectrum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.correct_energy_of_one_sided_spectrum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Corrects the energy of a one-sided spectrum.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>spectrum (np.ndarray): One-sided spectrum array.</p>
+<dt>Parameters</dt><dd><p>spectrum (np.ndarray): One-sided spectrum array.</p>
 </dd>
-<dt>Returns:</dt><dd><p>np.ndarray: Corrected one-sided spectrum array.</p>
+<dt>Returns</dt><dd><p>np.ndarray: Corrected one-sided spectrum array.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -302,14 +308,14 @@ upper_percentile (float): Upper percentile threshold.</p>
 <span class="sig-name descname"><span class="pre">dB2PowerAmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dB</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#dB2PowerAmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.dB2PowerAmp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the given value from decibel scale to power amplitude scale.</p>
 <section id="id5">
-<h3>Parameters:<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>dB<span class="classifier">float</span></dt><dd><p>Value to be converted in decibel scale.</p>
 </dd>
 </dl>
 </section>
 <section id="id6">
-<h3>Returns:<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>float</dt><dd><p>Value converted to power amplitude scale.</p>
 </dd>
@@ -322,14 +328,14 @@ upper_percentile (float): Upper percentile threshold.</p>
 <span class="sig-name descname"><span class="pre">dB2VoltageAmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dB</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#dB2VoltageAmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.dB2VoltageAmp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the given value from decibel scale to voltage amplitude scale.</p>
 <section id="id7">
-<h3>Parameters:<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>dB<span class="classifier">float</span></dt><dd><p>Value to be converted in decibel scale.</p>
 </dd>
 </dl>
 </section>
 <section id="id8">
-<h3>Returns:<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>float</dt><dd><p>Value converted to voltage amplitude scale.</p>
 </dd>
@@ -371,7 +377,7 @@ If <cite>None</cite>, no labels will be displayed. (default is an empty string).
 <span class="sig-name descname"><span class="pre">get_bootstrap_CI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B=5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha=0.3174</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic_func=&lt;function</span> <span class="pre">median&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#get_bootstrap_CI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.get_bootstrap_CI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the bootstrap confidence interval for the median of the given data.</p>
 <section id="id11">
-<h3>Parameters:<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>data<span class="classifier">numpy.ndarray</span></dt><dd><p>One-dimensional array containing the data.</p>
 </dd>
@@ -382,7 +388,7 @@ If <cite>None</cite>, no labels will be displayed. (default is an empty string).
 </dl>
 </section>
 <section id="id12">
-<h3>Returns:<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>tuple</dt><dd><p>Lower and upper bounds of the confidence interval.</p>
 </dd>
@@ -395,9 +401,9 @@ If <cite>None</cite>, no labels will be displayed. (default is an empty string).
 <span class="sig-name descname"><span class="pre">get_energy_from_one_sided_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rspectrum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#get_energy_from_one_sided_spectrum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.get_energy_from_one_sided_spectrum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the energy from a one-sided spectrum.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>rspectrum (np.ndarray): One-sided spectrum array.</p>
+<dt>Parameters</dt><dd><p>rspectrum (np.ndarray): One-sided spectrum array.</p>
 </dd>
-<dt>Returns:</dt><dd><p>float: Energy calculated from the one-sided spectrum.</p>
+<dt>Returns</dt><dd><p>float: Energy calculated from the one-sided spectrum.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -407,9 +413,9 @@ If <cite>None</cite>, no labels will be displayed. (default is an empty string).
 <span class="sig-name descname"><span class="pre">get_energy_from_one_sided_spectrum_corrected4one_side</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r2spectrum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#get_energy_from_one_sided_spectrum_corrected4one_side"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.get_energy_from_one_sided_spectrum_corrected4one_side" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the energy from a one-sided spectrum with correction for one side.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>r2spectrum (np.ndarray): One-sided spectrum array.</p>
+<dt>Parameters</dt><dd><p>r2spectrum (np.ndarray): One-sided spectrum array.</p>
 </dd>
-<dt>Returns:</dt><dd><p>float: Energy calculated from the one-sided spectrum with correction.</p>
+<dt>Returns</dt><dd><p>float: Energy calculated from the one-sided spectrum with correction.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -419,9 +425,9 @@ If <cite>None</cite>, no labels will be displayed. (default is an empty string).
 <span class="sig-name descname"><span class="pre">get_energy_from_time_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#get_energy_from_time_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.get_energy_from_time_trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the energy from a time trace.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>time_trace (np.ndarray): Time trace array.</p>
+<dt>Parameters</dt><dd><p>time_trace (np.ndarray): Time trace array.</p>
 </dd>
-<dt>Returns:</dt><dd><p>float: Energy calculated from the time trace.</p>
+<dt>Returns</dt><dd><p>float: Energy calculated from the time trace.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -431,9 +437,9 @@ If <cite>None</cite>, no labels will be displayed. (default is an empty string).
 <span class="sig-name descname"><span class="pre">get_energy_from_two_sided_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spectrum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#get_energy_from_two_sided_spectrum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.get_energy_from_two_sided_spectrum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the energy from a two-sided spectrum.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>spectrum (np.ndarray): Two-sided spectrum array.</p>
+<dt>Parameters</dt><dd><p>spectrum (np.ndarray): Two-sided spectrum array.</p>
 </dd>
-<dt>Returns:</dt><dd><p>float: Energy calculated from the spectrum.</p>
+<dt>Returns</dt><dd><p>float: Energy calculated from the spectrum.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -468,14 +474,14 @@ from concatenated simulation and recorded power DataFrames.</p>
 <span class="sig-name descname"><span class="pre">get_fitted_voltage_calibration_params_and_noise_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_sim_DF</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_rec_DF</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#get_fitted_voltage_calibration_params_and_noise_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.get_fitted_voltage_calibration_params_and_noise_offsets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the fitted voltage calibration parameters and noise offsets.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><dl class="simple">
+<dt>Parameters</dt><dd><dl class="simple">
 <dt>power_sim_DF<span class="classifier">pd.DataFrame</span></dt><dd><p>Simulated power DataFrame with frequency columns.</p>
 </dd>
 <dt>power_rec_DF<span class="classifier">pd.DataFrame</span></dt><dd><p>Recorded power DataFrame with frequency columns.</p>
 </dd>
 </dl>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
+<dt>Returns</dt><dd><dl class="simple">
 <dt>tuple</dt><dd><p>A tuple containing two DataFrames:
 - First DataFrame: Fitted voltage calibration parameters with frequency columns.
 - Second DataFrame: Noise offsets with frequency columns.</p>
@@ -501,7 +507,7 @@ from concatenated simulation and recorded power DataFrames.</p>
 <section id="id16">
 <h3>Returns<a class="headerlink" href="#id16" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
-<dt>tuple</dt><dd><p>A tuple containing the statistics of the frequency-independent calibration parameters:
+<dt>tuple</dt><dd><p>A tuple containing the statistics of the frequency-independent calibration Parameters
 - Total central value
 - Lower bound of the central value
 - Upper bound of the central value</p>
@@ -606,11 +612,11 @@ specified by the <cite>integrated_MHz_bands</cite> parameter.</p>
 <span class="sig-name descname"><span class="pre">linspace_with_middle_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">middle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#linspace_with_middle_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.linspace_with_middle_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a 1-D array of evenly spaced values centered around a middle value.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>middle (float): The middle value.
+<dt>Parameters</dt><dd><p>middle (float): The middle value.
 radius (float): The radius around the middle value.
 num_samples (int): The number of samples to generate.</p>
 </dd>
-<dt>Returns:</dt><dd><p>np.ndarray: An array of evenly spaced values.</p>
+<dt>Returns</dt><dd><p>np.ndarray: An array of evenly spaced values.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -620,14 +626,14 @@ num_samples (int): The number of samples to generate.</p>
 <span class="sig-name descname"><span class="pre">powerAmp2dB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">powerAmp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#powerAmp2dB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.powerAmp2dB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the given value from power amplitude scale to decibel scale.</p>
 <section id="id23">
-<h3>Parameters:<a class="headerlink" href="#id23" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id23" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>powerAmp<span class="classifier">float</span></dt><dd><p>Value to be converted in power amplitude scale.</p>
 </dd>
 </dl>
 </section>
 <section id="id24">
-<h3>Returns:<a class="headerlink" href="#id24" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id24" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>float</dt><dd><p>Value converted to decibel scale.</p>
 </dd>
@@ -640,7 +646,7 @@ num_samples (int): The number of samples to generate.</p>
 <span class="sig-name descname"><span class="pre">robust_regression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_arr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#robust_regression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.robust_regression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the robust regression coefficients for the given data using the HuberT norm.</p>
 <section id="id25">
-<h3>Parameters:<a class="headerlink" href="#id25" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id25" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>x_arr<span class="classifier">numpy.ndarray</span></dt><dd><p>One-dimensional array containing the predictor data.</p>
 </dd>
@@ -649,7 +655,7 @@ num_samples (int): The number of samples to generate.</p>
 </dl>
 </section>
 <section id="id26">
-<h3>Returns:<a class="headerlink" href="#id26" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id26" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>numpy.ndarray</dt><dd><p>Array containing the intercept and slope of the regression model.</p>
 </dd>
@@ -662,7 +668,7 @@ num_samples (int): The number of samples to generate.</p>
 <span class="sig-name descname"><span class="pre">time_trace_df_2_spectra_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_trace_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DSC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_frequency_MHz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#time_trace_df_2_spectra_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.time_trace_df_2_spectra_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a time trace DataFrame to a spectral density DataFrame using FFT.</p>
 <section id="id27">
-<h3>Parameters:<a class="headerlink" href="#id27" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>time_trace_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing the time trace data. The signal should be stored in columns.</p>
 </dd>
@@ -673,7 +679,7 @@ num_samples (int): The number of samples to generate.</p>
 </dl>
 </section>
 <section id="id28">
-<h3>Returns:<a class="headerlink" href="#id28" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id28" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>pandas.DataFrame</dt><dd><p>DataFrame containing the spectral density of the signal. The frequency values are stored in the columns.</p>
 </dd>
@@ -691,14 +697,14 @@ num_samples (int): The number of samples to generate.</p>
 <span class="sig-name descname"><span class="pre">voltageAmp2dB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voltageAmp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/calcfunctions.html#voltageAmp2dB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.calcfunctions.voltageAmp2dB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the given value from voltage amplitude scale to decibel scale.</p>
 <section id="id29">
-<h3>Parameters:<a class="headerlink" href="#id29" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id29" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>voltageAmp<span class="classifier">float</span></dt><dd><p>Value to be converted in voltage amplitude scale.</p>
 </dd>
 </dl>
 </section>
 <section id="id30">
-<h3>Returns:<a class="headerlink" href="#id30" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id30" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>float</dt><dd><p>Value converted to decibel scale.</p>
 </dd>
@@ -733,13 +739,17 @@ num_samples (int): The number of samples to generate.</p>
 </section>
 <section id="module-radiocalibrationtoolkit.common.helpfunctions">
 <span id="common-helpfunctions"></span><h2>common.helpfunctions<a class="headerlink" href="#module-radiocalibrationtoolkit.common.helpfunctions" title="Permalink to this heading">¶</a></h2>
+<section id="id33">
+<h3>Module Description<a class="headerlink" href="#id33" title="Permalink to this heading">¶</a></h3>
+<p>This module provides some Python helping functions for the package.</p>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.AppendOnlyIfMore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AppendOnlyIfMore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metavar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#AppendOnlyIfMore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.AppendOnlyIfMore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></p>
 <p>Custom action class for argparse that appends values to a list only if more than one value is provided.</p>
-<section id="id33">
-<h3>Parameters<a class="headerlink" href="#id33" title="Permalink to this heading">¶</a></h3>
+<section id="id34">
+<h3>Parameters<a class="headerlink" href="#id34" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>parser<span class="classifier">argparse.ArgumentParser</span></dt><dd><p>The argument parser object.</p>
 </dd>
@@ -751,12 +761,12 @@ num_samples (int): The number of samples to generate.</p>
 </dd>
 </dl>
 </section>
-<section id="id34">
-<h3>Returns<a class="headerlink" href="#id34" title="Permalink to this heading">¶</a></h3>
+<section id="id35">
+<h3>Returns<a class="headerlink" href="#id35" title="Permalink to this heading">¶</a></h3>
 <p>None</p>
 </section>
-<section id="id35">
-<h3>Notes:<a class="headerlink" href="#id35" title="Permalink to this heading">¶</a></h3>
+<section id="id36">
+<h3>Notes:<a class="headerlink" href="#id36" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>This action class is designed to be used with the argparse module.</p></li>
 <li><p>It appends values to the list attribute specified by ‘dest’ only if more than one value is provided.</p></li>
@@ -764,8 +774,8 @@ num_samples (int): The number of samples to generate.</p>
 <li><p>It is intended for use with options that can accept multiple values.</p></li>
 </ul>
 </section>
-<section id="id36">
-<h3>Example<a class="headerlink" href="#id36" title="Permalink to this heading">¶</a></h3>
+<section id="id37">
+<h3>Example<a class="headerlink" href="#id37" title="Permalink to this heading">¶</a></h3>
 <p># Example usage
 parser = argparse.ArgumentParser()
 parser.add_argument(”–values”, action=AppendOnlyIfMore, default=[], dest=”values”, nargs=”+”)
@@ -780,8 +790,8 @@ print(args.values)</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interpolates a pandas DataFrame onto a healpix map.
 Supports half-sky and full-sky DataFrames, and includes options to shift and flip the data.</p>
-<section id="id37">
-<h3>Parameters<a class="headerlink" href="#id37" title="Permalink to this heading">¶</a></h3>
+<section id="id38">
+<h3>Parameters<a class="headerlink" href="#id38" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>data<span class="classifier">pandas DataFrame or 2D array</span></dt><dd><p>The input data. If a pandas DataFrame is provided, the index and column names will be used
 as the phi and theta values, respectively. If a 2D array is provided, <cite>phi</cite> and <cite>theta</cite>
@@ -805,24 +815,24 @@ pandas DataFrame. Default is None.</p>
 </dd>
 </dl>
 </section>
-<section id="id38">
-<h3>Returns<a class="headerlink" href="#id38" title="Permalink to this heading">¶</a></h3>
+<section id="id39">
+<h3>Returns<a class="headerlink" href="#id39" title="Permalink to this heading">¶</a></h3>
 <p>None</p>
 </section>
-<section id="id39">
-<h3>Raises<a class="headerlink" href="#id39" title="Permalink to this heading">¶</a></h3>
+<section id="id40">
+<h3>Raises<a class="headerlink" href="#id40" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>ValueError</dt><dd><p>If the input data is not a pandas DataFrame and <cite>phi</cite> and <cite>theta</cite> are not provided.</p>
 </dd>
 </dl>
 </section>
-<section id="id40">
-<h3>Notes<a class="headerlink" href="#id40" title="Permalink to this heading">¶</a></h3>
+<section id="id41">
+<h3>Notes<a class="headerlink" href="#id41" title="Permalink to this heading">¶</a></h3>
 <p>This class uses the <cite>scipy.interpolate.RegularGridInterpolator</cite> function to interpolate the data onto
 a healpix map. The interpolated map can be obtained using the <cite>get_map</cite> method.</p>
 </section>
-<section id="id41">
-<h3>Examples<a class="headerlink" href="#id41" title="Permalink to this heading">¶</a></h3>
+<section id="id42">
+<h3>Examples<a class="headerlink" href="#id42" title="Permalink to this heading">¶</a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
@@ -837,8 +847,8 @@ a healpix map. The interpolated map can be obtained using the <cite>get_map</cit
 <span class="sig-name descname"><span class="pre">get_grid_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#Data2hpmap.get_grid_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_grid_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the input data as a pandas DataFrame, with the rows corresponding to the <cite>phi</cite> values and
 the columns corresponding to the <cite>theta</cite> values.</p>
-<section id="id42">
-<h4>Returns<a class="headerlink" href="#id42" title="Permalink to this heading">¶</a></h4>
+<section id="id43">
+<h4>Returns<a class="headerlink" href="#id43" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>pd.DataFrame</dt><dd><p>The input data as a pandas DataFrame.</p>
 </dd>
@@ -850,15 +860,15 @@ the columns corresponding to the <cite>theta</cite> values.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_interp_func">
 <span class="sig-name descname"><span class="pre">get_interp_func</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#Data2hpmap.get_interp_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_interp_func" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the interpolation function.</p>
-<section id="id43">
-<h4>Returns<a class="headerlink" href="#id43" title="Permalink to this heading">¶</a></h4>
+<section id="id44">
+<h4>Returns<a class="headerlink" href="#id44" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>callable</dt><dd><p>The interpolation function.</p>
 </dd>
 </dl>
 </section>
-<section id="id44">
-<h4>Notes<a class="headerlink" href="#id44" title="Permalink to this heading">¶</a></h4>
+<section id="id45">
+<h4>Notes<a class="headerlink" href="#id45" title="Permalink to this heading">¶</a></h4>
 <p>The interpolation function is a <cite>RegularGridInterpolator</cite> object that can be used to interpolate the data onto a
 regular grid. The function takes a tuple (phi, theta) as input, where <cite>phi</cite> and <cite>theta</cite> are arrays of the same shape,
 and returns the interpolated values at the corresponding (phi, theta) positions.</p>
@@ -869,8 +879,8 @@ and returns the interpolated values at the corresponding (phi, theta) positions.
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_map">
 <span class="sig-name descname"><span class="pre">get_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[[(None,</span> <span class="pre">None)],</span> <span class="pre">[array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.])],</span> <span class="pre">[False]]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#Data2hpmap.get_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolate the input data onto a full-sky map with the specified <cite>nside</cite> and <cite>rotator</cite>.</p>
-<section id="id45">
-<h4>Parameters<a class="headerlink" href="#id45" title="Permalink to this heading">¶</a></h4>
+<section id="id46">
+<h4>Parameters<a class="headerlink" href="#id46" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>nside<span class="classifier">int, optional</span></dt><dd><p>The resolution parameter for the HEALPix map. Defaults to 64.</p>
 </dd>
@@ -878,8 +888,8 @@ and returns the interpolated values at the corresponding (phi, theta) positions.
 </dd>
 </dl>
 </section>
-<section id="id46">
-<h4>Returns<a class="headerlink" href="#id46" title="Permalink to this heading">¶</a></h4>
+<section id="id47">
+<h4>Returns<a class="headerlink" href="#id47" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>np.ndarray</dt><dd><p>The interpolated HEALPix map.</p>
 </dd>
@@ -894,15 +904,15 @@ and returns the interpolated values at the corresponding (phi, theta) positions.
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.GetXMLRoot">
 <span class="sig-name descname"><span class="pre">GetXMLRoot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">XMLFile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#GetXMLRoot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.GetXMLRoot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads an XML file and returns the root element of the parsed XML tree.</p>
-<section id="id47">
-<h3>Parameters:<a class="headerlink" href="#id47" title="Permalink to this heading">¶</a></h3>
+<section id="id48">
+<h3>Parameters<a class="headerlink" href="#id48" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>XMLFile<span class="classifier">str</span></dt><dd><p>Path to the XML file to be read.</p>
 </dd>
 </dl>
 </section>
-<section id="id48">
-<h3>Returns:<a class="headerlink" href="#id48" title="Permalink to this heading">¶</a></h3>
+<section id="id49">
+<h3>Returns<a class="headerlink" href="#id49" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>root<span class="classifier">xml.etree.ElementTree.Element</span></dt><dd><p>Root element of the parsed XML tree.</p>
 </dd>
@@ -914,8 +924,8 @@ and returns the interpolated values at the corresponding (phi, theta) positions.
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.abs_fft">
 <span class="sig-name descname"><span class="pre">abs_fft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeTrace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">250.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#abs_fft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.abs_fft" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute one-sided Fourier transform of a time series.</p>
-<section id="id49">
-<h3>Parameters<a class="headerlink" href="#id49" title="Permalink to this heading">¶</a></h3>
+<section id="id50">
+<h3>Parameters<a class="headerlink" href="#id50" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>timeTrace<span class="classifier">np.ndarray or pd.Series</span></dt><dd><p>Time series to transform.</p>
 </dd>
@@ -925,15 +935,15 @@ and returns the interpolated values at the corresponding (phi, theta) positions.
 </dd>
 </dl>
 </section>
-<section id="id50">
-<h3>Returns<a class="headerlink" href="#id50" title="Permalink to this heading">¶</a></h3>
+<section id="id51">
+<h3>Returns<a class="headerlink" href="#id51" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>np.ndarray</dt><dd><p>One-sided Fourier transform.</p>
 </dd>
 </dl>
 </section>
-<section id="id51">
-<h3>Raises<a class="headerlink" href="#id51" title="Permalink to this heading">¶</a></h3>
+<section id="id52">
+<h3>Raises<a class="headerlink" href="#id52" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>ValueError</dt><dd><p>If input time series is not a numpy array or pandas Series.</p>
 </dd>
@@ -945,8 +955,8 @@ and returns the interpolated values at the corresponding (phi, theta) positions.
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.add_deviation">
 <span class="sig-name descname"><span class="pre">add_deviation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#add_deviation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.add_deviation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a random deviation to a value based on a fractional error.</p>
-<section id="id52">
-<h3>Parameters:<a class="headerlink" href="#id52" title="Permalink to this heading">¶</a></h3>
+<section id="id53">
+<h3>Parameters<a class="headerlink" href="#id53" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>mu<span class="classifier">float</span></dt><dd><p>The mean value.</p>
 </dd>
@@ -954,8 +964,8 @@ and returns the interpolated values at the corresponding (phi, theta) positions.
 </dd>
 </dl>
 </section>
-<section id="id53">
-<h3>Returns:<a class="headerlink" href="#id53" title="Permalink to this heading">¶</a></h3>
+<section id="id54">
+<h3>Returns<a class="headerlink" href="#id54" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>new_mu<span class="classifier">float</span></dt><dd><p>The new mean value with the deviation added.</p>
 </dd>
@@ -980,8 +990,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.bin_df_rows">
 <span class="sig-name descname"><span class="pre">bin_df_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binning_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#bin_df_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.bin_df_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bin DataFrame rows based on a given column.</p>
-<section id="id54">
-<h3>Parameters<a class="headerlink" href="#id54" title="Permalink to this heading">¶</a></h3>
+<section id="id55">
+<h3>Parameters<a class="headerlink" href="#id55" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>df<span class="classifier">pd.DataFrame</span></dt><dd><p>Input DataFrame.</p>
 </dd>
@@ -991,8 +1001,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 </dd>
 </dl>
 </section>
-<section id="id55">
-<h3>Returns<a class="headerlink" href="#id55" title="Permalink to this heading">¶</a></h3>
+<section id="id56">
+<h3>Returns<a class="headerlink" href="#id56" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>pd.DataFrame</dt><dd><p>Binned DataFrame.</p>
 </dd>
@@ -1004,8 +1014,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.compare_maps">
 <span class="sig-name descname"><span class="pre">compare_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['G']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mollweide'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'jet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot_comparison</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(6,</span> <span class="pre">6.5)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#compare_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.compare_maps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare maps in a dictionary using matplotlib and return an integrated comparison dictionary.</p>
-<section id="id56">
-<h3>Parameters:<a class="headerlink" href="#id56" title="Permalink to this heading">¶</a></h3>
+<section id="id57">
+<h3>Parameters<a class="headerlink" href="#id57" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>map_dict<span class="classifier">dict</span></dt><dd><p>A dictionary containing maps to compare.</p>
 </dd>
@@ -1027,15 +1037,15 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 </dd>
 </dl>
 </section>
-<section id="id57">
-<h3>Returns:<a class="headerlink" href="#id57" title="Permalink to this heading">¶</a></h3>
+<section id="id58">
+<h3>Returns<a class="headerlink" href="#id58" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>dict</dt><dd><p>An integrated comparison dictionary.</p>
 </dd>
 </dl>
 </section>
-<section id="id58">
-<h3>Raises:<a class="headerlink" href="#id58" title="Permalink to this heading">¶</a></h3>
+<section id="id59">
+<h3>Raises<a class="headerlink" href="#id59" title="Permalink to this heading">¶</a></h3>
 <p>None</p>
 </section>
 </dd></dl>
@@ -1044,8 +1054,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.concatenate_simulated_dfs">
 <span class="sig-name descname"><span class="pre">concatenate_simulated_dfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec_substring</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#concatenate_simulated_dfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.concatenate_simulated_dfs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate simulated DataFrames from CSV files.</p>
-<section id="id59">
-<h3>Parameters<a class="headerlink" href="#id59" title="Permalink to this heading">¶</a></h3>
+<section id="id60">
+<h3>Parameters<a class="headerlink" href="#id60" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>dir_path<span class="classifier">str</span></dt><dd><p>Directory path containing the CSV files.</p>
 </dd>
@@ -1053,8 +1063,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 </dd>
 </dl>
 </section>
-<section id="id60">
-<h3>Returns<a class="headerlink" href="#id60" title="Permalink to this heading">¶</a></h3>
+<section id="id61">
+<h3>Returns<a class="headerlink" href="#id61" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>pd.DataFrame</dt><dd><p>Concatenated DataFrame containing the simulated data.</p>
 </dd>
@@ -1066,15 +1076,15 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.convert_xml_string_to_floats">
 <span class="sig-name descname"><span class="pre">convert_xml_string_to_floats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#convert_xml_string_to_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.convert_xml_string_to_floats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts an XML string containing whitespace-separated float values to a NumPy array of float values.</p>
-<section id="id61">
-<h3>Parameters:<a class="headerlink" href="#id61" title="Permalink to this heading">¶</a></h3>
+<section id="id62">
+<h3>Parameters<a class="headerlink" href="#id62" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>xml_string<span class="classifier">str</span></dt><dd><p>XML string containing whitespace-separated float values.</p>
 </dd>
 </dl>
 </section>
-<section id="id62">
-<h3>Returns:<a class="headerlink" href="#id62" title="Permalink to this heading">¶</a></h3>
+<section id="id63">
+<h3>Returns<a class="headerlink" href="#id63" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>floats<span class="classifier">ndarray</span></dt><dd><p>NumPy array of float values extracted from the XML string.</p>
 </dd>
@@ -1086,8 +1096,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.create_local_mask">
 <span class="sig-name descname"><span class="pre">create_local_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#create_local_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.create_local_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a mask that is True for pixels above the equator and False for those below.</p>
-<section id="id63">
-<h3>Parameters<a class="headerlink" href="#id63" title="Permalink to this heading">¶</a></h3>
+<section id="id64">
+<h3>Parameters<a class="headerlink" href="#id64" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>nside<span class="classifier">int</span></dt><dd><p>The nside parameter for the Healpix map.</p>
 </dd>
@@ -1095,8 +1105,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 </dd>
 </dl>
 </section>
-<section id="id64">
-<h3>Returns<a class="headerlink" href="#id64" title="Permalink to this heading">¶</a></h3>
+<section id="id65">
+<h3>Returns<a class="headerlink" href="#id65" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>np.ndarray</dt><dd><p>A boolean array with True for pixels above the equator and False for those below.</p>
 </dd>
@@ -1108,8 +1118,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.create_rotation_parameters">
 <span class="sig-name descname"><span class="pre">create_rotation_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#create_rotation_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.create_rotation_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a tuple of Galactic longitude and latitude (in degrees) from local sidereal time and latitude.</p>
-<section id="id65">
-<h3>Parameters<a class="headerlink" href="#id65" title="Permalink to this heading">¶</a></h3>
+<section id="id66">
+<h3>Parameters<a class="headerlink" href="#id66" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>lst<span class="classifier">float</span></dt><dd><p>The local sidereal time in hours.</p>
 </dd>
@@ -1117,8 +1127,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 </dd>
 </dl>
 </section>
-<section id="id66">
-<h3>Returns<a class="headerlink" href="#id66" title="Permalink to this heading">¶</a></h3>
+<section id="id67">
+<h3>Returns<a class="headerlink" href="#id67" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>tuple of float</dt><dd><p>A tuple containing the Galactic longitude and latitude (in degrees).</p>
 </dd>
@@ -1130,8 +1140,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.create_rotator">
 <span class="sig-name descname"><span class="pre">create_rotator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['G']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Rotator</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#create_rotator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.create_rotator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Rotator object for converting between Galactic and celestial (e.g., equatorial) coordinates.</p>
-<section id="id67">
-<h3>Parameters<a class="headerlink" href="#id67" title="Permalink to this heading">¶</a></h3>
+<section id="id68">
+<h3>Parameters<a class="headerlink" href="#id68" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>lst<span class="classifier">float or None</span></dt><dd><p>The local sidereal time in hours. If None, defaults to 0.</p>
 </dd>
@@ -1143,8 +1153,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 </dd>
 </dl>
 </section>
-<section id="id68">
-<h3>Returns<a class="headerlink" href="#id68" title="Permalink to this heading">¶</a></h3>
+<section id="id69">
+<h3>Returns<a class="headerlink" href="#id69" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>Rotator</dt><dd><p>A Rotator object that can be used to convert between Galactic and celestial coordinates.</p>
 </dd>
@@ -1156,8 +1166,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.del_keys">
 <span class="sig-name descname"><span class="pre">del_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#del_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.del_keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove one or more keys from a dictionary.</p>
-<section id="id69">
-<h3>Parameters:<a class="headerlink" href="#id69" title="Permalink to this heading">¶</a></h3>
+<section id="id70">
+<h3>Parameters<a class="headerlink" href="#id70" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>d<span class="classifier">dict</span></dt><dd><p>The dictionary to modify.</p>
 </dd>
@@ -1171,8 +1181,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.distort_array">
 <span class="sig-name descname"><span class="pre">distort_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rstd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#distort_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.distort_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distort the values of a NumPy array by adding Gaussian noise.</p>
-<section id="id70">
-<h3>Parameters:<a class="headerlink" href="#id70" title="Permalink to this heading">¶</a></h3>
+<section id="id71">
+<h3>Parameters<a class="headerlink" href="#id71" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>arr<span class="classifier">np.ndarray</span></dt><dd><p>The input NumPy array.</p>
 </dd>
@@ -1180,15 +1190,15 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 </dd>
 </dl>
 </section>
-<section id="id71">
-<h3>Returns:<a class="headerlink" href="#id71" title="Permalink to this heading">¶</a></h3>
+<section id="id72">
+<h3>Returns<a class="headerlink" href="#id72" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>np.ndarray</dt><dd><p>The distorted array.</p>
 </dd>
 </dl>
 </section>
-<section id="id72">
-<h3>Notes:<a class="headerlink" href="#id72" title="Permalink to this heading">¶</a></h3>
+<section id="id73">
+<h3>Notes:<a class="headerlink" href="#id73" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>This function adds Gaussian noise to the values of the input array.</p></li>
 <li><p>The amount of noise is controlled by the relative standard deviation (rstd).</p></li>
@@ -1197,8 +1207,8 @@ margin (float): The fraction of the total height of the y-data to pad the upper 
 <li><p>For masked arrays, the distortion is only applied to unmasked values.</p></li>
 </ul>
 </section>
-<section id="id73">
-<h3>Example:<a class="headerlink" href="#id73" title="Permalink to this heading">¶</a></h3>
+<section id="id74">
+<h3>Example:<a class="headerlink" href="#id74" title="Permalink to this heading">¶</a></h3>
 <p># Example usage
 arr = np.array([1, 2, 3, 4, 5])
 distorted_arr = distort_array(arr, rstd=0.5)
@@ -1210,15 +1220,15 @@ print(distorted_arr)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.dropnans">
 <span class="sig-name descname"><span class="pre">dropnans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#dropnans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.dropnans" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop NaN values from the array.</p>
-<section id="id74">
-<h3>Parameters<a class="headerlink" href="#id74" title="Permalink to this heading">¶</a></h3>
+<section id="id75">
+<h3>Parameters<a class="headerlink" href="#id75" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>arr<span class="classifier">array-like</span></dt><dd><p>Input array.</p>
 </dd>
 </dl>
 </section>
-<section id="id75">
-<h3>Returns<a class="headerlink" href="#id75" title="Permalink to this heading">¶</a></h3>
+<section id="id76">
+<h3>Returns<a class="headerlink" href="#id76" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>array</dt><dd><p>Array with NaN values removed.</p>
 </dd>
@@ -1230,15 +1240,15 @@ print(distorted_arr)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.fig_to_image">
 <span class="sig-name descname"><span class="pre">fig_to_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#fig_to_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.fig_to_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a Matplotlib figure object to a NumPy array of RGB values.</p>
-<section id="id76">
-<h3>Parameters:<a class="headerlink" href="#id76" title="Permalink to this heading">¶</a></h3>
+<section id="id77">
+<h3>Parameters<a class="headerlink" href="#id77" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>fig<span class="classifier">matplotlib.figure.Figure object</span></dt><dd><p>Matplotlib figure object to be converted.</p>
 </dd>
 </dl>
 </section>
-<section id="id77">
-<h3>Returns:<a class="headerlink" href="#id77" title="Permalink to this heading">¶</a></h3>
+<section id="id78">
+<h3>Returns<a class="headerlink" href="#id78" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>image_from_plot<span class="classifier">ndarray</span></dt><dd><p>3D NumPy array of RGB values representing the image.</p>
 </dd>
@@ -1250,8 +1260,8 @@ print(distorted_arr)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.find_closest_index">
 <span class="sig-name descname"><span class="pre">find_closest_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#find_closest_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.find_closest_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the index of the closest value in an array to a given value.</p>
-<section id="id78">
-<h3>Parameters<a class="headerlink" href="#id78" title="Permalink to this heading">¶</a></h3>
+<section id="id79">
+<h3>Parameters<a class="headerlink" href="#id79" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>arr<span class="classifier">np.ndarray</span></dt><dd><p>Input array.</p>
 </dd>
@@ -1259,8 +1269,8 @@ print(distorted_arr)</p>
 </dd>
 </dl>
 </section>
-<section id="id79">
-<h3>Returns<a class="headerlink" href="#id79" title="Permalink to this heading">¶</a></h3>
+<section id="id80">
+<h3>Returns<a class="headerlink" href="#id80" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>int</dt><dd><p>Index of the closest value.</p>
 </dd>
@@ -1273,8 +1283,8 @@ print(distorted_arr)</p>
 <span class="sig-name descname"><span class="pre">find_index_on_CDF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#find_index_on_CDF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.find_index_on_CDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the index of the array <cite>X</cite> such that the cumulative distribution function (CDF) of <cite>log_dens</cite>
 evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
-<section id="id80">
-<h3>Parameters<a class="headerlink" href="#id80" title="Permalink to this heading">¶</a></h3>
+<section id="id81">
+<h3>Parameters<a class="headerlink" href="#id81" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>log_dens<span class="classifier">np.ndarray</span></dt><dd><p>Array of log-density values.</p>
 </dd>
@@ -1284,8 +1294,8 @@ evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
 </dd>
 </dl>
 </section>
-<section id="id81">
-<h3>Returns<a class="headerlink" href="#id81" title="Permalink to this heading">¶</a></h3>
+<section id="id82">
+<h3>Returns<a class="headerlink" href="#id82" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>int</dt><dd><p>The index of the array <cite>X</cite> such that the CDF of <cite>log_dens</cite> evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
 </dd>
@@ -1297,15 +1307,15 @@ evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.generate_one_sided_random_phase">
 <span class="sig-name descname"><span class="pre">generate_one_sided_random_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#generate_one_sided_random_phase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.generate_one_sided_random_phase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate one-sided random phase for a given size.</p>
-<section id="id82">
-<h3>Parameters<a class="headerlink" href="#id82" title="Permalink to this heading">¶</a></h3>
+<section id="id83">
+<h3>Parameters<a class="headerlink" href="#id83" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>size<span class="classifier">int</span></dt><dd><p>Size of the phase array.</p>
 </dd>
 </dl>
 </section>
-<section id="id83">
-<h3>Returns<a class="headerlink" href="#id83" title="Permalink to this heading">¶</a></h3>
+<section id="id84">
+<h3>Returns<a class="headerlink" href="#id84" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>np.ndarray</dt><dd><p>One-sided random phase array.</p>
 </dd>
@@ -1317,8 +1327,8 @@ evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.hpmap2grid">
 <span class="sig-name descname"><span class="pre">hpmap2grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#hpmap2grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.hpmap2grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolate a HEALPix map onto a regular grid.</p>
-<section id="id84">
-<h3>Parameters:<a class="headerlink" href="#id84" title="Permalink to this heading">¶</a></h3>
+<section id="id85">
+<h3>Parameters<a class="headerlink" href="#id85" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>m<span class="classifier">List</span></dt><dd><p>HEALPix map array.</p>
 </dd>
@@ -1326,8 +1336,8 @@ evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
 </dd>
 </dl>
 </section>
-<section id="id85">
-<h3>Returns:<a class="headerlink" href="#id85" title="Permalink to this heading">¶</a></h3>
+<section id="id86">
+<h3>Returns<a class="headerlink" href="#id86" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>PHI<span class="classifier">numpy.ndarray</span></dt><dd><p>2D array of azimuthal angles (longitude).</p>
 </dd>
@@ -1343,15 +1353,15 @@ evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.integrate_hpmap">
 <span class="sig-name descname"><span class="pre">integrate_hpmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#integrate_hpmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.integrate_hpmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Integrate the HEALPix map over the sky.</p>
-<section id="id86">
-<h3>Parameters:<a class="headerlink" href="#id86" title="Permalink to this heading">¶</a></h3>
+<section id="id87">
+<h3>Parameters<a class="headerlink" href="#id87" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>m<span class="classifier">List</span></dt><dd><p>HEALPix map array.</p>
 </dd>
 </dl>
 </section>
-<section id="id87">
-<h3>Returns:<a class="headerlink" href="#id87" title="Permalink to this heading">¶</a></h3>
+<section id="id88">
+<h3>Returns<a class="headerlink" href="#id88" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>flux<span class="classifier">float</span></dt><dd><p>The integrated flux of the map.</p>
 </dd>
@@ -1363,27 +1373,27 @@ evaluated on <cite>X</cite> is closest to <cite>p</cite>.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.mkdir">
 <span class="sig-name descname"><span class="pre">mkdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#mkdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.mkdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a directory if it doesn’t already exist.</p>
-<section id="id88">
-<h3>Parameters:<a class="headerlink" href="#id88" title="Permalink to this heading">¶</a></h3>
+<section id="id89">
+<h3>Parameters<a class="headerlink" href="#id89" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>directory<span class="classifier">str</span></dt><dd><p>Directory path to be created.</p>
 </dd>
 </dl>
 </section>
-<section id="id89">
-<h3>Returns:<a class="headerlink" href="#id89" title="Permalink to this heading">¶</a></h3>
+<section id="id90">
+<h3>Returns<a class="headerlink" href="#id90" title="Permalink to this heading">¶</a></h3>
 <p>None</p>
 </section>
-<section id="id90">
-<h3>Notes:<a class="headerlink" href="#id90" title="Permalink to this heading">¶</a></h3>
+<section id="id91">
+<h3>Notes:<a class="headerlink" href="#id91" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>This function checks if the directory already exists.</p></li>
 <li><p>If the directory doesn’t exist, it creates a new directory.</p></li>
 <li><p>If the directory already exists, it prints a message indicating that the directory already exists.</p></li>
 </ul>
 </section>
-<section id="id91">
-<h3>Example:<a class="headerlink" href="#id91" title="Permalink to this heading">¶</a></h3>
+<section id="id92">
+<h3>Example:<a class="headerlink" href="#id92" title="Permalink to this heading">¶</a></h3>
 <p># Example usage
 mkdir(“path/to/directory”)</p>
 </section>
@@ -1393,8 +1403,8 @@ mkdir(“path/to/directory”)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.my_modulo">
 <span class="sig-name descname"><span class="pre">my_modulo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#my_modulo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.my_modulo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the modulo of each element in an array, except for elements that are equal to the modulo.</p>
-<section id="id92">
-<h3>Parameters<a class="headerlink" href="#id92" title="Permalink to this heading">¶</a></h3>
+<section id="id93">
+<h3>Parameters<a class="headerlink" href="#id93" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>arr<span class="classifier">array_like</span></dt><dd><p>The input array.</p>
 </dd>
@@ -1402,15 +1412,15 @@ mkdir(“path/to/directory”)</p>
 </dd>
 </dl>
 </section>
-<section id="id93">
-<h3>Returns<a class="headerlink" href="#id93" title="Permalink to this heading">¶</a></h3>
+<section id="id94">
+<h3>Returns<a class="headerlink" href="#id94" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>ndarray</dt><dd><p>The output array with the same shape as the input array.</p>
 </dd>
 </dl>
 </section>
-<section id="id94">
-<h3>Examples<a class="headerlink" href="#id94" title="Permalink to this heading">¶</a></h3>
+<section id="id95">
+<h3>Examples<a class="headerlink" href="#id95" title="Permalink to this heading">¶</a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_modulo</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
 <span class="go">array([1, 2, 0, 1, 2, 0, 1])</span>
 </pre></div>
@@ -1422,8 +1432,8 @@ mkdir(“path/to/directory”)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.one_sided_2_complex_two_sided">
 <span class="sig-name descname"><span class="pre">one_sided_2_complex_two_sided</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">one_sided_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">one_sided_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#one_sided_2_complex_two_sided"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.one_sided_2_complex_two_sided" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert one-sided amplitude and phase to complex two-sided array.</p>
-<section id="id95">
-<h3>Parameters<a class="headerlink" href="#id95" title="Permalink to this heading">¶</a></h3>
+<section id="id96">
+<h3>Parameters<a class="headerlink" href="#id96" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>one_sided_abs<span class="classifier">np.ndarray</span></dt><dd><p>One-sided amplitude array.</p>
 </dd>
@@ -1431,8 +1441,8 @@ mkdir(“path/to/directory”)</p>
 </dd>
 </dl>
 </section>
-<section id="id96">
-<h3>Returns<a class="headerlink" href="#id96" title="Permalink to this heading">¶</a></h3>
+<section id="id97">
+<h3>Returns<a class="headerlink" href="#id97" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>np.ndarray</dt><dd><p>Complex two-sided array.</p>
 </dd>
@@ -1444,8 +1454,8 @@ mkdir(“path/to/directory”)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.one_sided_2_two_sided">
 <span class="sig-name descname"><span class="pre">one_sided_2_two_sided</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spectrum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#one_sided_2_two_sided"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.one_sided_2_two_sided" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a one-sided power spectrum into a two-sided power spectrum.</p>
-<section id="id97">
-<h3>Parameters:<a class="headerlink" href="#id97" title="Permalink to this heading">¶</a></h3>
+<section id="id98">
+<h3>Parameters<a class="headerlink" href="#id98" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>spectrum<span class="classifier">numpy.ndarray</span></dt><dd><p>One-sided power spectrum.</p>
 </dd>
@@ -1453,8 +1463,8 @@ mkdir(“path/to/directory”)</p>
 </dd>
 </dl>
 </section>
-<section id="id98">
-<h3>Returns:<a class="headerlink" href="#id98" title="Permalink to this heading">¶</a></h3>
+<section id="id99">
+<h3>Returns<a class="headerlink" href="#id99" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>two_sided_spectrum<span class="classifier">numpy.ndarray</span></dt><dd><p>Two-sided power spectrum.</p>
 </dd>
@@ -1466,15 +1476,15 @@ mkdir(“path/to/directory”)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.print_map_properties">
 <span class="sig-name descname"><span class="pre">print_map_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#print_map_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.print_map_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints properties of a Healpix map.</p>
-<section id="id99">
-<h3>Parameters<a class="headerlink" href="#id99" title="Permalink to this heading">¶</a></h3>
+<section id="id100">
+<h3>Parameters<a class="headerlink" href="#id100" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>map<span class="classifier">np.ndarray</span></dt><dd><p>A one-dimensional array representing the map.</p>
 </dd>
 </dl>
 </section>
-<section id="id100">
-<h3>Returns<a class="headerlink" href="#id100" title="Permalink to this heading">¶</a></h3>
+<section id="id101">
+<h3>Returns<a class="headerlink" href="#id101" title="Permalink to this heading">¶</a></h3>
 <p>None</p>
 </section>
 </dd></dl>
@@ -1483,8 +1493,8 @@ mkdir(“path/to/directory”)</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.read_hw_file">
 <span class="sig-name descname"><span class="pre">read_hw_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hw_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_tabulated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_interp_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#read_hw_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.read_hw_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads an XML file containing hierarchical data, extracts data into a nested dictionary of NumPy arrays and/or interpolation functions.</p>
-<section id="id101">
-<h3>Parameters:<a class="headerlink" href="#id101" title="Permalink to this heading">¶</a></h3>
+<section id="id102">
+<h3>Parameters<a class="headerlink" href="#id102" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>hw_file_path<span class="classifier">str</span></dt><dd><p>Path to the XML file to be read.</p>
 </dd>
@@ -1499,8 +1509,8 @@ Default is an empty dictionary.</p>
 </dd>
 </dl>
 </section>
-<section id="id102">
-<h3>Returns:<a class="headerlink" href="#id102" title="Permalink to this heading">¶</a></h3>
+<section id="id103">
+<h3>Returns<a class="headerlink" href="#id103" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>xml_dict<span class="classifier">dict</span></dt><dd><p>A nested dictionary containing the extracted data. If <cite>return_tabulated</cite> is True, values in the dictionary are NumPy arrays.
 Else, values are interpolation functions.</p>
@@ -1513,8 +1523,8 @@ Else, values are interpolation functions.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.rotate_default_hpmap_array_from_galactic2local_coordinates">
 <span class="sig-name descname"><span class="pre">rotate_default_hpmap_array_from_galactic2local_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nside_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#rotate_default_hpmap_array_from_galactic2local_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.rotate_default_hpmap_array_from_galactic2local_coordinates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotates a Healpix map from Galactic to local coordinates.</p>
-<section id="id103">
-<h3>Parameters<a class="headerlink" href="#id103" title="Permalink to this heading">¶</a></h3>
+<section id="id104">
+<h3>Parameters<a class="headerlink" href="#id104" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>m<span class="classifier">np.ndarray</span></dt><dd><p>A one-dimensional array representing the map.</p>
 </dd>

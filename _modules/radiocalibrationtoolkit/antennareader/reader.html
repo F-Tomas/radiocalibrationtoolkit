@@ -93,7 +93,24 @@
            <div itemprop="articleBody">
              
   <h1>Source code for radiocalibrationtoolkit.antennareader.reader</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module Description</span>
+<span class="sd">------------------</span>
+
+<span class="sd">The `antennareader` module provides functionalities for reading antenna pattern data</span>
+<span class="sd">from an XML file format and performing various operations on the data. It includes a</span>
+<span class="sd">class `AntennaPattern` that allows users to read antenna pattern data from an XML file,</span>
+<span class="sd">interpolate the data for finer spacing, and convert it to a healpix format.</span>
+
+<span class="sd">The module is designed to work with Pandas DataFrames and supports data manipulation,</span>
+<span class="sd">interpolation, and conversion to healpix format, which is useful for antenna pattern</span>
+<span class="sd">analysis and visualization.</span>
+
+<span class="sd">It also offers methods to retrieve volume data for a given quantity and frequencies.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -114,10 +131,10 @@
 <span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="o">*</span>
 
 
-
 <div class="viewcode-block" id="AntennaPattern"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.antennareader.html#radiocalibrationtoolkit.antennareader.reader.AntennaPattern">[docs]</a><span class="k">class</span> <span class="nc">AntennaPattern</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class reads the antenna pattern from an XML file format and can interpolate the pattern for a finer spacing or convert it to a healpy format.</span>
+<span class="sd">    This class reads the antenna pattern from an XML file format and can interpolate the pattern for a</span>
+<span class="sd">    finer spacing or convert it to a healpy format.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -134,33 +151,49 @@
 <span class="sd">        A list of the different quantities available in the antenna pattern data.</span>
 <span class="sd">    show_quantities : method</span>
 <span class="sd">        Prints the list of available quantities.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
 <span class="sd">    get_raw() -&gt; dict:</span>
 <span class="sd">        Returns the antenna pattern data as a dictionary.</span>
 <span class="sd">    get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None, return_interp_func: bool = False) -&gt; pd.DataFrame:</span>
-<span class="sd">        Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity. </span>
+<span class="sd">        Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity.</span>
 <span class="sd">        Interpolates the data based on interp_phi and interp_theta if provided.</span>
-<span class="sd">    </span>
+<span class="sd">    get_volumetric_dataset(quantity: str, frequencies: Union[List[float], np.ndarray, None] = None) -&gt; pd.DataFrame:</span>
+<span class="sd">        Get volume data for a given quantity and frequencies.</span>
+<span class="sd">    convert2hp(</span>
+<span class="sd">        frequency: float,</span>
+<span class="sd">        shift_phi: float = 0,</span>
+<span class="sd">        flip_theta: bool = False,</span>
+<span class="sd">        flip_phi: bool = False,</span>
+<span class="sd">        in_degrees: bool = True,</span>
+<span class="sd">        quantity: str = &quot;absolute&quot;,</span>
+<span class="sd">        add_invisible_sky: bool = True,</span>
+<span class="sd">    ) -&gt; Data2hpmap:</span>
+<span class="sd">        Convert the antenna pattern data to healpix format at a given frequency.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    pd.DataFrame</span>
-<span class="sd">        A pandas DataFrame of the antenna pattern data.</span>
+<span class="sd">    Data2hpmap</span>
+<span class="sd">        A Data2hpmap object containing the antenna pattern data in healpix format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">antennaPath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frange</span><span class="p">:</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">antennaPath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frange</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor method for AntennaPattern class.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
         <span class="n">root_</span> <span class="o">=</span> <span class="n">GetXMLRoot</span><span class="p">(</span><span class="n">antennaPath</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">topBranch</span> <span class="ow">in</span> <span class="n">root_</span><span class="p">:</span>
-            <span class="c1"># print(topBranch)</span>
             <span class="k">if</span> <span class="s2">&quot;idfreq&quot;</span> <span class="ow">in</span> <span class="n">topBranch</span><span class="o">.</span><span class="n">attrib</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="c1"># print(&#39;e&#39;)</span>
                 <span class="n">freq</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">topBranch</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;idfreq&quot;</span><span class="p">])</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">freq</span> <span class="o">&gt;=</span> <span class="n">frange</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">freq</span> <span class="o">&lt;=</span> <span class="n">frange</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span><span class="p">[</span><span class="n">topBranch</span><span class="o">.</span><span class="n">tag</span><span class="p">][</span><span class="n">freq</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_xml_string_to_floats</span><span class="p">(</span><span class="n">topBranch</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span><span class="p">[</span><span class="n">topBranch</span><span class="o">.</span><span class="n">tag</span><span class="p">][</span><span class="n">freq</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_xml_string_to_floats</span><span class="p">(</span>
+                        <span class="n">topBranch</span><span class="o">.</span><span class="n">text</span>
+                    <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">convert_xml_string_to_floats</span><span class="p">(</span><span class="n">topBranch</span><span class="o">.</span><span class="n">text</span><span class="p">))))</span>
-                <span class="k">if</span> <span class="n">topBranch</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;frequency&#39;</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+                    <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">convert_xml_string_to_floats</span><span class="p">(</span><span class="n">topBranch</span><span class="o">.</span><span class="n">text</span><span class="p">)))</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">topBranch</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;frequency&quot;</span><span class="p">:</span>
                     <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[(</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">frange</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">frange</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">topBranch</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_quantity_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -181,7 +214,7 @@
 <div class="viewcode-block" id="AntennaPattern.get_raw"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.antennareader.html#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_raw">[docs]</a>    <span class="k">def</span> <span class="nf">get_raw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the antenna pattern data as a dictionary.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
@@ -195,31 +228,34 @@
         <span class="n">quantity</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">interp_phi</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">interp_theta</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">return_interp_func</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">return_interp_func</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the antenna pattern data for a given frequency and quantity.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            frequency (float): The frequency for which to retrieve the antenna pattern data.</span>
-<span class="sd">            quantity (str): The quantity to retrieve. Valid values are &quot;absolute&quot;, &quot;theta_amp&quot;, &quot;phi_amp&quot;, &quot;theta_phase&quot;, and &quot;phi_phase&quot;.</span>
-<span class="sd">            interp_phi (list, optional): A list of phi values for which to interpolate the data. Defaults to None.</span>
-<span class="sd">            interp_theta (list, optional): A list of theta values for which to interpolate the data. Defaults to None.</span>
-<span class="sd">            return_interp_func (bool, optional): Whether to return the interpolation function. Defaults to False.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frequency : float</span>
+<span class="sd">            The frequency for which to retrieve the antenna pattern data.</span>
+<span class="sd">        quantity : str</span>
+<span class="sd">            The quantity to retrieve. Valid values are &quot;absolute&quot;, &quot;theta_amp&quot;, &quot;phi_amp&quot;, &quot;theta_phase&quot;, and &quot;phi_phase&quot;.</span>
+<span class="sd">        interp_phi : list, optional</span>
+<span class="sd">            A list of phi values for which to interpolate the data. Defaults to None.</span>
+<span class="sd">        interp_theta : list, optional</span>
+<span class="sd">            A list of theta values for which to interpolate the data. Defaults to None.</span>
+<span class="sd">        return_interp_func : bool, optional</span>
+<span class="sd">            Whether to return the interpolation function. Defaults to False.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            pd.DataFrame: A pandas dataframe containing the antenna pattern data for the chosen frequency and quantity. The rows are the phi angles and columns the theta angles.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            A pandas DataFrame containing the antenna pattern data for the chosen frequency and quantity. The rows are the phi angles and columns are the theta angles.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">quantity</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quantity_list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">show_quantities</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">quantity</span> <span class="o">==</span> <span class="s2">&quot;absolute&quot;</span><span class="p">:</span>
-            <span class="c1"># print(</span>
-            <span class="c1">#    &quot;[INFO] Trying to identify keys in the dictionary representing amplitudes of theta and phi polarization&quot;</span>
-            <span class="c1"># )</span>
-            <span class="c1"># print(&quot;[INFO] This identification is based on which keys end with &#39;amp&#39;&quot;)</span>
             <span class="n">amp_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;amp&quot;</span><span class="p">)]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">amp_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="c1"># print(&quot;[INFO] I found these keys: {} It should work.&quot;.format(amp_keys))</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
                     <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
                     <span class="o">*</span> <span class="p">(</span>
@@ -229,15 +265,9 @@
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;[INFO] Tried to identify keys in the dictionary representing amplitudes of theta and phi polarization&quot;</span>
+                    <span class="s2">&quot;[INFO] No keys found, do your absolute value manually or fix the tags in the XML so that the polarization amplitudes end with &#39;amp&#39;&quot;</span>
                 <span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;[INFO] This identification was based on which keys end with &#39;amp&#39;&quot;</span>
-                <span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;[ERROR] No keys found, do your absolute value manually or fix the tags in the XML so that the polarization amplitudes end with &#39;amp&#39;</span><span class="se">\</span>
-<span class="s2">                      The formula is (1/2*theta_amp**2+phi_amp**2)^(1/2)  &quot;</span>
-                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] The formula is (1/2 * theta_amp**2 + phi_amp**2)^(1/2)&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span><span class="p">[</span><span class="n">quantity</span><span class="p">][</span><span class="n">frequency</span><span class="p">]</span>
 
@@ -260,6 +290,40 @@
         <span class="n">temporary_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;phi&quot;</span>
         <span class="n">temporary_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;theta&quot;</span>
         <span class="k">return</span> <span class="n">temporary_DF</span></div>
+
+<div class="viewcode-block" id="AntennaPattern.get_volumetric_dataset"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.antennareader.html#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_volumetric_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_volumetric_dataset</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get volume data for a given quantity and frequencies.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        quantity : str</span>
+<span class="sd">            The quantity to retrieve volume data for.</span>
+<span class="sd">        frequencies : Union[List[float], np.ndarray, None], optional</span>
+<span class="sd">            Frequencies for which volume data is requested.</span>
+<span class="sd">            It can be either a list or a numpy array of floats.</span>
+<span class="sd">            If not provided (None), the method will use default frequencies from the `antenna_inst` object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            A Pandas DataFrame containing volume data for the specified quantity and frequencies.</span>
+<span class="sd">            The DataFrame is indexed by the frequencies and may have multiple columns depending on the structure of the data retrieved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">frequencies</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">frequencies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="s2">&quot;frequency&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frequencies</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=</span><span class="n">quantity</span><span class="p">)</span>
+            <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="n">volume_data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">frequencies</span><span class="p">)</span>
+        <span class="n">volume_data_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;freq&quot;</span><span class="p">,</span> <span class="n">volume_data_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="n">volume_data_df</span></div>
 
     <span class="k">def</span> <span class="nf">_interpolate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -290,7 +354,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_flip_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="n">yes</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">yes</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">yes</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">arr</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">arr</span>
@@ -304,7 +368,7 @@
         <span class="n">in_degrees</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">quantity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;absolute&quot;</span><span class="p">,</span>
         <span class="n">add_invisible_sky</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data2hpmap</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the antenna pattern data to healpix format at a given frequency.</span>
 
@@ -334,7 +398,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">args</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">del</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
-        <span class="c1"># print(args)</span>
         <span class="k">return</span> <span class="n">AntennaPattern</span><span class="o">.</span><span class="n">_Convert2hp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span></div>
 
     <span class="k">class</span> <span class="nc">_Convert2hp</span><span class="p">(</span><span class="n">Data2hpmap</span><span class="p">):</span>
@@ -348,7 +411,6 @@
 
         <span class="k">def</span> <span class="nf">get_frequency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frequency</span></div>
-
 </pre></div>
 
            </div>

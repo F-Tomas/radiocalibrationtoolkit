@@ -68,10 +68,12 @@
 <li class="toctree-l1"><a class="reference internal" href="radiocalibrationtoolkit.skymapwrappers.html">skymapwrappers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">antennareader</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-radiocalibrationtoolkit.antennareader.reader">antennareader.reader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-description">Module Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern"><code class="docutils literal notranslate"><span class="pre">AntennaPattern</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.convert2hp"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.convert2hp()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_raw"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.get_raw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_volumetric_dataset"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.get_volumetric_dataset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.show_quantities"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.show_quantities()</span></code></a></li>
 </ul>
 </li>
@@ -111,11 +113,23 @@
 <h1>antennareader<a class="headerlink" href="#antennareader" title="Permalink to this heading">¶</a></h1>
 <section id="module-radiocalibrationtoolkit.antennareader.reader">
 <span id="antennareader-reader"></span><h2>antennareader.reader<a class="headerlink" href="#module-radiocalibrationtoolkit.antennareader.reader" title="Permalink to this heading">¶</a></h2>
+<section id="module-description">
+<h3>Module Description<a class="headerlink" href="#module-description" title="Permalink to this heading">¶</a></h3>
+<p>The <cite>antennareader</cite> module provides functionalities for reading antenna pattern data
+from an XML file format and performing various operations on the data. It includes a
+class <cite>AntennaPattern</cite> that allows users to read antenna pattern data from an XML file,
+interpolate the data for finer spacing, and convert it to a healpix format.</p>
+<p>The module is designed to work with Pandas DataFrames and supports data manipulation,
+interpolation, and conversion to healpix format, which is useful for antenna pattern
+analysis and visualization.</p>
+<p>It also offers methods to retrieve volume data for a given quantity and frequencies.</p>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.antennareader.reader.AntennaPattern">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AntennaPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">antennaPath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[0,</span> <span class="pre">inf]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/antennareader/reader.html#AntennaPattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AntennaPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">antennaPath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">inf)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/antennareader/reader.html#AntennaPattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This class reads the antenna pattern from an XML file format and can interpolate the pattern for a finer spacing or convert it to a healpy format.</p>
+<p>This class reads the antenna pattern from an XML file format and can interpolate the pattern for a
+finer spacing or convert it to a healpy format.</p>
 <section id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
@@ -141,20 +155,32 @@
 <dl class="simple">
 <dt>get_raw() -&gt; dict:</dt><dd><p>Returns the antenna pattern data as a dictionary.</p>
 </dd>
-<dt>get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None, return_interp_func: bool = False) -&gt; pd.DataFrame:</dt><dd><p>Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity. 
+<dt>get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None, return_interp_func: bool = False) -&gt; pd.DataFrame:</dt><dd><p>Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity.
 Interpolates the data based on interp_phi and interp_theta if provided.</p>
+</dd>
+<dt>get_volumetric_dataset(quantity: str, frequencies: Union[List[float], np.ndarray, None] = None) -&gt; pd.DataFrame:</dt><dd><p>Get volume data for a given quantity and frequencies.</p>
+</dd>
+<dt>convert2hp(</dt><dd><p>frequency: float,
+shift_phi: float = 0,
+flip_theta: bool = False,
+flip_phi: bool = False,
+in_degrees: bool = True,
+quantity: str = “absolute”,
+add_invisible_sky: bool = True,</p>
+</dd>
+<dt>) -&gt; Data2hpmap:</dt><dd><p>Convert the antenna pattern data to healpix format at a given frequency.</p>
 </dd>
 </dl>
 </section>
 <section id="returns">
 <h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
-<dt>pd.DataFrame</dt><dd><p>A pandas DataFrame of the antenna pattern data.</p>
+<dt>Data2hpmap</dt><dd><p>A Data2hpmap object containing the antenna pattern data in healpix format.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.antennareader.reader.AntennaPattern.convert2hp">
-<span class="sig-name descname"><span class="pre">convert2hp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degrees</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'absolute'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_invisible_sky</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/antennareader/reader.html#AntennaPattern.convert2hp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.convert2hp" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">convert2hp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degrees</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'absolute'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_invisible_sky</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap" title="radiocalibrationtoolkit.common.helpfunctions.Data2hpmap"><span class="pre">Data2hpmap</span></a></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/antennareader/reader.html#AntennaPattern.convert2hp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.convert2hp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the antenna pattern data to healpix format at a given frequency.</p>
 <section id="id1">
 <h4>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
@@ -190,26 +216,63 @@ If False, only the visible pixels are included in the map.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp_phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp_theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_interp_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/antennareader/reader.html#AntennaPattern.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the antenna pattern data for a given frequency and quantity.</p>
+<section id="id3">
+<h4>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
-<dt>Parameters:</dt><dd><p>frequency (float): The frequency for which to retrieve the antenna pattern data.
-quantity (str): The quantity to retrieve. Valid values are “absolute”, “theta_amp”, “phi_amp”, “theta_phase”, and “phi_phase”.
-interp_phi (list, optional): A list of phi values for which to interpolate the data. Defaults to None.
-interp_theta (list, optional): A list of theta values for which to interpolate the data. Defaults to None.
-return_interp_func (bool, optional): Whether to return the interpolation function. Defaults to False.</p>
+<dt>frequency<span class="classifier">float</span></dt><dd><p>The frequency for which to retrieve the antenna pattern data.</p>
 </dd>
-<dt>Returns:</dt><dd><p>pd.DataFrame: A pandas dataframe containing the antenna pattern data for the chosen frequency and quantity. The rows are the phi angles and columns the theta angles.</p>
+<dt>quantity<span class="classifier">str</span></dt><dd><p>The quantity to retrieve. Valid values are “absolute”, “theta_amp”, “phi_amp”, “theta_phase”, and “phi_phase”.</p>
+</dd>
+<dt>interp_phi<span class="classifier">list, optional</span></dt><dd><p>A list of phi values for which to interpolate the data. Defaults to None.</p>
+</dd>
+<dt>interp_theta<span class="classifier">list, optional</span></dt><dd><p>A list of theta values for which to interpolate the data. Defaults to None.</p>
+</dd>
+<dt>return_interp_func<span class="classifier">bool, optional</span></dt><dd><p>Whether to return the interpolation function. Defaults to False.</p>
 </dd>
 </dl>
+</section>
+<section id="id4">
+<h4>Returns<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>A pandas DataFrame containing the antenna pattern data for the chosen frequency and quantity. The rows are the phi angles and columns are the theta angles.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_raw">
 <span class="sig-name descname"><span class="pre">get_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/antennareader/reader.html#AntennaPattern.get_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the antenna pattern data as a dictionary.</p>
-<section id="id3">
-<h4>Returns<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h4>
+<section id="id5">
+<h4>Returns<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>dict</dt><dd><p>A dictionary containing the antenna pattern data.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_volumetric_dataset">
+<span class="sig-name descname"><span class="pre">get_volumetric_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/antennareader/reader.html#AntennaPattern.get_volumetric_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_volumetric_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get volume data for a given quantity and frequencies.</p>
+<section id="id6">
+<h4>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>quantity<span class="classifier">str</span></dt><dd><p>The quantity to retrieve volume data for.</p>
+</dd>
+<dt>frequencies<span class="classifier">Union[List[float], np.ndarray, None], optional</span></dt><dd><p>Frequencies for which volume data is requested.
+It can be either a list or a numpy array of floats.
+If not provided (None), the method will use default frequencies from the <cite>antenna_inst</cite> object.</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h4>Returns<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>A Pandas DataFrame containing volume data for the specified quantity and frequencies.
+The DataFrame is indexed by the frequencies and may have multiple columns depending on the structure of the data retrieved.</p>
 </dd>
 </dl>
 </section>

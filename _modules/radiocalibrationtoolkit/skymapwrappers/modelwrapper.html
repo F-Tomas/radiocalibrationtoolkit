@@ -94,6 +94,9 @@
              
   <h1>Source code for radiocalibrationtoolkit.skymapwrappers.modelwrapper</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module Description</span>
+<span class="sd">------------------</span>
+
 <span class="sd">This module contains three classes: GMOSS, ULSA, and SSM.</span>
 
 <span class="sd">GMOSS - Generates the Galactic and extragalactic sky brightness temperature at frequencies ranging from 30 MHz to 80 MHz based on a table of precomputed values.</span>
@@ -144,8 +147,8 @@
 <span class="sd">    A class to generate the Galactic diffuse emission map from GMRT observations</span>
 <span class="sd">    between 30-80 MHz based on the tabulated data.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
 <span class="sd">    gmoss_map_DF : pandas.DataFrame</span>
 <span class="sd">        Dataframe containing the GMRT observed spectra for Galactic diffuse emission</span>
 <span class="sd">        between 30-80 MHz.</span>
@@ -167,14 +170,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the Galactic diffuse emission map for the given frequency.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        frequency_MHz : float</span>
 <span class="sd">            The frequency value in MHz for which the Galactic diffuse emission map needs</span>
 <span class="sd">            to be generated.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        --------</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">        numpy.ndarray</span>
 <span class="sd">            The generated Galactic diffuse emission map for the given frequency.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -191,8 +194,8 @@
 <span class="sd">    A class to generate the UTR-2 Low-Frequency Sky Atlas maps from the tabulated data</span>
 <span class="sd">    based on the specified index type.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
 <span class="sd">    ulsa_map_DF : pandas.DataFrame</span>
 <span class="sd">        Dataframe containing the UTR-2 Low-Frequency Sky Atlas maps between 30-80 MHz.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -217,14 +220,14 @@
 
 <div class="viewcode-block" id="ULSA.generate"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.ULSA.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequency_MHz</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        frequency_MHz : float</span>
 <span class="sd">            The frequency value in MHz for which the UTR-2 Low-Frequency Sky Atlas map</span>
 <span class="sd">            needs to be generated.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        --------</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">        numpy.ndarray</span>
 <span class="sd">            The generated UTR-2 Low-Frequency Sky Atlas map for the given frequency.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -247,8 +250,8 @@
 
 <div class="viewcode-block" id="SSM.generate"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        frequency_MHz : float</span>
 <span class="sd">            The frequency value in MHz for which the simulated sky map needs to be</span>
 <span class="sd">            generated.</span>
@@ -257,8 +260,8 @@
 <span class="sd">            The value of nside to use for the generation of simulated sky map. The default</span>
 <span class="sd">            value is 64.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        --------</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">        numpy.ndarray</span>
 <span class="sd">            The generated simulated sky map from the Global Sky Model (GSM) for the given</span>
 <span class="sd">            frequency and nside.</span>
@@ -282,8 +285,8 @@
 <span class="sd">    class</span>
 <span class="sd">        The decorated class that adds the CMB temperature to the output.</span>
 
-<span class="sd">    Notes:</span>
-<span class="sd">    ------</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    The CMB temperature (2.7255 K) is added to the output generated by the decorated class.</span>
 
 <span class="sd">    Example</span>

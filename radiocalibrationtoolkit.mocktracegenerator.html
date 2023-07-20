@@ -69,6 +69,7 @@
 <li class="toctree-l1"><a class="reference internal" href="radiocalibrationtoolkit.antennareader.html">antennareader</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mocktracegenerator</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator">mocktracegenerator.mocktracegenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-description">Module Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator.Mock_trace_generator"><code class="docutils literal notranslate"><span class="pre">Mock_trace_generator</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator.Mock_trace_generator.generate_mock_trace"><code class="docutils literal notranslate"><span class="pre">Mock_trace_generator.generate_mock_trace()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator.Mock_trace_generator.get_frequency_bins"><code class="docutils literal notranslate"><span class="pre">Mock_trace_generator.get_frequency_bins()</span></code></a></li>
@@ -109,6 +110,20 @@
 <h1>mocktracegenerator<a class="headerlink" href="#mocktracegenerator" title="Permalink to this heading">¶</a></h1>
 <section id="module-radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator">
 <span id="mocktracegenerator-mocktracegenerator"></span><h2>mocktracegenerator.mocktracegenerator<a class="headerlink" href="#module-radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator" title="Permalink to this heading">¶</a></h2>
+<section id="module-description">
+<h3>Module Description<a class="headerlink" href="#module-description" title="Permalink to this heading">¶</a></h3>
+<p>The <cite>mocktracegenerator</cite> module provides functionalities for generating mock voltage
+time traces. It includes a class <cite>Mock_trace_generator</cite> that allows users to generate
+mock voltage traces based on voltage-to-density conversion values as a function of
+sidereal time and frequency.</p>
+<p>The module uses interpolation functions for the hardware response and impedance, along
+with additional noise, to create realistic mock time traces. It also supports adding
+non-background interference (NBI) to the traces and temperature-varying additional noise.</p>
+<p>Users can specify various parameters, such as the size of the time trace, sampling
+frequency, temperature range, and more, to customize the generated mock traces. The
+module is useful for testing and simulating voltage time traces for antenna pattern
+analysis and other related applications.</p>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator.Mock_trace_generator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Mock_trace_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sidereal_voltage2_density_DF</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hw_response_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">interp1d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impedance_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">interp1d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voltage2ADC</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2048</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_trace_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2048</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_frequency_MHz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/mocktracegenerator/mocktracegenerator.html#Mock_trace_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator.Mock_trace_generator" title="Permalink to this definition">¶</a></dt>

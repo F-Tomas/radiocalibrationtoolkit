@@ -93,7 +93,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for radiocalibrationtoolkit.common.calcfunctions</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module Description</span>
+<span class="sd">------------------</span>
+
+<span class="sd">This module provides calculation functions for the package.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="c1">## import sys</span>
@@ -393,8 +400,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a time trace DataFrame to a spectral density DataFrame using FFT.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    time_trace_df : pandas.DataFrame</span>
 <span class="sd">        DataFrame containing the time trace data. The signal should be stored in columns.</span>
 <span class="sd">    DSC : int, optional (default = 0)</span>
@@ -402,8 +409,8 @@
 <span class="sd">    sampling_frequency_MHz : float, optional (default = 250)</span>
 <span class="sd">        Sampling frequency of the signal in MHz.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    pandas.DataFrame</span>
 <span class="sd">        DataFrame containing the spectral density of the signal. The frequency values are stored in the columns.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -419,8 +426,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the bootstrap confidence interval for the median of the given data.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    data : numpy.ndarray</span>
 <span class="sd">        One-dimensional array containing the data.</span>
 <span class="sd">    B : int, optional (default = 1000)</span>
@@ -428,8 +435,8 @@
 <span class="sd">    alpha : float, optional (default = 0.32)</span>
 <span class="sd">        The level of significance, i.e., the proportion of the confidence interval to be calculated.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    tuple</span>
 <span class="sd">        Lower and upper bounds of the confidence interval.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -450,15 +457,15 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the robust regression coefficients for the given data using the HuberT norm.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    x_arr : numpy.ndarray</span>
 <span class="sd">        One-dimensional array containing the predictor data.</span>
 <span class="sd">    y_arr : numpy.ndarray</span>
 <span class="sd">        One-dimensional array containing the response data.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    numpy.ndarray</span>
 <span class="sd">        Array containing the intercept and slope of the regression model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -471,13 +478,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the given value from decibel scale to power amplitude scale.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    dB : float</span>
 <span class="sd">        Value to be converted in decibel scale.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    float</span>
 <span class="sd">        Value converted to power amplitude scale.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -488,13 +495,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the given value from decibel scale to voltage amplitude scale.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    dB : float</span>
 <span class="sd">        Value to be converted in decibel scale.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    float</span>
 <span class="sd">        Value converted to voltage amplitude scale.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -505,13 +512,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the given value from power amplitude scale to decibel scale.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    powerAmp : float</span>
 <span class="sd">        Value to be converted in power amplitude scale.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    float</span>
 <span class="sd">        Value converted to decibel scale.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -522,13 +529,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the given value from voltage amplitude scale to decibel scale.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    voltageAmp : float</span>
 <span class="sd">        Value to be converted in voltage amplitude scale.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    float</span>
 <span class="sd">        Value converted to decibel scale.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -539,10 +546,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the energy from a two-sided spectrum.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        spectrum (np.ndarray): Two-sided spectrum array.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        float: Energy calculated from the spectrum.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">spectrum</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">size</span></div>
@@ -552,10 +559,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the energy from a time trace.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        time_trace (np.ndarray): Time trace array.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        float: Energy calculated from the time trace.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">time_trace</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
@@ -565,10 +572,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the energy from a one-sided spectrum.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        rspectrum (np.ndarray): One-sided spectrum array.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        float: Energy calculated from the one-sided spectrum.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span>
@@ -582,10 +589,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the energy from a one-sided spectrum with correction for one side.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        r2spectrum (np.ndarray): One-sided spectrum array.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        float: Energy calculated from the one-sided spectrum with correction.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">r2spectrum</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">r2spectrum</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
@@ -595,10 +602,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corrects the energy of a one-sided spectrum.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        spectrum (np.ndarray): One-sided spectrum array.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        np.ndarray: Corrected one-sided spectrum array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">r2spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -612,12 +619,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates a 1-D array of evenly spaced values centered around a middle value.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        middle (float): The middle value.</span>
 <span class="sd">        radius (float): The radius around the middle value.</span>
 <span class="sd">        num_samples (int): The number of samples to generate.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        np.ndarray: An array of evenly spaced values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">middle</span> <span class="o">-</span> <span class="n">radius</span><span class="p">,</span> <span class="n">middle</span> <span class="o">+</span> <span class="n">radius</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span></div>
@@ -629,12 +636,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the truncated mean and standard deviation of the given data within the specified percentiles.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        data (np.ndarray): Input data array.</span>
 <span class="sd">        lower_percentile (float): Lower percentile threshold.</span>
 <span class="sd">        upper_percentile (float): Upper percentile threshold.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        tuple: A tuple containing the truncated mean and standard deviation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Filter the data within the specified percentiles</span>
@@ -665,13 +672,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the fitted voltage calibration parameters and noise offsets.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">        power_sim_DF : pd.DataFrame</span>
 <span class="sd">            Simulated power DataFrame with frequency columns.</span>
 <span class="sd">        power_rec_DF : pd.DataFrame</span>
 <span class="sd">            Recorded power DataFrame with frequency columns.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">        tuple</span>
 <span class="sd">            A tuple containing two DataFrames:</span>
 <span class="sd">            - First DataFrame: Fitted voltage calibration parameters with frequency columns.</span>
@@ -752,7 +759,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    tuple</span>
-<span class="sd">        A tuple containing the statistics of the frequency-independent calibration parameters:</span>
+<span class="sd">        A tuple containing the statistics of the frequency-independent calibration Parameters</span>
 <span class="sd">        - Total central value</span>
 <span class="sd">        - Lower bound of the central value</span>
 <span class="sd">        - Upper bound of the central value</span>
@@ -974,8 +981,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply Kernel Density Estimation (KDE) on input data and calculate relevant statistics.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    input_data : pd.DataFrame</span>
 <span class="sd">        Input data for KDE estimation.</span>
 
@@ -988,19 +995,19 @@
 <span class="sd">    data_in_relative_values : bool, optional</span>
 <span class="sd">        Flag to indicate whether the input data is in relative values. Default is False.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    tuple[np.ndarray, np.ndarray]</span>
 <span class="sd">        Tuple containing the x-axis values, log densities, and calculated statistics.</span>
 
-<span class="sd">    Notes:</span>
-<span class="sd">    ------</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    - This function applies Kernel Density Estimation (KDE) on the input data using a Gaussian kernel and bandwidth of 0.05.</span>
 <span class="sd">    - It calculates the log densities and relevant statistics based on the KDE estimation.</span>
 <span class="sd">    - If show_plots is True, it displays the KDE plot along with relevant annotations and fills the area within +/- one standard deviation.</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">    --------</span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
 <span class="sd">    # Example usage</span>
 <span class="sd">    xaxis_values, log_densities, statistics = apply_KDE(input_data, bounds=(0.2, 1.8), show_plots=True)</span>
 <span class="sd">    &quot;&quot;&quot;</span>

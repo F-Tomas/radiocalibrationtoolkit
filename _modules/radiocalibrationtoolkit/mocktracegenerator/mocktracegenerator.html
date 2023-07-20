@@ -93,7 +93,25 @@
            <div itemprop="articleBody">
              
   <h1>Source code for radiocalibrationtoolkit.mocktracegenerator.mocktracegenerator</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module Description</span>
+<span class="sd">------------------</span>
+
+<span class="sd">The `mocktracegenerator` module provides functionalities for generating mock voltage</span>
+<span class="sd">time traces. It includes a class `Mock_trace_generator` that allows users to generate</span>
+<span class="sd">mock voltage traces based on voltage-to-density conversion values as a function of</span>
+<span class="sd">sidereal time and frequency.</span>
+
+<span class="sd">The module uses interpolation functions for the hardware response and impedance, along</span>
+<span class="sd">with additional noise, to create realistic mock time traces. It also supports adding</span>
+<span class="sd">non-background interference (NBI) to the traces and temperature-varying additional noise.</span>
+
+<span class="sd">Users can specify various parameters, such as the size of the time trace, sampling</span>
+<span class="sd">frequency, temperature range, and more, to customize the generated mock traces. The</span>
+<span class="sd">module is useful for testing and simulating voltage time traces for antenna pattern</span>
+<span class="sd">analysis and other related applications.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 

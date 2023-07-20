@@ -67,6 +67,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">skymapwrappers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-radiocalibrationtoolkit.skymapwrappers.modelwrapper">skymapwrappers.modelwrapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-description">Module Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS"><code class="docutils literal notranslate"><span class="pre">GMOSS</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS.generate"><code class="docutils literal notranslate"><span class="pre">GMOSS.generate()</span></code></a></li>
 </ul>
@@ -119,6 +120,8 @@
 <h1>skymapwrappers<a class="headerlink" href="#skymapwrappers" title="Permalink to this heading">¶</a></h1>
 <section id="module-radiocalibrationtoolkit.skymapwrappers.modelwrapper">
 <span id="skymapwrappers-modelwrapper"></span><h2>skymapwrappers.modelwrapper<a class="headerlink" href="#module-radiocalibrationtoolkit.skymapwrappers.modelwrapper" title="Permalink to this heading">¶</a></h2>
+<section id="module-description">
+<h3>Module Description<a class="headerlink" href="#module-description" title="Permalink to this heading">¶</a></h3>
 <p>This module contains three classes: GMOSS, ULSA, and SSM.</p>
 <p>GMOSS - Generates the Galactic and extragalactic sky brightness temperature at frequencies ranging from 30 MHz to 80 MHz based on a table of precomputed values.</p>
 <p>ULSA - Generates the ultra-large scale structure (ULSS) component of the sky brightness temperature at frequencies ranging from 30 MHz to 80 MHz based on a table of precomputed values.</p>
@@ -127,6 +130,7 @@
 <p>Usage:
 Instantiate a class and call its “generate” method with a frequency in MHz as an argument. The “generate” method will return an array of brightness temperature values.</p>
 <p>Note: These classes assume that the user has the necessary data files and functions installed on their system.</p>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GMOSS</span></span><a class="reference internal" href="_modules/radiocalibrationtoolkit/skymapwrappers/modelwrapper.html#GMOSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS" title="Permalink to this definition">¶</a></dt>
@@ -134,7 +138,7 @@ Instantiate a class and call its “generate” method with a frequency in MHz a
 <p>A class to generate the Galactic diffuse emission map from GMRT observations
 between 30-80 MHz based on the tabulated data.</p>
 <section id="attributes">
-<h3>Attributes:<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h3>
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>gmoss_map_DF<span class="classifier">pandas.DataFrame</span></dt><dd><p>Dataframe containing the GMRT observed spectra for Galactic diffuse emission
 between 30-80 MHz.</p>
@@ -145,7 +149,7 @@ between 30-80 MHz.</p>
 <span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency_MHz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/skymapwrappers/modelwrapper.html#GMOSS.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS.generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the Galactic diffuse emission map for the given frequency.</p>
 <section id="parameters">
-<h4>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h4>
+<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>frequency_MHz<span class="classifier">float</span></dt><dd><p>The frequency value in MHz for which the Galactic diffuse emission map needs
 to be generated.</p>
@@ -153,7 +157,7 @@ to be generated.</p>
 </dl>
 </section>
 <section id="returns">
-<h4>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h4>
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>numpy.ndarray</dt><dd><p>The generated Galactic diffuse emission map for the given frequency.</p>
 </dd>
@@ -186,7 +190,7 @@ the specified frequency and nside.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM.generate">
 <span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency_MHz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/skymapwrappers/modelwrapper.html#SSM.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM.generate" title="Permalink to this definition">¶</a></dt>
 <dd><section id="id1">
-<h3>Parameters:<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>frequency_MHz<span class="classifier">float</span></dt><dd><p>The frequency value in MHz for which the simulated sky map needs to be
 generated.</p>
@@ -197,7 +201,7 @@ value is 64.</p>
 </dl>
 </section>
 <section id="id2">
-<h3>Returns:<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>numpy.ndarray</dt><dd><p>The generated simulated sky map from the Global Sky Model (GSM) for the given
 frequency and nside.</p>
@@ -215,7 +219,7 @@ frequency and nside.</p>
 <p>A class to generate the UTR-2 Low-Frequency Sky Atlas maps from the tabulated data
 based on the specified index type.</p>
 <section id="id3">
-<h3>Attributes:<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<h3>Attributes<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>ulsa_map_DF<span class="classifier">pandas.DataFrame</span></dt><dd><p>Dataframe containing the UTR-2 Low-Frequency Sky Atlas maps between 30-80 MHz.</p>
 </dd>
@@ -224,7 +228,7 @@ based on the specified index type.</p>
 <dt class="sig sig-object py" id="radiocalibrationtoolkit.skymapwrappers.modelwrapper.ULSA.generate">
 <span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency_MHz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/skymapwrappers/modelwrapper.html#ULSA.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.skymapwrappers.modelwrapper.ULSA.generate" title="Permalink to this definition">¶</a></dt>
 <dd><section id="id4">
-<h4>Parameters:<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
+<h4>Parameters<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>frequency_MHz<span class="classifier">float</span></dt><dd><p>The frequency value in MHz for which the UTR-2 Low-Frequency Sky Atlas map
 needs to be generated.</p>
@@ -232,7 +236,7 @@ needs to be generated.</p>
 </dl>
 </section>
 <section id="id5">
-<h4>Returns:<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h4>
+<h4>Returns<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h4>
 <dl class="simple">
 <dt>numpy.ndarray</dt><dd><p>The generated UTR-2 Low-Frequency Sky Atlas map for the given frequency.</p>
 </dd>
@@ -262,7 +266,7 @@ needs to be generated.</p>
 </dl>
 </section>
 <section id="notes">
-<h3>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h3>
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h3>
 <p>The CMB temperature (2.7255 K) is added to the output generated by the decorated class.</p>
 </section>
 <section id="example">

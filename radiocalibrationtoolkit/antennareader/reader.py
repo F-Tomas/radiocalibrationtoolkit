@@ -38,8 +38,8 @@ from ..common import *
 
 class AntennaPattern:
     """
-    This class reads the antenna pattern from an XML file format and can interpolate the pattern for a
-    finer spacing or convert it to a healpy format.
+    This class reads antenna pattern data from an XML file and provides methods to work
+    with the pattern data, interpolate it, convert it to healpix format, and more.
 
     Parameters
     ----------
@@ -47,6 +47,9 @@ class AntennaPattern:
         The path of the XML file containing the antenna pattern data.
     frange : Tuple[float, float], optional
         The frequency range of interest, by default [0, np.inf].
+    new_antenna_conventions : dict, optional
+        A dictionary of new antenna conventions to apply for coordinate adjustments,
+        by default an empty dictionary.
 
     Attributes
     ----------
@@ -61,29 +64,67 @@ class AntennaPattern:
     -------
     get_raw() -> dict:
         Returns the antenna pattern data as a dictionary.
-    get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None, return_interp_func: bool = False) -> pd.DataFrame:
+    get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None,
+        return_interp_func: bool = False, return_with_updated_conventions: bool = True) -> pd.DataFrame:
         Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity.
         Interpolates the data based on interp_phi and interp_theta if provided.
     get_volumetric_dataset(quantity: str, frequencies: Union[List[float], np.ndarray, None] = None) -> pd.DataFrame:
         Get volume data for a given quantity and frequencies.
-    convert2hp(
-        frequency: float,
-        shift_phi: float = 0,
-        flip_theta: bool = False,
-        flip_phi: bool = False,
-        in_degrees: bool = True,
-        quantity: str = "absolute",
-        add_invisible_sky: bool = True,
-    ) -> Data2hpmap:
+    convert2hp(frequency: float, shift_phi: float = 0, flip_theta: bool = False, flip_phi: bool = False,
+              in_degrees: bool = True, quantity: str = "absolute", add_invisible_sky: bool = False) -> Data2hpmap:
         Convert the antenna pattern data to healpix format at a given frequency.
 
     Returns
     -------
     Data2hpmap
         A Data2hpmap object containing the antenna pattern data in healpix format.
+
+    Notes
+    -----
+    This class provides functionality to work with antenna pattern data, including
+    interpolation, coordinate adjustments, and conversion to healpix format.
+
+    Example
+    -------
+    # Create an instance of AntennaPattern
+    antenna_inst = AntennaPattern(antennaPath="path/to/antenna.xml")
+
+    # Get antenna pattern data for a specific frequency and quantity
+    data = antenna_inst.get(frequency=50, quantity="theta_amp")
+
+    # Convert the antenna pattern data to healpix format
+    healpix_data = antenna_inst.convert2hp(frequency=50)
+
     """
 
-    def __init__(self, antennaPath: str, frange: Tuple[float, float] = (0, np.inf)):
+    def __init__(
+        self,
+        antennaPath: str,
+        frange: Tuple[float, float] = (0, np.inf),
+        new_antenna_conventions: dict = {},
+    ):
+        self._antenna_conventions = {
+            "flip_theta": False,
+            "flip_phi": False,
+            "shift_phi": 0,
+            "add_invisible_sky": False,
+            "in_degrees": True,
+        }
+        self._default_settings_for_conventions = self._antenna_conventions.copy()
+
+        updated_convention_keys = set(self._antenna_conventions) & set(
+            new_antenna_conventions
+        )
+        self._antenna_conventions.update(new_antenna_conventions)
+        if updated_convention_keys != set():
+            self.__updated_conventions = True
+            print(
+                "[INFO] These conventions will be updated on output:",
+                updated_convention_keys,
+            )
+        else:
+            self.__updated_conventions = False
+
         """Constructor method for AntennaPattern class."""
         self._xml_dict = collections.defaultdict(dict)
         root_ = GetXMLRoot(antennaPath)
@@ -134,6 +175,7 @@ class AntennaPattern:
         interp_phi: list = None,
         interp_theta: list = None,
         return_interp_func: bool = False,
+        return_with_updated_conventions: bool = True,
     ) -> pd.DataFrame:
         """
         Get the antenna pattern data for a given frequency and quantity.
@@ -194,7 +236,11 @@ class AntennaPattern:
             )
         temporary_DF.index.name = "phi"
         temporary_DF.columns.name = "theta"
-        return temporary_DF
+
+        if self.__updated_conventions and return_with_updated_conventions:
+            return update_antenna_coordinates(temporary_DF, **self._antenna_conventions)
+        else:
+            return temporary_DF
 
     def get_volumetric_dataset(
         self, quantity: str, frequencies: Union[List[float], np.ndarray, None] = None
@@ -272,7 +318,7 @@ class AntennaPattern:
         flip_phi: bool = False,
         in_degrees: bool = True,
         quantity: str = "absolute",
-        add_invisible_sky: bool = True,
+        add_invisible_sky: bool = False,
     ) -> Data2hpmap:
         """
         Convert the antenna pattern data to healpix format at a given frequency.
@@ -308,10 +354,28 @@ class AntennaPattern:
     class _Convert2hp(Data2hpmap):
         def __init__(self, AntennaPattern, **kwargs):
             self._frequency = kwargs["frequency"]
-            self._df = AntennaPattern.get(
-                frequency=self._frequency, quantity=kwargs["quantity"]
-            )
+            quantity = kwargs["quantity"]
             del_keys(kwargs, ["frequency", "quantity"])
+
+            # if updated antenna settings are provided by the "convert2hp" method,
+            # the ones from the class are not used,
+            if kwargs == AntennaPattern._default_settings_for_conventions:
+                # nothing in kwargs is provided (settings from the class constructor are used)
+                print(
+                    "[INFO] Using updated antenna conventions provided at the class constructor"
+                )
+                kwargs = self._antenna_conventions
+            else:
+                # some settings are provided, then use those, do not update the kwargs
+                pass
+
+            # here we must get the default df without updated conventions, since these are going to be updated
+            # later in the Data2hpmap class
+            self._df = AntennaPattern.get(
+                frequency=self._frequency,
+                quantity=quantity,
+                return_with_updated_conventions=False,
+            )
             super().__init__(self._df, **kwargs)
 
         def get_frequency(self):

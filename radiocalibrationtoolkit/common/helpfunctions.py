@@ -459,52 +459,16 @@ class Data2hpmap:
         in_degrees=False,
         add_invisible_sky=False,
     ):
-        if isinstance(data, pd.DataFrame):
-            df = data.copy(deep=True)
-        else:
-            if isinstance(phi, (list, np.ndarray)) and isinstance(
-                theta, (list, np.ndarray)
-            ):
-                df = pd.DataFrame(data, columns=theta, index=phi)
-            else:
-                print("[ERROR] Data are not a pandas dataframe. Define theta= and phi=")
-
-        # just in case...
-        df.columns = df.columns.values.astype(float)
-        df.index = df.index.values.astype(float)
+        args = locals().copy()
+        del args["self"]
+        df = update_antenna_coordinates(**args)
 
         if in_degrees:
-            df.columns = np.deg2rad(df.columns.values)
-            df.index = np.deg2rad(df.index.values)
-            shift_phi = np.deg2rad(shift_phi)
-
-        # reorder to ascending order if needed
-        if df.columns[0] > df.columns[-1]:
-            df = df.loc[:, ::-1]
-        if df.index[0] > df.index[-1]:
-            df = df.loc[::-1, :]
-
-        if add_invisible_sky:
-            if flip_theta:
-                df.iloc[:, :] = df.iloc[:, ::-1].values
-            if df.columns[0] > np.pi / 2:  # in case that theta goes from pi/2 to pi
-                df.columns = df.columns - np.pi / 2
-            elif df.columns[0] < 0:
-                print("[ERROR] Theta for the half sky cannot be negative.")
-                return None
-            invisible_DF = pd.DataFrame(
-                np.zeros(df.shape)[:, :-1],
-                columns=-df.columns.values[1:][::-1],
-                index=df.index,
-            )
-            df_complete = pd.concat((invisible_DF, df), axis=1)
+            phi_g = np.deg2rad(df.index.values)
+            theta_g = np.deg2rad(df.columns.values)
         else:
-            df_complete = df
-            if flip_theta:
-                df_complete.iloc[:, :] = df_complete.iloc[:, ::-1].values
-
-        phi_g = df_complete.index.values
-        theta_g = df_complete.columns.values
+            phi_g = df.index.values
+            theta_g = df.columns.values
 
         # adjust to conventions
         if phi_g.max() > np.pi:  # if phi range is 0,2pi change it to -/+pi
@@ -512,21 +476,12 @@ class Data2hpmap:
         if theta_g.min() < 0:  # if theta is -/+pi/2 change it to 0,pi
             theta_g = theta_g + np.pi / 2
 
-        # shifting in azimuth
-        if shift_phi != 0:
-            shifted = my_modulo((phi_g + np.pi + shift_phi), (2 * np.pi))
-            new_row_order = np.argsort(np.argsort(shifted))
-            df_complete.iloc[:, :] = df_complete.iloc[new_row_order, :].values
-
-        if flip_phi:
-            df_complete.iloc[:, :] = df_complete.iloc[::-1, :].values
-
-        # return df_complete
         # internally healpy has different ordering, the 'theta' is in descending order, starting with pi, flipping it here
         self._interp2d_func = RegularGridInterpolator(
-            (phi_g, theta_g), df_complete.values[:, ::-1]
+            (phi_g, theta_g), df.values[:, ::-1]
         )
-        self.df_complete = df_complete
+
+        self.df = df
 
     def get_grid_df(self) -> pd.DataFrame:
         """
@@ -538,7 +493,7 @@ class Data2hpmap:
         pd.DataFrame
             The input data as a pandas DataFrame.
         """
-        return self.df_complete
+        return self.df
 
     def get_map(
         self, nside: int = 64, rotator: type(Rotator) = Rotator(rot=[0, 0])
@@ -586,6 +541,171 @@ class Data2hpmap:
         and returns the interpolated values at the corresponding (phi, theta) positions.
         """
         return self._interp2d_func
+
+
+def update_antenna_coordinates(
+    data,
+    phi=None,
+    theta=None,
+    flip_theta=False,
+    flip_phi=False,
+    shift_phi=0,
+    add_invisible_sky=False,
+    in_degrees=False,
+):
+    """
+    Update the antenna coordinates represented by a DataFrame.
+
+    This function modifies the input DataFrame representing antenna coordinates based
+    on the provided parameters.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame or numpy.ndarray
+        Input data representing antenna coordinates. If a DataFrame is provided, it is
+        deep-copied to ensure data integrity. If a numpy ndarray is provided, the 'phi'
+        and 'theta' parameters must also be provided to create a DataFrame.
+    phi : list, numpy.ndarray, optional
+        List or array representing phi values (azimuth angles). Required when 'data'
+        is an ndarray.
+    theta : list, numpy.ndarray, optional
+        List or array representing theta values (zenith angles). Required when 'data'
+        is an ndarray.
+    flip_theta : bool, optional
+        If True, flip the theta values. Default is False.
+    flip_phi : bool, optional
+        If True, flip the phi values. Default is False.
+    shift_phi : float, optional
+        Shift the phi values by the specified angle (in radians). Default is 0.
+    add_invisible_sky : bool, optional
+        If True, add an invisible sky sector by mirroring the existing data. Default is
+        False.
+    in_degrees : bool, optional
+        If True, treat the input angles in degrees, otherwise, radians. Default is False.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A modified DataFrame containing the updated antenna coordinates.
+
+    Notes
+    -----
+    This function updates the input data to match the specified coordinate adjustments.
+    It handles flipping, shifting, and periodicity of the input data based on the given
+    parameters.
+
+    Raises
+    ------
+    ValueError
+        Raised if the input data is not a pandas DataFrame and 'phi' or 'theta' are not
+        provided.
+
+    Example
+    -------
+    # Create a DataFrame with antenna coordinates
+    data = pd.DataFrame([[1, 2], [3, 4]], index=[0.0, 0.5], columns=[0.0, 1.0])
+
+    # Update the antenna coordinates
+    updated_data = update_antenna_coordinates(data, flip_phi=True)
+
+    """
+    if isinstance(data, pd.DataFrame):
+        df = data.copy(deep=True)
+    else:
+        if isinstance(phi, (list, np.ndarray)) and isinstance(
+            theta, (list, np.ndarray)
+        ):
+            df = pd.DataFrame(data, columns=theta, index=phi)
+        else:
+            print("[ERROR] Data are not a pandas dataframe. Define theta= and phi=")
+
+    # save index and column names, if any
+    index_name = df.index.name
+    columns_name = df.columns.name
+
+    # just in case...
+    df.columns = df.columns.values.astype(float)
+    df.index = df.index.values.astype(float)
+
+    if in_degrees:
+        df.columns = np.deg2rad(df.columns.values)
+        df.index = np.deg2rad(df.index.values)
+        shift_phi = np.deg2rad(shift_phi)
+
+    # reorder to ascending order if needed
+    if df.columns[0] > df.columns[-1]:
+        df = df.loc[:, ::-1]
+    if df.index[0] > df.index[-1]:
+        df = df.loc[::-1, :]
+
+    if add_invisible_sky:
+        if flip_theta:
+            df.iloc[:, :] = df.iloc[:, ::-1].values
+        if df.columns[0] > np.pi / 2:  # in case that theta goes from pi/2 to pi
+            df.columns = df.columns - np.pi / 2
+        elif df.columns[0] < 0:
+            print("[ERROR] Theta for the half sky cannot be negative.")
+            return None
+        invisible_DF = pd.DataFrame(
+            np.zeros(df.shape)[:, :-1],
+            columns=-df.columns.values[1:][::-1],
+            index=df.index,
+        )
+        df_complete = pd.concat((invisible_DF, df), axis=1)
+    else:
+        df_complete = df
+        if flip_theta:
+            df_complete.iloc[:, :] = df_complete.iloc[:, ::-1].values
+
+    # if the dataframe is periodic (it should be!) then temporary delete this periodicity
+    if (
+        np.sum(df_complete.iloc[0, :] == df_complete.iloc[-1, :])
+        == df_complete.columns.size
+    ):
+        periodic = True
+        index_value = df_complete.index[-1]
+        df_complete = df_complete.iloc[:-1, :].copy(deep=True)
+    else:
+        periodic = False
+
+    phi_g = df_complete.index.values
+    theta_g = df_complete.columns.values
+
+    # adjust to conventions
+    if phi_g.max() > np.pi:  # if phi range is 0,2pi change it to -/+pi
+        phi_g = phi_g - np.pi
+    if theta_g.min() < 0:  # if theta is -/+pi/2 change it to 0,pi
+        theta_g = theta_g + np.pi / 2
+
+    # shifting in azimuth
+    if shift_phi != 0:
+        shifted = my_modulo((phi_g + np.pi + shift_phi), (2 * np.pi))
+        new_row_order = np.argsort(np.argsort(shifted))
+        df_complete.iloc[:, :] = df_complete.iloc[new_row_order, :].values
+
+    if flip_phi:
+        df_complete.iloc[:, :] = df_complete.iloc[::-1, :].values
+
+    # add back updated periodic boundary
+    if periodic:
+        df_complete.loc[index_value, :] = df_complete.iloc[0, :].values
+    else:
+        print(
+            "[WARN] The data where not periodic, i.e., the first and last column were not the same!"
+        )
+        print("[WARN] Trying to recover this but copying first row to a new last row.")
+        df_complete.loc[2 * np.pi, :] = df_complete.iloc[0, :].values
+
+    # convert back if it was in degrees
+    if in_degrees:
+        df_complete.columns = np.around(np.rad2deg(df_complete.columns.values), 5)
+        df_complete.index = np.around(np.rad2deg(df_complete.index.values), 5)
+
+    # put back index and column names
+    df_complete.index.name = index_name
+    df_complete.columns.name = columns_name
+
+    return df_complete
 
 
 def fig_to_image(fig):

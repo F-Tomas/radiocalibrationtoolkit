@@ -134,6 +134,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.helpfunctions.print_map_properties"><code class="docutils literal notranslate"><span class="pre">print_map_properties()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.helpfunctions.read_hw_file"><code class="docutils literal notranslate"><span class="pre">read_hw_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.helpfunctions.rotate_default_hpmap_array_from_galactic2local_coordinates"><code class="docutils literal notranslate"><span class="pre">rotate_default_hpmap_array_from_galactic2local_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#radiocalibrationtoolkit.common.helpfunctions.update_antenna_coordinates"><code class="docutils literal notranslate"><span class="pre">update_antenna_coordinates()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1533,6 +1534,68 @@ Else, values are interpolation functions.</p>
 <dt>latitude<span class="classifier">float or None</span></dt><dd><p>The latitude of the observer in degrees. If None, defaults to 0.</p>
 </dd>
 </dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="radiocalibrationtoolkit.common.helpfunctions.update_antenna_coordinates">
+<span class="sig-name descname"><span class="pre">update_antenna_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_invisible_sky</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/radiocalibrationtoolkit/common/helpfunctions.html#update_antenna_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiocalibrationtoolkit.common.helpfunctions.update_antenna_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the antenna coordinates represented by a DataFrame.</p>
+<p>This function modifies the input DataFrame representing antenna coordinates based
+on the provided parameters.</p>
+<section id="id105">
+<h3>Parameters<a class="headerlink" href="#id105" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>data<span class="classifier">pandas.DataFrame or numpy.ndarray</span></dt><dd><p>Input data representing antenna coordinates. If a DataFrame is provided, it is
+deep-copied to ensure data integrity. If a numpy ndarray is provided, the ‘phi’
+and ‘theta’ parameters must also be provided to create a DataFrame.</p>
+</dd>
+<dt>phi<span class="classifier">list, numpy.ndarray, optional</span></dt><dd><p>List or array representing phi values (azimuth angles). Required when ‘data’
+is an ndarray.</p>
+</dd>
+<dt>theta<span class="classifier">list, numpy.ndarray, optional</span></dt><dd><p>List or array representing theta values (zenith angles). Required when ‘data’
+is an ndarray.</p>
+</dd>
+<dt>flip_theta<span class="classifier">bool, optional</span></dt><dd><p>If True, flip the theta values. Default is False.</p>
+</dd>
+<dt>flip_phi<span class="classifier">bool, optional</span></dt><dd><p>If True, flip the phi values. Default is False.</p>
+</dd>
+<dt>shift_phi<span class="classifier">float, optional</span></dt><dd><p>Shift the phi values by the specified angle (in radians). Default is 0.</p>
+</dd>
+<dt>add_invisible_sky<span class="classifier">bool, optional</span></dt><dd><p>If True, add an invisible sky sector by mirroring the existing data. Default is
+False.</p>
+</dd>
+<dt>in_degrees<span class="classifier">bool, optional</span></dt><dd><p>If True, treat the input angles in degrees, otherwise, radians. Default is False.</p>
+</dd>
+</dl>
+</section>
+<section id="id106">
+<h3>Returns<a class="headerlink" href="#id106" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>A modified DataFrame containing the updated antenna coordinates.</p>
+</dd>
+</dl>
+</section>
+<section id="id107">
+<h3>Notes<a class="headerlink" href="#id107" title="Permalink to this heading">¶</a></h3>
+<p>This function updates the input data to match the specified coordinate adjustments.
+It handles flipping, shifting, and periodicity of the input data based on the given
+parameters.</p>
+</section>
+<section id="id108">
+<h3>Raises<a class="headerlink" href="#id108" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>Raised if the input data is not a pandas DataFrame and ‘phi’ or ‘theta’ are not
+provided.</p>
+</dd>
+</dl>
+</section>
+<section id="id109">
+<h3>Example<a class="headerlink" href="#id109" title="Permalink to this heading">¶</a></h3>
+<p># Create a DataFrame with antenna coordinates
+data = pd.DataFrame([[1, 2], [3, 4]], index=[0.0, 0.5], columns=[0.0, 1.0])</p>
+<p># Update the antenna coordinates
+updated_data = update_antenna_coordinates(data, flip_phi=True)</p>
 </section>
 </dd></dl>
 

@@ -133,8 +133,8 @@
 
 <div class="viewcode-block" id="AntennaPattern"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.antennareader.html#radiocalibrationtoolkit.antennareader.reader.AntennaPattern">[docs]</a><span class="k">class</span> <span class="nc">AntennaPattern</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class reads the antenna pattern from an XML file format and can interpolate the pattern for a</span>
-<span class="sd">    finer spacing or convert it to a healpy format.</span>
+<span class="sd">    This class reads antenna pattern data from an XML file and provides methods to work</span>
+<span class="sd">    with the pattern data, interpolate it, convert it to healpix format, and more.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -142,6 +142,9 @@
 <span class="sd">        The path of the XML file containing the antenna pattern data.</span>
 <span class="sd">    frange : Tuple[float, float], optional</span>
 <span class="sd">        The frequency range of interest, by default [0, np.inf].</span>
+<span class="sd">    new_antenna_conventions : dict, optional</span>
+<span class="sd">        A dictionary of new antenna conventions to apply for coordinate adjustments,</span>
+<span class="sd">        by default an empty dictionary.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -156,29 +159,67 @@
 <span class="sd">    -------</span>
 <span class="sd">    get_raw() -&gt; dict:</span>
 <span class="sd">        Returns the antenna pattern data as a dictionary.</span>
-<span class="sd">    get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None, return_interp_func: bool = False) -&gt; pd.DataFrame:</span>
+<span class="sd">    get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None,</span>
+<span class="sd">        return_interp_func: bool = False, return_with_updated_conventions: bool = True) -&gt; pd.DataFrame:</span>
 <span class="sd">        Returns antenna pattern data as a pandas DataFrame for the given frequency and quantity.</span>
 <span class="sd">        Interpolates the data based on interp_phi and interp_theta if provided.</span>
 <span class="sd">    get_volumetric_dataset(quantity: str, frequencies: Union[List[float], np.ndarray, None] = None) -&gt; pd.DataFrame:</span>
 <span class="sd">        Get volume data for a given quantity and frequencies.</span>
-<span class="sd">    convert2hp(</span>
-<span class="sd">        frequency: float,</span>
-<span class="sd">        shift_phi: float = 0,</span>
-<span class="sd">        flip_theta: bool = False,</span>
-<span class="sd">        flip_phi: bool = False,</span>
-<span class="sd">        in_degrees: bool = True,</span>
-<span class="sd">        quantity: str = &quot;absolute&quot;,</span>
-<span class="sd">        add_invisible_sky: bool = True,</span>
-<span class="sd">    ) -&gt; Data2hpmap:</span>
+<span class="sd">    convert2hp(frequency: float, shift_phi: float = 0, flip_theta: bool = False, flip_phi: bool = False,</span>
+<span class="sd">              in_degrees: bool = True, quantity: str = &quot;absolute&quot;, add_invisible_sky: bool = False) -&gt; Data2hpmap:</span>
 <span class="sd">        Convert the antenna pattern data to healpix format at a given frequency.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Data2hpmap</span>
 <span class="sd">        A Data2hpmap object containing the antenna pattern data in healpix format.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class provides functionality to work with antenna pattern data, including</span>
+<span class="sd">    interpolation, coordinate adjustments, and conversion to healpix format.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # Create an instance of AntennaPattern</span>
+<span class="sd">    antenna_inst = AntennaPattern(antennaPath=&quot;path/to/antenna.xml&quot;)</span>
+
+<span class="sd">    # Get antenna pattern data for a specific frequency and quantity</span>
+<span class="sd">    data = antenna_inst.get(frequency=50, quantity=&quot;theta_amp&quot;)</span>
+
+<span class="sd">    # Convert the antenna pattern data to healpix format</span>
+<span class="sd">    healpix_data = antenna_inst.convert2hp(frequency=50)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">antennaPath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frange</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">antennaPath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">frange</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
+        <span class="n">new_antenna_conventions</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_antenna_conventions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;flip_theta&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;flip_phi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;shift_phi&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;add_invisible_sky&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;in_degrees&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_settings_for_conventions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_antenna_conventions</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">updated_convention_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_antenna_conventions</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="n">new_antenna_conventions</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_antenna_conventions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_antenna_conventions</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">updated_convention_keys</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__updated_conventions</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;[INFO] These conventions will be updated on output:&quot;</span><span class="p">,</span>
+                <span class="n">updated_convention_keys</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__updated_conventions</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="sd">&quot;&quot;&quot;Constructor method for AntennaPattern class.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_xml_dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
         <span class="n">root_</span> <span class="o">=</span> <span class="n">GetXMLRoot</span><span class="p">(</span><span class="n">antennaPath</span><span class="p">)</span>
@@ -229,6 +270,7 @@
         <span class="n">interp_phi</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">interp_theta</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">return_interp_func</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">return_with_updated_conventions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the antenna pattern data for a given frequency and quantity.</span>
@@ -289,7 +331,11 @@
             <span class="p">)</span>
         <span class="n">temporary_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;phi&quot;</span>
         <span class="n">temporary_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;theta&quot;</span>
-        <span class="k">return</span> <span class="n">temporary_DF</span></div>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__updated_conventions</span> <span class="ow">and</span> <span class="n">return_with_updated_conventions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">update_antenna_coordinates</span><span class="p">(</span><span class="n">temporary_DF</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_antenna_conventions</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">temporary_DF</span></div>
 
 <div class="viewcode-block" id="AntennaPattern.get_volumetric_dataset"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.antennareader.html#radiocalibrationtoolkit.antennareader.reader.AntennaPattern.get_volumetric_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_volumetric_dataset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -367,7 +413,7 @@
         <span class="n">flip_phi</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">in_degrees</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">quantity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;absolute&quot;</span><span class="p">,</span>
-        <span class="n">add_invisible_sky</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_invisible_sky</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data2hpmap</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the antenna pattern data to healpix format at a given frequency.</span>
@@ -403,10 +449,28 @@
     <span class="k">class</span> <span class="nc">_Convert2hp</span><span class="p">(</span><span class="n">Data2hpmap</span><span class="p">):</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">AntennaPattern</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_frequency</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;frequency&quot;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_df</span> <span class="o">=</span> <span class="n">AntennaPattern</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="n">frequency</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_frequency</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;quantity&quot;</span><span class="p">]</span>
-            <span class="p">)</span>
+            <span class="n">quantity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;quantity&quot;</span><span class="p">]</span>
             <span class="n">del_keys</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;quantity&quot;</span><span class="p">])</span>
+
+            <span class="c1"># if updated antenna settings are provided by the &quot;convert2hp&quot; method,</span>
+            <span class="c1"># the ones from the class are not used,</span>
+            <span class="k">if</span> <span class="n">kwargs</span> <span class="o">==</span> <span class="n">AntennaPattern</span><span class="o">.</span><span class="n">_default_settings_for_conventions</span><span class="p">:</span>
+                <span class="c1"># nothing in kwargs is provided (settings from the class constructor are used)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;[INFO] Using updated antenna conventions provided at the class constructor&quot;</span>
+                <span class="p">)</span>
+                <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_antenna_conventions</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># some settings are provided, then use those, do not update the kwargs</span>
+                <span class="k">pass</span>
+
+            <span class="c1"># here we must get the default df without updated conventions, since these are going to be updated</span>
+            <span class="c1"># later in the Data2hpmap class</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_df</span> <span class="o">=</span> <span class="n">AntennaPattern</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">frequency</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_frequency</span><span class="p">,</span>
+                <span class="n">quantity</span><span class="o">=</span><span class="n">quantity</span><span class="p">,</span>
+                <span class="n">return_with_updated_conventions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_frequency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

@@ -554,52 +554,16 @@
         <span class="n">in_degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">add_invisible_sky</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
-                <span class="n">theta</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
-            <span class="p">):</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Data are not a pandas dataframe. Define theta= and phi=&quot;</span><span class="p">)</span>
-
-        <span class="c1"># just in case...</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">update_antenna_coordinates</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">in_degrees</span><span class="p">:</span>
-            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-            <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-            <span class="n">shift_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">shift_phi</span><span class="p">)</span>
-
-        <span class="c1"># reorder to ascending order if needed</span>
-        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
-
-        <span class="k">if</span> <span class="n">add_invisible_sky</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">flip_theta</span><span class="p">:</span>
-                <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-            <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># in case that theta goes from pi/2 to pi</span>
-                <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
-            <span class="k">elif</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Theta for the half sky cannot be negative.&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">invisible_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">columns</span><span class="o">=-</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">df_complete</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">invisible_DF</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">phi_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">df_complete</span> <span class="o">=</span> <span class="n">df</span>
-            <span class="k">if</span> <span class="n">flip_theta</span><span class="p">:</span>
-                <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
-        <span class="n">phi_g</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">theta_g</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">phi_g</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">theta_g</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
 
         <span class="c1"># adjust to conventions</span>
         <span class="k">if</span> <span class="n">phi_g</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>  <span class="c1"># if phi range is 0,2pi change it to -/+pi</span>
@@ -607,21 +571,12 @@
         <span class="k">if</span> <span class="n">theta_g</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># if theta is -/+pi/2 change it to 0,pi</span>
             <span class="n">theta_g</span> <span class="o">=</span> <span class="n">theta_g</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
 
-        <span class="c1"># shifting in azimuth</span>
-        <span class="k">if</span> <span class="n">shift_phi</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">shifted</span> <span class="o">=</span> <span class="n">my_modulo</span><span class="p">((</span><span class="n">phi_g</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">shift_phi</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
-            <span class="n">new_row_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">shifted</span><span class="p">))</span>
-            <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">new_row_order</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
-
-        <span class="k">if</span> <span class="n">flip_phi</span><span class="p">:</span>
-            <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
-
-        <span class="c1"># return df_complete</span>
         <span class="c1"># internally healpy has different ordering, the &#39;theta&#39; is in descending order, starting with pi, flipping it here</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interp2d_func</span> <span class="o">=</span> <span class="n">RegularGridInterpolator</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">phi_g</span><span class="p">,</span> <span class="n">theta_g</span><span class="p">),</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">(</span><span class="n">phi_g</span><span class="p">,</span> <span class="n">theta_g</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">df_complete</span> <span class="o">=</span> <span class="n">df_complete</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
 
 <div class="viewcode-block" id="Data2hpmap.get_grid_df"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_grid_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_grid_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -633,7 +588,7 @@
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">            The input data as a pandas DataFrame.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_complete</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span></div>
 
 <div class="viewcode-block" id="Data2hpmap.get_map"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_map">[docs]</a>    <span class="k">def</span> <span class="nf">get_map</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">nside</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">rotator</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">Rotator</span><span class="p">)</span> <span class="o">=</span> <span class="n">Rotator</span><span class="p">(</span><span class="n">rot</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -681,6 +636,171 @@
 <span class="sd">        and returns the interpolated values at the corresponding (phi, theta) positions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interp2d_func</span></div></div>
+
+
+<div class="viewcode-block" id="update_antenna_coordinates"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.update_antenna_coordinates">[docs]</a><span class="k">def</span> <span class="nf">update_antenna_coordinates</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">phi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">theta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">flip_theta</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">flip_phi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">shift_phi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">add_invisible_sky</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">in_degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the antenna coordinates represented by a DataFrame.</span>
+
+<span class="sd">    This function modifies the input DataFrame representing antenna coordinates based</span>
+<span class="sd">    on the provided parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or numpy.ndarray</span>
+<span class="sd">        Input data representing antenna coordinates. If a DataFrame is provided, it is</span>
+<span class="sd">        deep-copied to ensure data integrity. If a numpy ndarray is provided, the &#39;phi&#39;</span>
+<span class="sd">        and &#39;theta&#39; parameters must also be provided to create a DataFrame.</span>
+<span class="sd">    phi : list, numpy.ndarray, optional</span>
+<span class="sd">        List or array representing phi values (azimuth angles). Required when &#39;data&#39;</span>
+<span class="sd">        is an ndarray.</span>
+<span class="sd">    theta : list, numpy.ndarray, optional</span>
+<span class="sd">        List or array representing theta values (zenith angles). Required when &#39;data&#39;</span>
+<span class="sd">        is an ndarray.</span>
+<span class="sd">    flip_theta : bool, optional</span>
+<span class="sd">        If True, flip the theta values. Default is False.</span>
+<span class="sd">    flip_phi : bool, optional</span>
+<span class="sd">        If True, flip the phi values. Default is False.</span>
+<span class="sd">    shift_phi : float, optional</span>
+<span class="sd">        Shift the phi values by the specified angle (in radians). Default is 0.</span>
+<span class="sd">    add_invisible_sky : bool, optional</span>
+<span class="sd">        If True, add an invisible sky sector by mirroring the existing data. Default is</span>
+<span class="sd">        False.</span>
+<span class="sd">    in_degrees : bool, optional</span>
+<span class="sd">        If True, treat the input angles in degrees, otherwise, radians. Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        A modified DataFrame containing the updated antenna coordinates.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function updates the input data to match the specified coordinate adjustments.</span>
+<span class="sd">    It handles flipping, shifting, and periodicity of the input data based on the given</span>
+<span class="sd">    parameters.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised if the input data is not a pandas DataFrame and &#39;phi&#39; or &#39;theta&#39; are not</span>
+<span class="sd">        provided.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # Create a DataFrame with antenna coordinates</span>
+<span class="sd">    data = pd.DataFrame([[1, 2], [3, 4]], index=[0.0, 0.5], columns=[0.0, 1.0])</span>
+
+<span class="sd">    # Update the antenna coordinates</span>
+<span class="sd">    updated_data = update_antenna_coordinates(data, flip_phi=True)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">theta</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Data are not a pandas dataframe. Define theta= and phi=&quot;</span><span class="p">)</span>
+
+    <span class="c1"># save index and column names, if any</span>
+    <span class="n">index_name</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">columns_name</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="c1"># just in case...</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">in_degrees</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">shift_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">shift_phi</span><span class="p">)</span>
+
+    <span class="c1"># reorder to ascending order if needed</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">if</span> <span class="n">add_invisible_sky</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">flip_theta</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># in case that theta goes from pi/2 to pi</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Theta for the half sky cannot be negative.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">invisible_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">columns</span><span class="o">=-</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">df_complete</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">invisible_DF</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df_complete</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="k">if</span> <span class="n">flip_theta</span><span class="p">:</span>
+            <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># if the dataframe is periodic (it should be!) then temporary delete this periodicity</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="o">==</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">size</span>
+    <span class="p">):</span>
+        <span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">index_value</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">df_complete</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">periodic</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">phi_g</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">theta_g</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># adjust to conventions</span>
+    <span class="k">if</span> <span class="n">phi_g</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>  <span class="c1"># if phi range is 0,2pi change it to -/+pi</span>
+        <span class="n">phi_g</span> <span class="o">=</span> <span class="n">phi_g</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="k">if</span> <span class="n">theta_g</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># if theta is -/+pi/2 change it to 0,pi</span>
+        <span class="n">theta_g</span> <span class="o">=</span> <span class="n">theta_g</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># shifting in azimuth</span>
+    <span class="k">if</span> <span class="n">shift_phi</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">shifted</span> <span class="o">=</span> <span class="n">my_modulo</span><span class="p">((</span><span class="n">phi_g</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">shift_phi</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+        <span class="n">new_row_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">shifted</span><span class="p">))</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">new_row_order</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">if</span> <span class="n">flip_phi</span><span class="p">:</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># add back updated periodic boundary</span>
+    <span class="k">if</span> <span class="n">periodic</span><span class="p">:</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_value</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;[WARN] The data where not periodic, i.e., the first and last column were not the same!&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[WARN] Trying to recover this but copying first row to a new last row.&quot;</span><span class="p">)</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># convert back if it was in degrees</span>
+    <span class="k">if</span> <span class="n">in_degrees</span><span class="p">:</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="c1"># put back index and column names</span>
+    <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">index_name</span>
+    <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">columns_name</span>
+
+    <span class="k">return</span> <span class="n">df_complete</span></div>
 
 
 <div class="viewcode-block" id="fig_to_image"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.fig_to_image">[docs]</a><span class="k">def</span> <span class="nf">fig_to_image</span><span class="p">(</span><span class="n">fig</span><span class="p">):</span>

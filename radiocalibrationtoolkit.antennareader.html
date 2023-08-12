@@ -155,7 +155,7 @@ by default an empty dictionary.</p>
 </section>
 <section id="methods">
 <h3>Methods<a class="headerlink" href="#methods" title="Permalink to this heading">¶</a></h3>
-<dl>
+<dl class="simple">
 <dt>get_raw() -&gt; dict:</dt><dd><p>Returns the antenna pattern data as a dictionary.</p>
 </dd>
 <dt>get(frequency: float, quantity: str, interp_phi: list = None, interp_theta: list = None,</dt><dd><p>return_interp_func: bool = False, return_with_updated_conventions: bool = True) -&gt; pd.DataFrame:
@@ -164,10 +164,7 @@ Interpolates the data based on interp_phi and interp_theta if provided.</p>
 </dd>
 <dt>get_volumetric_dataset(quantity: str, frequencies: Union[List[float], np.ndarray, None] = None) -&gt; pd.DataFrame:</dt><dd><p>Get volume data for a given quantity and frequencies.</p>
 </dd>
-<dt>convert2hp(frequency: float, shift_phi: float = 0, flip_theta: bool = False, flip_phi: bool = False,</dt><dd><blockquote>
-<div><p>in_degrees: bool = True, quantity: str = “absolute”, add_invisible_sky: bool = False) -&gt; Data2hpmap:</p>
-</div></blockquote>
-<p>Convert the antenna pattern data to healpix format at a given frequency.</p>
+<dt>convert2hp(frequency: float, shift_phi: float = 0, flip_theta: bool = False, flip_phi: bool = False, in_degrees: bool = True, quantity: str = “absolute”, add_invisible_sky: bool = False) -&gt; Data2hpmap:</dt><dd><p>Convert the antenna pattern data to healpix format at a given frequency.</p>
 </dd>
 </dl>
 </section>

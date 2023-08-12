@@ -70,8 +70,7 @@ class AntennaPattern:
         Interpolates the data based on interp_phi and interp_theta if provided.
     get_volumetric_dataset(quantity: str, frequencies: Union[List[float], np.ndarray, None] = None) -> pd.DataFrame:
         Get volume data for a given quantity and frequencies.
-    convert2hp(frequency: float, shift_phi: float = 0, flip_theta: bool = False, flip_phi: bool = False,
-              in_degrees: bool = True, quantity: str = "absolute", add_invisible_sky: bool = False) -> Data2hpmap:
+    convert2hp(frequency: float, shift_phi: float = 0, flip_theta: bool = False, flip_phi: bool = False, in_degrees: bool = True, quantity: str = "absolute", add_invisible_sky: bool = False) -> Data2hpmap:
         Convert the antenna pattern data to healpix format at a given frequency.
 
     Returns

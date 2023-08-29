@@ -37,9 +37,9 @@ run this in terminal:
 
 `python -m pip install git+https://github.com/F-Tomas/radiocalibrationtoolkit.git`
 
-## Documentation
+## Documentation and tutorial
 
-Documentation and tutorial for version `v0.1.0-alpha` is available [here](https://f-tomas.github.io/radiocalibrationtoolkit/index.html)
+Documentation and tutorial for version `v0.1.0-alpha` is available [HERE](https://f-tomas.github.io/radiocalibrationtoolkit/index.html)
 
 To compile the documentation manually, go to `docs` and execute: 
 

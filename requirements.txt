@@ -8,6 +8,7 @@ h5py==3.8.0
 healpy==1.16.2
 iniconfig==2.0.0
 joblib==1.2.0
+kaleido==0.2.1
 kiwisolver==1.4.4
 lxml==4.9.2
 matplotlib==3.7.1

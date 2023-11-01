@@ -45,6 +45,9 @@ To compile the documentation manually, go to `docs` and execute:
 
 `sphinx-build -b html . ./html`
 
+## Examples using measured data
+
+The branch `measured-data-examples` contains some examples where measured data were used. The measured datasets can be provided only for members of the Pierre Auger Collaboration.
 
 ## Some tips on installing the ULSA
 

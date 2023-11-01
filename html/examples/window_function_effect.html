@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Window function and amplitude correction &mdash; Radio calibration toolkit 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/sphinx_rtd_size.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/nbsphinx-code-cells.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../_static/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Permanent hpmap array rotation" href="permanent_hpmap_array_rotation.html" />
+    <link rel="prev" title="Statistical error propagation" href="gaussian_error_propagation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Radio calibration toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#documentation-and-tutorial">Documentation and tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#examples-using-measured-data">Examples using measured data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#some-tips-on-installing-the-ulsa">Some tips on installing the ULSA</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Galactic models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#antenna-model">Antenna model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#antenna-galaxy-response">Antenna-galaxy response</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#mocktraces">Mocktraces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#calibration">Calibration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorial.html#miscellaneous">Miscellaneous</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gaussian_error_propagation.html">Statistical error propagation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Window function and amplitude correction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Examine-effects-on-a-single-trace">Examine effects on a single trace</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Trace-with-a-broad-band-pulse">Trace with a broad band pulse</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Distributions-of-the-energy-ratios-of-not-windowed-spectra-and-windowed-spectra-with-amplitude-correction">Distributions of the energy ratios of not windowed spectra and windowed spectra with amplitude correction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Simple-traces">Simple traces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Mock-traces">Mock traces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="permanent_hpmap_array_rotation.html">Permanent hpmap array rotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compare_galactic_power_simulations_via_galactic_and_local_CS.html">Compare galactic power simulations via galactic and local CS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.skymapwrappers.html">skymapwrappers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.antennareader.html">antennareader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.mocktracegenerator.html">mocktracegenerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.common.html">common</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Radio calibration toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorial.html">Galactic models</a></li>
+      <li class="breadcrumb-item active">Window function and amplitude correction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/window_function_effect.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Window-function-and-amplitude-correction">
+<h1>Window function and amplitude correction<a class="headerlink" href="#Window-function-and-amplitude-correction" title="Permalink to this heading">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">butter</span><span class="p">,</span> <span class="n">lfilter</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">blackmanharris</span><span class="p">,</span> <span class="n">boxcar</span><span class="p">,</span> <span class="n">hann</span>
+<span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">rfft</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[INFO] LFmap: Import successful.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># some global plot settings</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;axes.labelweight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bold&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bold&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;legend.fontsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.major.width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;ytick.major.width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.major.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;ytick.major.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.labelsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;ytick.labelsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+<section id="Examine-effects-on-a-single-trace">
+<h2>Examine effects on a single trace<a class="headerlink" href="#Examine-effects-on-a-single-trace" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">2048</span>   <span class="c1"># samples</span>
+<span class="n">fs_Hz</span> <span class="o">=</span> <span class="mf">250e6</span> <span class="c1"># sampling frequency</span>
+<span class="n">signal_freq_Hz</span> <span class="o">=</span> <span class="mf">55.5e6</span> <span class="c1"># signal</span>
+<span class="n">win</span> <span class="o">=</span> <span class="n">blackmanharris</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="c1"># window function type</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">fs_Hz</span>
+<span class="k">def</span> <span class="nf">make_simple_time_trace</span><span class="p">(</span><span class="n">signal_amplitude</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">signal_frequency</span><span class="o">=</span><span class="mf">55.5e+6</span><span class="p">,</span> <span class="n">noise_amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">apply_filter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">time_trace</span> <span class="o">=</span> <span class="n">signal_amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">signal_frequency</span><span class="o">*</span><span class="n">tx</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mf">30e6</span><span class="p">,</span> <span class="mf">80e6</span><span class="p">],</span> <span class="n">fs</span><span class="o">=</span><span class="mf">250e6</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="s1">&#39;band&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">apply_filter</span><span class="p">:</span>
+        <span class="n">time_trace</span> <span class="o">=</span> <span class="n">lfilter</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">time_trace</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">time_trace</span> <span class="o">*</span> <span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tt</span> <span class="o">=</span> <span class="n">make_simple_time_trace</span><span class="p">(</span><span class="n">signal_amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs_Hz</span><span class="p">)</span><span class="o">*</span><span class="mf">1e-6</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;no windows&#39;</span><span class="p">,</span> <span class="s1">&#39;hann&#39;</span><span class="p">,</span> <span class="s1">&#39;blackman-harris&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">hann</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">blackmanharris</span><span class="p">(</span><span class="n">N</span><span class="p">)]):</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="o">*</span><span class="mf">1e+6</span><span class="p">,</span> <span class="n">tt</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">tt</span><span class="o">*</span><span class="n">w</span><span class="p">))),</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\mu$s&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;amplitude [ADC]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;amplitude [ADC]&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0, 0.5, &#39;amplitude [ADC]&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_6_1.png" src="../_images/examples_window_function_effect_6_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate time trace</span>
+<span class="n">time_trace</span> <span class="o">=</span> <span class="n">make_simple_time_trace</span><span class="p">()</span>
+
+<span class="c1"># calculate two sided spectrum</span>
+<span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft</span><span class="p">(</span><span class="n">time_trace</span><span class="p">))</span>
+<span class="c1"># calculate one sided spectrum (not corrected for the one side)</span>
+<span class="n">rspectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace</span><span class="p">))</span>
+
+<span class="c1"># calculate one sided spectrum (corrected for the one side)</span>
+<span class="n">r2spectrum</span> <span class="o">=</span> <span class="n">correct_energy_of_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum</span><span class="p">)</span>
+
+<span class="c1"># calculate amplitude window function correction</span>
+<span class="n">Aw</span> <span class="o">=</span> <span class="n">N</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">win</span><span class="p">)</span> <span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># calculate two sided spectrum using a window function (not corrected for the one side)</span>
+<span class="n">spectrum_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft</span><span class="p">(</span><span class="n">time_trace</span><span class="o">*</span><span class="n">win</span><span class="p">))</span>
+<span class="c1"># calculate one sided spectrum using a window function (not corrected for the one side)</span>
+<span class="n">rspectrum_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace</span><span class="o">*</span><span class="n">win</span><span class="p">))</span>
+
+<span class="c1"># calculate one sided spectrum (corrected for the one side)</span>
+<span class="n">r2spectrum</span> <span class="o">=</span> <span class="n">correct_energy_of_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum</span><span class="p">)</span>
+<span class="n">r2spectrum_w</span> <span class="o">=</span> <span class="n">correct_energy_of_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum_w</span><span class="p">)</span>
+
+<span class="c1"># define X-axis values</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs_Hz</span><span class="p">)</span><span class="o">/</span><span class="mf">1e+6</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate energy from time trace, one and two sided spectrum with and without window</span>
+<span class="c1"># when the window is used, the amplitudes are corrected</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Energy calculated from:</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;time trace = </span><span class="si">{</span><span class="n">get_energy_from_time_trace</span><span class="p">(</span><span class="n">time_trace</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;two sided spectrum = </span><span class="si">{</span><span class="n">get_energy_from_two_sided_spectrum</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;one sided spectrum = </span><span class="si">{</span><span class="n">get_energy_from_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;windowed two sided spectrum = </span><span class="si">{</span><span class="n">get_energy_from_two_sided_spectrum</span><span class="p">(</span><span class="n">spectrum_w</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;one sided spectrum corrected for being the one sided spectrum = </span><span class="si">{</span><span class="n">get_energy_from_one_sided_spectrum_corrected4one_side</span><span class="p">(</span><span class="n">r2spectrum</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;windowed two sided spectrum corrected by window function loss = </span><span class="si">{</span><span class="n">get_energy_from_two_sided_spectrum</span><span class="p">(</span><span class="n">spectrum_w</span> <span class="o">*</span> <span class="n">Aw</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;windowed one sided spectrum corrected by window function loss = </span><span class="si">{</span><span class="n">get_energy_from_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum_w</span> <span class="o">*</span> <span class="n">Aw</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;one sided spectrum corrected for being the one sided spectrum and for window function loss = </span><span class="si">{</span><span class="n">get_energy_from_one_sided_spectrum_corrected4one_side</span><span class="p">(</span><span class="n">r2spectrum_w</span><span class="o">*</span><span class="n">Aw</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Energy calculated from:
+time trace = 1332.59,
+two sided spectrum = 1332.59,
+one sided spectrum = 1332.59,
+windowed two sided spectrum = 337.56,
+one sided spectrum corrected for being the one sided spectrum = 1332.59,
+windowed two sided spectrum corrected by window function loss = 1312.67,
+windowed one sided spectrum corrected by window function loss = 1312.67,
+one sided spectrum corrected for being the one sided spectrum and for window function loss = 1312.67,
+
+</pre></div></div>
+</div>
+<section id="Trace-with-a-broad-band-pulse">
+<h3>Trace with a broad band pulse<a class="headerlink" href="#Trace-with-a-broad-band-pulse" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1"># create a broad band noise trace</span>
+<span class="n">bb_spec</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">65</span><span class="p">)</span>
+<span class="n">bb_spec</span><span class="p">[</span><span class="mi">26</span><span class="p">:</span><span class="mi">33</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">std_dev</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Standard deviation</span>
+
+<span class="c1"># Randomize the array values using a normal distribution</span>
+<span class="n">bb_spec</span> <span class="o">=</span> <span class="n">bb_spec</span> <span class="o">+</span> <span class="n">std_dev</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bb_spec</span><span class="p">))</span>
+<span class="n">bb_spec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">bb_spec</span><span class="p">)</span>
+
+<span class="n">bb_tt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ifft</span><span class="p">(</span><span class="n">one_sided_2_complex_two_sided</span><span class="p">(</span><span class="n">bb_spec</span><span class="p">)))</span>
+
+<span class="n">fx_bb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bb_spec</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">bb_spec</span><span class="o">.</span><span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">250</span><span class="p">)</span>
+<span class="n">tx_bb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="o">/</span><span class="mi">250</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;amplitude [ADC]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;amplitude [ADC]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\mu$s&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fx_bb</span><span class="p">,</span> <span class="n">bb_spec</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx_bb</span><span class="p">,</span> <span class="n">bb_tt</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rfft</span><span class="p">(</span><span class="n">bb_tt</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x7fb9f0954190&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_10_1.png" src="../_images/examples_window_function_effect_10_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_10_2.png" src="../_images/examples_window_function_effect_10_2.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># add broad band pulse to the time trace</span>
+<span class="n">time_trace_e</span> <span class="o">=</span> <span class="n">time_trace</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">time_trace_e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="o">+</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span> <span class="o">=</span> <span class="n">time_trace_e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="o">+</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span> <span class="o">+</span> <span class="n">bb_tt</span>
+
+<span class="n">rspectrum_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace_e</span><span class="p">))</span>
+<span class="n">rspectrum_w_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace_e</span><span class="o">*</span><span class="n">win</span><span class="p">))</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_plots</span><span class="p">(</span><span class="n">time_trace</span><span class="p">,</span> <span class="n">show_window_func</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">rspectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace</span><span class="p">))</span>
+    <span class="n">rspectrum_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace</span> <span class="o">*</span> <span class="n">win</span><span class="p">))</span>
+    <span class="n">Aw</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">win</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">e_tt</span> <span class="o">=</span> <span class="n">get_energy_from_time_trace</span><span class="p">(</span><span class="n">time_trace</span><span class="p">)</span>
+    <span class="n">e_spec</span> <span class="o">=</span> <span class="n">get_energy_from_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum</span><span class="p">)</span>
+    <span class="n">e_spec_w</span> <span class="o">=</span> <span class="n">get_energy_from_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum_w</span> <span class="o">*</span> <span class="n">Aw</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+    <span class="n">mu</span> <span class="o">=</span> <span class="mf">1e6</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">tx</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">time_trace</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;no window: E=</span><span class="si">{:.1f}</span><span class="s2"> a.u.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e_tt</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">time_trace</span> <span class="o">*</span> <span class="n">win</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;windowed&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_window_func</span><span class="p">:</span>
+        <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">win</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;window func. x10&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">fx</span> <span class="p">,</span> <span class="n">rspectrum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;no window:         E=</span><span class="si">{:.1f}</span><span class="s2"> a.u.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e_spec</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span>
+    <span class="p">)</span>
+
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">fx</span> <span class="p">,</span>
+        <span class="n">rspectrum_w</span> <span class="o">*</span> <span class="n">Aw</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;windowed &amp; A$_w$: E=</span><span class="si">{:.1f}</span><span class="s2"> a.u.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e_spec_w</span><span class="p">),</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+        <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">display</span><span class="p">(</span>
+        <span class="n">get_energy_from_time_trace</span><span class="p">(</span><span class="n">time_trace</span><span class="p">),</span>
+        <span class="n">get_energy_from_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum</span><span class="p">),</span>
+        <span class="n">get_energy_from_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum_w</span> <span class="o">*</span> <span class="n">Aw</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\mu$s&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;amplitude [ADC]&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;amplitude [ADC]&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ylims</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ylims</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ylims</span><span class="p">))</span><span class="o">*</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">ylims</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">1.4</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># trace without the broad band pulse</span>
+<span class="n">show_plots</span><span class="p">(</span><span class="n">time_trace</span><span class="p">,</span> <span class="n">show_window_func</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1332.5858173370361
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1332.5858173370361
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1312.674415864144
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_13_3.png" src="../_images/examples_window_function_effect_13_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># trace with the broad band pulse</span>
+<span class="n">time_trace_e</span> <span class="o">=</span> <span class="n">time_trace</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">time_trace_e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="o">+</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span> <span class="o">=</span> <span class="n">time_trace_e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="o">+</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span> <span class="o">+</span> <span class="n">bb_tt</span>
+<span class="n">show_plots</span><span class="p">(</span><span class="n">time_trace_e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+5709.23198318932
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+5709.23198318932
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+16995.217867776955
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_14_3.png" src="../_images/examples_window_function_effect_14_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># rolled trace to shift the broad band pulse</span>
+<span class="n">show_plots</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">time_trace_e</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+5709.23198318932
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+5709.23198318932
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1735.5628301299691
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_15_3.png" src="../_images/examples_window_function_effect_15_3.png" />
+</div>
+</div>
+<p>The learning here is that a amplitudes of a trace with broad band pulse cannot be safely corrected after the window function because the window function is symmetric and the broad band pulse appearing in random parts of the trace will be each time differently supressed by the window function.</p>
+<p>Note that the energy of the trace is after the rolling of the trace still the same when no window is used.</p>
+</section>
+</section>
+<section id="Distributions-of-the-energy-ratios-of-not-windowed-spectra-and-windowed-spectra-with-amplitude-correction">
+<h2>Distributions of the energy ratios of not windowed spectra and windowed spectra with amplitude correction<a class="headerlink" href="#Distributions-of-the-energy-ratios-of-not-windowed-spectra-and-windowed-spectra-with-amplitude-correction" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_averaged_spectra_and_diffs</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="n">diffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">avr_rspectrum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">avr_rspectrum_w</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="n">blackmanharris</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">Aw</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">win</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">time_trace</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">rspectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace</span><span class="p">))</span>
+        <span class="n">rspectrum_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">time_trace</span> <span class="o">*</span> <span class="n">win</span><span class="p">))</span>
+        <span class="n">diffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">diffs</span><span class="p">,</span>
+            <span class="n">get_energy_from_time_trace</span><span class="p">(</span><span class="n">time_trace</span><span class="p">)</span>
+            <span class="o">/</span> <span class="n">get_energy_from_one_sided_spectrum</span><span class="p">(</span><span class="n">rspectrum_w</span> <span class="o">*</span> <span class="n">Aw</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">avr_rspectrum</span> <span class="o">+=</span> <span class="n">rspectrum</span>
+        <span class="n">avr_rspectrum_w</span> <span class="o">+=</span> <span class="n">rspectrum_w</span>
+
+    <span class="n">avr_rspectrum</span> <span class="o">/=</span> <span class="n">n</span>
+    <span class="n">avr_rspectrum_w</span> <span class="o">/=</span> <span class="n">n</span>
+    <span class="k">return</span> <span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span>
+
+
+<span class="k">def</span> <span class="nf">show_results</span><span class="p">(</span>
+    <span class="n">avr_rspectrum</span><span class="p">,</span>
+    <span class="n">avr_rspectrum_w</span><span class="p">,</span>
+    <span class="n">diffs</span><span class="p">,</span>
+    <span class="n">histo_edge</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">N</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+    <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">xax_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">xax_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">xlim</span><span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">fs_Hz</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e6</span>
+
+    <span class="k">if</span> <span class="n">bins</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">linspace_with_middle_value</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diffs</span><span class="p">),</span> <span class="n">histo_edge</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">diffs</span><span class="p">),</span> <span class="mi">20</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diffs</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+    <span class="c1"># Calculate mean and standard deviation</span>
+    <span class="n">mean_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span>
+    <span class="n">std_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">mean_diff</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">std_diff</span><span class="p">)</span>
+
+    <span class="c1"># Add text box with mean and standard deviation</span>
+    <span class="n">text_box</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$\mu$: </span><span class="si">{</span><span class="n">mean_diff</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">$\sigma$: </span><span class="si">{</span><span class="n">std_diff</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="mf">0.95</span><span class="p">,</span>
+        <span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">text_box</span><span class="p">,</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+        <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xax_min</span><span class="p">,</span> <span class="n">xax_max</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">&quot;$\frac{\mathrm{energy: \ spectrum \ with \ no\ window}}{\mathrm{energy:spectrum \ with\ window,\ amplitudes\ corrected}}$&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">voltageAmp2dB</span><span class="p">(</span><span class="n">avr_rspectrum</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;no window&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">voltageAmp2dB</span><span class="p">(</span><span class="n">avr_rspectrum_w</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;with window&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">fx</span><span class="p">,</span>
+        <span class="n">voltageAmp2dB</span><span class="p">(</span><span class="n">avr_rspectrum_w</span> <span class="o">*</span> <span class="n">Aw</span><span class="p">),</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;with window &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;and corrected&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span>
+    <span class="p">)</span>
+
+
+    <span class="c1"># ax.axes.axvspan(30,80, color=&#39;b&#39;, alpha=0.1)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">*</span><span class="n">xlim</span><span class="p">)</span>
+    <span class="n">autoscale_y</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;frequency [MHz]&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;dB&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<section id="Simple-traces">
+<h3>Simple traces<a class="headerlink" href="#Simple-traces" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a set of 1000 time traces</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">avr_rspectrum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">avr_rspectrum_w</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_traces</span> <span class="o">=</span> <span class="n">make_simple_time_trace</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">time_traces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">time_traces</span><span class="p">,</span> <span class="n">make_simple_time_trace</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate energy ratios of unwindowed spectra and windowed with amplitude correction</span>
+<span class="c1"># and average spectra</span>
+<span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span> <span class="o">=</span> <span class="n">get_averaged_spectra_and_diffs</span><span class="p">(</span><span class="n">time_traces</span><span class="p">)</span>
+<span class="n">diffs1</span> <span class="o">=</span> <span class="n">diffs</span>
+<span class="n">label4final_histo</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;simple traces&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_results</span><span class="p">(</span><span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span><span class="p">,</span> <span class="n">histo_edge</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">65</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1.0018217390344406
+0.060064483377693656
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_22_1.png" src="../_images/examples_window_function_effect_22_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_22_2.png" src="../_images/examples_window_function_effect_22_2.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a set of 1000 time traces with bb pulses</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">avr_rspectrum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">avr_rspectrum_w</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_traces</span> <span class="o">=</span> <span class="n">make_simple_time_trace</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">time_trace</span> <span class="o">=</span> <span class="n">make_simple_time_trace</span><span class="p">()</span>
+    <span class="n">time_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">bb_tt</span>
+    <span class="n">time_trace</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">time_trace_e</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2048</span> <span class="o">-</span> <span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">time_traces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">time_traces</span><span class="p">,</span> <span class="n">time_trace</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span> <span class="o">=</span> <span class="n">get_averaged_spectra_and_diffs</span><span class="p">(</span><span class="n">time_traces</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_results</span><span class="p">(</span><span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span><span class="p">,</span> <span class="n">histo_edge</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+<span class="c1"># ,xax_min=-10, xax_max=80)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+2.5347509214172477
+1.5478178215950311
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_25_1.png" src="../_images/examples_window_function_effect_25_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_25_2.png" src="../_images/examples_window_function_effect_25_2.png" />
+</div>
+</div>
+</section>
+<section id="Mock-traces">
+<h3>Mock traces<a class="headerlink" href="#Mock-traces" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># read HW response</span>
+<span class="n">hw_file_path</span> <span class="o">=</span> <span class="s2">&quot;./antenna_setup_files/HardwareProfileList_realistic.xml&quot;</span>
+<span class="n">hw_dict</span> <span class="o">=</span> <span class="n">read_hw_file</span><span class="p">(</span><span class="n">hw_file_path</span><span class="p">,</span> <span class="n">interp_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;fill_value&quot;</span><span class="p">:</span> <span class="s2">&quot;extrapolate&quot;</span><span class="p">})</span>
+
+<span class="n">hw_reponse_1</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;LNA&quot;</span><span class="p">]</span>
+<span class="n">hw_reponse_2</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;digitizer&quot;</span><span class="p">]</span>
+<span class="n">hw_reponse_3</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;cable_fromLNA2digitizer&quot;</span><span class="p">]</span>
+<span class="n">hw_reponse_4</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;RResponse&quot;</span><span class="p">][</span><span class="s2">&quot;impedance_matching_EW&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># merge all hw responses to one function</span>
+<span class="k">def</span> <span class="nf">hw_response_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">dB2PowerAmp</span><span class="p">(</span>
+        <span class="n">hw_reponse_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">hw_reponse_4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># impedance function</span>
+<span class="n">impedance_func</span> <span class="o">=</span> <span class="n">hw_dict</span><span class="p">[</span><span class="s2">&quot;IImpedance&quot;</span><span class="p">][</span>
+    <span class="s2">&quot;antenna_EW&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># read sidereal voltage square spectral density</span>
+<span class="n">sidereal_voltage2_density_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s2">&quot;./voltage2_density/voltage2_density_Salla_EW_GSM16.csv&quot;</span><span class="p">,</span>
+    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">sidereal_voltage2_density_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">sidereal_voltage2_density_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+    <span class="nb">float</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;iso-8859-1&#34;?&gt;
+&lt;Element HardwareProfileList at 0x7fb9f197eb40&gt;
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mock_trace_generator</span> <span class="o">=</span> <span class="n">Mock_trace_generator</span><span class="p">(</span>
+    <span class="n">sidereal_voltage2_density_DF</span><span class="o">=</span><span class="n">sidereal_voltage2_density_DF</span><span class="p">,</span>
+    <span class="n">hw_response_func</span><span class="o">=</span><span class="n">hw_response_func</span><span class="p">,</span>
+    <span class="n">impedance_func</span><span class="o">=</span><span class="n">impedance_func</span><span class="p">,</span>
+    <span class="n">voltage2ADC</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+    <span class="n">time_trace_size</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+    <span class="n">sampling_frequency_MHz</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">freq_MHz_bins</span> <span class="o">=</span> <span class="n">mock_trace_generator</span><span class="o">.</span><span class="n">get_frequency_bins</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">piko</span> <span class="o">=</span> <span class="mf">1e-12</span>
+<span class="n">additional_noise</span> <span class="o">=</span> <span class="mf">5e-4</span><span class="o">*</span><span class="n">piko</span>
+<span class="n">debug_spectra_dict</span> <span class="o">=</span> <span class="n">mock_trace_generator</span><span class="o">.</span><span class="n">generate_mock_trace</span><span class="p">(</span>
+    <span class="mi">1</span><span class="p">,</span>
+    <span class="n">lst</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">temp_celsius</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">nbi</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;67.2&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="n">nbi_err</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">return_debug_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">additional_noise</span><span class="o">=</span><span class="n">additional_noise</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|████████████████████████████████████████████| 1/1 [00:00&lt;00:00, 302.14it/s]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_traces</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">mock_traces_DF</span> <span class="o">=</span> <span class="n">mock_trace_generator</span><span class="o">.</span><span class="n">generate_mock_trace</span><span class="p">(</span>
+    <span class="n">number_of_traces</span><span class="p">,</span>
+    <span class="n">temp_celsius</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">],</span>
+    <span class="n">additional_noise</span><span class="o">=</span><span class="n">additional_noise</span><span class="p">,</span>
+    <span class="n">nbi</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;67.25&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="n">nbi_err</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|███████████████████████████████████████| 1000/1000 [00:31&lt;00:00, 31.53it/s]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span> <span class="o">=</span> <span class="n">get_averaged_spectra_and_diffs</span><span class="p">(</span><span class="n">mock_traces_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">diffs2</span> <span class="o">=</span> <span class="n">diffs</span>
+<span class="n">label4final_histo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;mock traces&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_results</span><span class="p">(</span><span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span><span class="p">,</span> <span class="n">histo_edge</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.9997583861051457
+0.04984380100134047
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_32_1.png" src="../_images/examples_window_function_effect_32_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_32_2.png" src="../_images/examples_window_function_effect_32_2.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mock_traces_with_BB_DF</span> <span class="o">=</span> <span class="n">mock_traces_DF</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mock_traces_with_BB_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+    <span class="n">start_bb_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2048</span><span class="o">-</span><span class="mi">40</span><span class="p">)</span>
+    <span class="n">time_trace</span> <span class="o">=</span> <span class="n">mock_traces_with_BB_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">time_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">bb_tt</span>
+    <span class="n">time_trace</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">time_trace_e</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2048</span> <span class="o">-</span> <span class="n">bb_tt</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">mock_traces_with_BB_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">time_trace</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span> <span class="o">=</span> <span class="n">get_averaged_spectra_and_diffs</span><span class="p">(</span><span class="n">mock_traces_with_BB_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">diffs3</span> <span class="o">=</span> <span class="n">diffs</span>
+<span class="n">label4final_histo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;mock traces with BB pulse&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_results</span><span class="p">(</span><span class="n">avr_rspectrum</span><span class="p">,</span> <span class="n">avr_rspectrum_w</span><span class="p">,</span> <span class="n">diffs</span><span class="p">,</span> <span class="n">histo_edge</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+2.52938808657187
+1.5461405225345628
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_35_1.png" src="../_images/examples_window_function_effect_35_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_35_2.png" src="../_images/examples_window_function_effect_35_2.png" />
+</div>
+</div>
+</section>
+<section id="Summary">
+<h3>Summary<a class="headerlink" href="#Summary" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">fs_Hz</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e6</span>
+
+<span class="n">diffs_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">diffs1</span><span class="p">,</span> <span class="n">diffs2</span><span class="p">,</span> <span class="n">diffs3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="c1"># diffs_list = [diffs1, diffs2]</span>
+
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram_bin_edges</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">diffs_list</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+
+<span class="c1"># if bins == None:</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">linspace_with_middle_value</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">diffs_list</span><span class="p">)),</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">diffs_list</span><span class="p">)),</span> <span class="mi">20</span>
+<span class="p">)</span>
+
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">diffs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">diffs_list</span><span class="p">):</span>
+    <span class="n">mean_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span>
+    <span class="n">std_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span>
+    <span class="n">mean_diff_trun</span><span class="p">,</span> <span class="n">std_diff_trun</span> <span class="o">=</span> <span class="n">calculate_truncated_stats</span><span class="p">(</span><span class="n">diffs</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">text_box</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$\mu_</span><span class="se">{{</span><span class="s2">trunc</span><span class="se">}}</span><span class="s2">$: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_diff_trun</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">$\sigma_</span><span class="se">{{</span><span class="s2">trunc</span><span class="se">}}</span><span class="s2">$: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">std_diff_trun</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diffs</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="c1"># Calculate mean and standard deviation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">label4final_histo</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mean and STD:</span><span class="si">{:.4f}</span><span class="s1">, </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mean_diff</span><span class="p">,</span> <span class="n">std_diff</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Truncated Mean and STD: </span><span class="si">{:.4f}</span><span class="s1">, </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mean_diff</span><span class="p">,</span> <span class="n">std_diff</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;******&quot;</span><span class="p">)</span>
+
+<span class="c1"># ax.set_xlim(xax_min, xax_max)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;$\frac{\mathrm{energy: \ spectrum \ with \ no\ window}}{\mathrm{energy:spectrum \ with\ window,\ amplitudes\ corrected}} -1$&quot;</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+simple traces
+Mean and STD:0.0018, 0.0601
+Truncated Mean and STD: 0.0018, 0.0601
+******
+mock traces
+Mean and STD:-0.0002, 0.0498
+Truncated Mean and STD: -0.0002, 0.0498
+******
+mock traces with BB pulse
+Mean and STD:1.5294, 1.5461
+Truncated Mean and STD: 1.5294, 1.5461
+******
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fb9f09af250&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_window_function_effect_37_2.png" src="../_images/examples_window_function_effect_37_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The colors corespond to&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">label4final_histo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;, respectively.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The colors corespond to
+[&#39;simple traces&#39;, &#39;mock traces&#39;, &#39;mock traces with BB pulse&#39;]
+, respectively.
+</pre></div></div>
+</div>
+<p>CONCLUSION: The broad band pulse in the trace spoils the energy recovery.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gaussian_error_propagation.html" class="btn btn-neutral float-left" title="Statistical error propagation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="permanent_hpmap_array_rotation.html" class="btn btn-neutral float-right" title="Permanent hpmap array rotation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tomas Fodran.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

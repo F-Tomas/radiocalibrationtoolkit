@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calibration example &mdash; Radio calibration toolkit 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/sphinx_rtd_size.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/nbsphinx-code-cells.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../_static/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Statistical error propagation" href="gaussian_error_propagation.html" />
+    <link rel="prev" title="Mock power dataset testing" href="mock_power_dataset_testing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Radio calibration toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#documentation-and-tutorial">Documentation and tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#examples-using-measured-data">Examples using measured data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#some-tips-on-installing-the-ulsa">Some tips on installing the ULSA</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Galactic models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#antenna-model">Antenna model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#antenna-galaxy-response">Antenna-galaxy response</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#mocktraces">Mocktraces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorial.html#calibration">Calibration</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Calibration example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Calibrate-with-%22true%22">Calibrate with “true”</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Calibrate-with-all-'not-true'-simulated-datasets">Calibrate with all ‘not true’ simulated datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Iteratively-apply-the-previous-procedure-to-all-simulated-datasets">Iteratively apply the previous procedure to all simulated datasets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.skymapwrappers.html">skymapwrappers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.antennareader.html">antennareader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.mocktracegenerator.html">mocktracegenerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../radiocalibrationtoolkit.common.html">common</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Radio calibration toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorial.html">Galactic models</a></li>
+      <li class="breadcrumb-item active">Calibration example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/calibration-example.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Calibration-example">
+<h1>Calibration example<a class="headerlink" href="#Calibration-example" title="Permalink to this heading">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
+<span class="kn">from</span> <span class="nn">radiocalibrationtoolkit</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[INFO] LFmap: Import successful.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This ensures Plotly output works in multiple places:</span>
+<span class="c1"># plotly_mimetype: VS Code notebook UI</span>
+<span class="c1"># notebook: &quot;Jupyter: Export to HTML&quot; command in VS Code</span>
+<span class="c1"># See https://plotly.com/python/renderers/#multiple-renderers</span>
+<span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
+<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;plotly_mimetype+notebook&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># some global plot settings</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;axes.labelweight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bold&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bold&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;legend.fontsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">14</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.major.width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;ytick.major.width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.major.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;ytick.major.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.labelsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;ytick.labelsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for this example you need to create a mock power dataframe and simulated sidereal power dataset</span>
+</pre></div>
+</div>
+</div>
+<section id="Calibrate-with-%22true%22">
+<h2>Calibrate with “true”<a class="headerlink" href="#Calibrate-with-%22true%22" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># in this case the recorded is the mock dataset</span>
+<span class="n">sky_map_model</span> <span class="o">=</span> <span class="s2">&quot;LFmap&quot;</span>
+
+<span class="n">power_rec_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s2">&quot;./mock_power_datasets/mock_power_dataset-Salla_EW_&quot;</span>
+    <span class="o">+</span> <span class="n">sky_map_model</span>
+    <span class="o">+</span> <span class="s2">&quot;_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&quot;</span><span class="p">,</span>
+    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="n">dir_path</span> <span class="o">=</span> <span class="s2">&quot;./simulated_power_datasets/&quot;</span>
+<span class="n">df_files</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Salla_EW&quot;</span><span class="p">))</span>
+<span class="p">]</span>
+<span class="n">file_path_2_true</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df_files</span> <span class="k">if</span> <span class="n">sky_map_model</span> <span class="ow">in</span> <span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">power_sim_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path_2_true</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="n">antenna_type</span> <span class="o">=</span> <span class="s2">&quot;Salla_EW&quot;</span>
+<span class="n">dir_path</span> <span class="o">=</span> <span class="s2">&quot;./simulated_power_datasets/&quot;</span>
+
+<span class="n">concatenated_sim_df</span> <span class="o">=</span> <span class="n">concatenate_simulated_dfs</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">antenna_type</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit each band and make a plot overview</span>
+<span class="n">cmapT</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;jet&quot;</span><span class="p">)</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">cmapT</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">frequencies_MHz</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+<span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">intercepts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">freq</span><span class="p">]</span> <span class="o">*</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">x_arr</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">freq</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">y_arr</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">freq</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">)</span>
+
+    <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="n">robust_regression</span><span class="p">(</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">)</span>
+    <span class="n">intercepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intercept</span><span class="p">)</span>
+    <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
+    <span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x_arr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x_arr</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">x_new</span><span class="p">,</span>
+        <span class="n">x_new</span> <span class="o">*</span> <span class="n">slope</span> <span class="o">+</span> <span class="n">intercept</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">cmapT</span><span class="p">((</span><span class="n">freq</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">bounds</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="p">)</span>
+
+<span class="n">intercepts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">intercepts</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">slopes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Frequency [MHz]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;simulated power [pW]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;measured (mock) power [pW]&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_7_0.png" src="../_images/examples_calibration-example_7_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">fig2</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">fig_data</span><span class="p">)</span>
+
+<span class="c1"># modify the axis limits of the copied figure</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">axes</span>
+<span class="n">ax2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">fig2</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_8_0.png" src="../_images/examples_calibration-example_8_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span> <span class="o">=</span> <span class="n">get_fitted_voltage_calibration_params_and_noise_offsets</span><span class="p">(</span><span class="n">power_sim_DF</span><span class="p">,</span> <span class="n">power_rec_DF</span><span class="p">)</span>
+<span class="n">get_and_plot_calibration_results</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">sky_map_model</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0006078210993757382
+Test2: p0.5=-0.0006078210993664124
+Test3: p0.5+/-0.341=-0.0018969865284672593
+0.9959979989994998 0.9455727863931966 1.0473236618309154
+Normalization test:  (0.9999996826650178, 8.579063148750484e-06)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(0.9959979989994998, 0.9455727863931966, 1.048224112056028)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_9_2.png" src="../_images/examples_calibration-example_9_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_9_3.png" src="../_images/examples_calibration-example_9_3.png" />
+</div>
+</div>
+</section>
+<section id="Calibrate-with-all-'not-true'-simulated-datasets">
+<h2>Calibrate with all ‘not true’ simulated datasets<a class="headerlink" href="#Calibrate-with-all-'not-true'-simulated-datasets" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">df_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">except_this</span> <span class="o">=</span> <span class="s2">&quot;Salla_EW_&quot;</span><span class="o">+</span><span class="n">sky_map_model</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">df_files</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">except_this</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">df_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
+
+<span class="n">concatenated_sim_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">df_names</span><span class="p">)</span>
+<span class="c1"># check keys</span>
+<span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">concatenated_sim_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;Salla_EW_GMOSS&#39;,
+ &#39;Salla_EW_ULSA&#39;,
+ &#39;Salla_EW_GSM08&#39;,
+ &#39;Salla_EW_Haslam&#39;,
+ &#39;Salla_EW_SSM&#39;,
+ &#39;Salla_EW_LFSS&#39;,
+ &#39;Salla_EW_GSM16&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">slopes_DF</span><span class="p">,</span>
+    <span class="n">intercepts_DF</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">=</span> <span class="n">get_fitted_voltage_cal_params_and_noise_offsets_from_concat_sim_dfs</span><span class="p">(</span>
+    <span class="n">concatenated_sim_df</span><span class="p">,</span> <span class="n">power_rec_DF</span>
+<span class="p">)</span>
+<span class="n">get_and_plot_calibration_results</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">,</span> <span class="n">intercepts_DF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">except_this</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0017821772044139261
+Test2: p0.5=0.0017821772044235296
+Test3: p0.5+/-0.341=0.00038797491434039433
+1.0635317658829415 1.0023011505752877 1.125662831415708
+Normalization test:  (1.0000005335287563, 4.765854054744162e-06)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(1.0635317658829415, 1.0023011505752877, 1.1265632816408204)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_12_2.png" src="../_images/examples_calibration-example_12_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_12_3.png" src="../_images/examples_calibration-example_12_3.png" />
+</div>
+</div>
+</section>
+<section id="Iteratively-apply-the-previous-procedure-to-all-simulated-datasets">
+<h2>Iteratively apply the previous procedure to all simulated datasets<a class="headerlink" href="#Iteratively-apply-the-previous-procedure-to-all-simulated-datasets" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for this example you need to create a mock power dataframe and simulated sidereal power dataset</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">galactic_models</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;GSM16&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LFSS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GSM08&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Haslam&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LFmap&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SSM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GMOSS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ULSA&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">all_freq_dep_cal_params_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">all_freq_dep_noise_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">central_stats_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">gmodel</span> <span class="ow">in</span> <span class="n">galactic_models</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;************************&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gmodel</span><span class="p">)</span>
+    <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">df_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">measured_label</span> <span class="o">=</span> <span class="s2">&quot;Salla_EW_&quot;</span> <span class="o">+</span> <span class="n">gmodel</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">df_files</span><span class="p">:</span>
+        <span class="c1"># if measured_label not in f:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">df_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">df_names</span><span class="p">)</span>
+    <span class="n">concatenated_sim_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">df_names</span><span class="p">)</span>
+    <span class="n">power_rec_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="s2">&quot;./mock_power_datasets/mock_power_dataset-&quot;</span>
+        <span class="o">+</span> <span class="n">measured_label</span>
+        <span class="o">+</span> <span class="s2">&quot;_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv&quot;</span><span class="p">,</span>
+        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_rec_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="p">(</span>
+        <span class="n">slopes_DF</span><span class="p">,</span>
+        <span class="n">intercepts_DF</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">get_fitted_voltage_cal_params_and_noise_offsets_from_concat_sim_dfs</span><span class="p">(</span>
+        <span class="n">concatenated_sim_df</span><span class="p">,</span> <span class="n">power_rec_DF</span>
+    <span class="p">)</span>
+    <span class="n">all_freq_dep_cal_params_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">],</span> <span class="n">all_freq_dep_noise_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">slopes_DF</span><span class="p">,</span>
+        <span class="n">intercepts_DF</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># central_stats_dict[gmodel] = get_and_plot_calibration_results(</span>
+    <span class="c1">#     slopes_DF, intercepts_DF, title=gmodel</span>
+    <span class="c1"># )</span>
+    <span class="c1"># exclude the &quot;true&quot; from the KDE calculations and plots</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">slopes_DF</span><span class="o">.</span><span class="n">index</span> <span class="o">!=</span> <span class="n">measured_label</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">slopes_DF</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">central_stats_dict</span><span class="p">[</span><span class="n">gmodel</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_and_plot_calibration_results</span><span class="p">(</span>
+        <span class="n">slopes_DF</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">intercepts_DF</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">gmodel</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;************************&quot;</span><span class="p">)</span>
+    <span class="c1"># fig = plt.gcf()</span>
+    <span class="c1"># fig.savefig(&#39;with_not_true_{}.png&#39;.format(gmodel), bbox_inches = &#39;tight&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+************************
+GSM16
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_GMOSS&#39; &#39;Salla_EW_ULSA&#39; &#39;Salla_EW_GSM08&#39; &#39;Salla_EW_Haslam&#39;
+ &#39;Salla_EW_LFmap&#39; &#39;Salla_EW_SSM&#39; &#39;Salla_EW_LFSS&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.002174319595923735
+Test2: p0.5=-0.0021743195959137984
+Test3: p0.5+/-0.341=-0.002416614628958702
+0.9356678339169586 0.8753376688344172 0.9968984492246125
+Normalization test:  (0.9999997607912533, 3.2552056166181145e-06)
+************************
+************************
+LFSS
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_GMOSS&#39; &#39;Salla_EW_ULSA&#39; &#39;Salla_EW_GSM08&#39; &#39;Salla_EW_Haslam&#39;
+ &#39;Salla_EW_LFmap&#39; &#39;Salla_EW_SSM&#39; &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0026656882041229957
+Test2: p0.5=0.002665688204132599
+Test3: p0.5+/-0.341=0.0016228715234236635
+0.9527763881940972 0.8897448724362182 1.0185092546273138
+Normalization test:  (0.9999996116825947, 4.973531270917492e-06)
+************************
+************************
+GSM08
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_GMOSS&#39; &#39;Salla_EW_ULSA&#39; &#39;Salla_EW_Haslam&#39; &#39;Salla_EW_LFmap&#39;
+ &#39;Salla_EW_SSM&#39; &#39;Salla_EW_LFSS&#39; &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-5.328442671259648e-06
+Test2: p0.5=5.32844268053001e-06
+Test3: p0.5+/-0.341=0.0008446868516868156
+1.0104052026013006 0.944672336168084 1.0752376188094048
+Normalization test:  (0.9999999429835957, 6.576854751385293e-06)
+************************
+************************
+Haslam
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_GMOSS&#39; &#39;Salla_EW_ULSA&#39; &#39;Salla_EW_GSM08&#39; &#39;Salla_EW_LFmap&#39;
+ &#39;Salla_EW_SSM&#39; &#39;Salla_EW_LFSS&#39; &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.002244839314243019
+Test2: p0.5=-0.0022448393142333045
+Test3: p0.5+/-0.341=0.0021073689429030873
+1.056328164082041 0.991495747873937 1.1202601300650326
+Normalization test:  (1.0000010415098421, 5.853550830967539e-06)
+************************
+************************
+LFmap
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_GMOSS&#39; &#39;Salla_EW_ULSA&#39; &#39;Salla_EW_GSM08&#39; &#39;Salla_EW_Haslam&#39;
+ &#39;Salla_EW_SSM&#39; &#39;Salla_EW_LFSS&#39; &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0017821772044139261
+Test2: p0.5=0.0017821772044235296
+Test3: p0.5+/-0.341=0.00038797491434039433
+1.0635317658829415 1.0023011505752877 1.125662831415708
+Normalization test:  (1.0000005335287563, 4.765854054744162e-06)
+************************
+************************
+SSM
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_GMOSS&#39; &#39;Salla_EW_ULSA&#39; &#39;Salla_EW_GSM08&#39; &#39;Salla_EW_Haslam&#39;
+ &#39;Salla_EW_LFmap&#39; &#39;Salla_EW_LFSS&#39; &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.002420342610871651
+Test2: p0.5=-0.002420342610862103
+Test3: p0.5+/-0.341=6.598389102518976e-05
+0.9869934967483742 0.9203601800900452 1.054527263631816
+Normalization test:  (0.9999996083730416, 6.945302130818199e-06)
+************************
+************************
+GMOSS
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_ULSA&#39; &#39;Salla_EW_GSM08&#39; &#39;Salla_EW_Haslam&#39; &#39;Salla_EW_LFmap&#39;
+ &#39;Salla_EW_SSM&#39; &#39;Salla_EW_LFSS&#39; &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0024821799085868457
+Test2: p0.5=0.002482179908596338
+Test3: p0.5+/-0.341=0.000974668134731016
+1.0131065532766383 0.9482741370685344 1.078839419709855
+Normalization test:  (0.9999999948079411, 7.262696357398249e-06)
+************************
+************************
+ULSA
+[&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;, &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;]
+[&#39;Salla_EW_GMOSS&#39; &#39;Salla_EW_GSM08&#39; &#39;Salla_EW_Haslam&#39; &#39;Salla_EW_LFmap&#39;
+ &#39;Salla_EW_SSM&#39; &#39;Salla_EW_LFSS&#39; &#39;Salla_EW_GSM16&#39;]
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.00165208727835231
+Test2: p0.5=-0.001652087278342762
+Test3: p0.5+/-0.341=0.0009122554419006557
+0.9509754877438721 0.887943971985993 1.015807903951976
+Normalization test:  (0.999999676719685, 5.043118322643974e-06)
+************************
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_1.png" src="../_images/examples_calibration-example_15_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_2.png" src="../_images/examples_calibration-example_15_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_3.png" src="../_images/examples_calibration-example_15_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_4.png" src="../_images/examples_calibration-example_15_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_5.png" src="../_images/examples_calibration-example_15_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_6.png" src="../_images/examples_calibration-example_15_6.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_7.png" src="../_images/examples_calibration-example_15_7.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_8.png" src="../_images/examples_calibration-example_15_8.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_9.png" src="../_images/examples_calibration-example_15_9.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_10.png" src="../_images/examples_calibration-example_15_10.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_11.png" src="../_images/examples_calibration-example_15_11.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_12.png" src="../_images/examples_calibration-example_15_12.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_13.png" src="../_images/examples_calibration-example_15_13.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_14.png" src="../_images/examples_calibration-example_15_14.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_15.png" src="../_images/examples_calibration-example_15_15.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_15_16.png" src="../_images/examples_calibration-example_15_16.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_slopes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_freq_dep_cal_params_dict</span><span class="p">)</span>
+<span class="n">all_intercepts_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_freq_dep_noise_dict</span><span class="p">)</span>
+<span class="n">central_stats_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">central_stats_dict</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mu&quot;</span><span class="p">,</span> <span class="s2">&quot;err_low&quot;</span><span class="p">,</span> <span class="s2">&quot;err_high&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_and_plot_calibration_results</span><span class="p">(</span><span class="n">all_slopes_df</span><span class="p">,</span> <span class="n">all_intercepts_df</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0009805924107588737
+Test2: p0.5=-0.0009805924107481045
+Test3: p0.5+/-0.341=0.0012921728570519653
+0.9959979989994998 0.924862431215608 1.068934467233617
+Normalization test:  (0.9999999657393277, 4.9459300101264076e-06)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(0.9959979989994998, 0.924862431215608, 1.0698349174587294)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_17_2.png" src="../_images/examples_calibration-example_17_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_17_3.png" src="../_images/examples_calibration-example_17_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate calibration parameters for each scenario</span>
+<span class="n">cal_params</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">cal_params_neg_err</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">cal_params_pos_err</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">all_freq_dep_cal_params_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">temp_df</span> <span class="o">=</span> <span class="n">all_freq_dep_cal_params_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="n">cal_params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cal_params_neg_err</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cal_params_pos_err</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">temp_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> vs </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">row</span><span class="p">))</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">center</span> <span class="o">=</span> <span class="n">get_frequency_independent_calibration_param</span><span class="p">(</span><span class="n">temp_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">,:])</span>
+        <span class="n">cal_params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+        <span class="n">cal_params_neg_err</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">left</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span>
+        <span class="n">cal_params_pos_err</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+GSM16 vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0025977884407848983
+Test2: p0.5=0.0025977884407942797
+Test3: p0.5+/-0.341=0.0005314665037673416
+0.9302651325662832 0.8771385692846423 0.9842921460730365
+Normalization test:  (1.000000069398638, 6.375856491796777e-06)
+GSM16 vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.000419782766687693
+Test2: p0.5=0.00041978276669707437
+Test3: p0.5+/-0.341=-0.0013414363124913953
+0.9788894447223613 0.9275637818909455 1.0311155577788895
+Normalization test:  (0.9999992795819773, 1.8077718352672214e-06)
+GSM16 vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.000721429509729532
+Test2: p0.5=-0.0007214295097203727
+Test3: p0.5+/-0.341=-0.002031603981097252
+0.9311655827913958 0.8771385692846423 0.9851925962981491
+Normalization test:  (1.0000000794985648, 4.807343904197531e-06)
+GSM16 vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.001029327447035988
+Test2: p0.5=-0.0010293274470266622
+Test3: p0.5+/-0.341=0.0017955856218669908
+0.894247123561781 0.8420210105052526 0.9464732366183093
+Normalization test:  (1.0000015207802915, 3.13054383664353e-06)
+GSM16 vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0026404371712007713
+Test2: p0.5=0.002640437171210097
+Test3: p0.5+/-0.341=0.0007049538984786885
+0.8897448724362182 0.8384192096048024 0.9419709854927465
+Normalization test:  (1.0000017221230597, 5.00430174995639e-06)
+GSM16 vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0023549227896587643
+Test2: p0.5=-0.002354922789649383
+Test3: p0.5+/-0.341=0.0029738824698209987
+0.9527763881940972 0.9005502751375689 1.0050025012506254
+Normalization test:  (0.9999991624804896, 2.5451759454266447e-06)
+GSM16 vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0006690968898482863
+Test2: p0.5=0.0006690968898575012
+Test3: p0.5+/-0.341=0.0012430632051779744
+0.9788894447223613 0.9167583791895948 1.0428214107053528
+Normalization test:  (1.000000951060131, 8.637438883877732e-07)
+GSM16 vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.00045201650713577735
+Test2: p0.5=0.0004520165071451032
+Test3: p0.5+/-0.341=-0.0016104251866339014
+0.9941970985492747 0.9437718859429716 1.0455227613806903
+Normalization test:  (0.9999996211138065, 8.70483781064553e-06)
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+LFSS vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0025865300556778825
+Test2: p0.5=-0.002586530055668612
+Test3: p0.5+/-0.341=0.0012962048626242728
+0.9455727863931966 0.8924462231115557 0.9986993496748375
+Normalization test:  (1.000004465756486, 4.915124465568904e-06)
+LFSS vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0012178128196086435
+Test2: p0.5=-0.0012178128195993732
+Test3: p0.5+/-0.341=0.00016048604044616166
+0.9950975487743872 0.9383691845922961 1.0527263631815909
+Normalization test:  (0.9999995188041708, 7.805661958231215e-06)
+LFSS vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0007832955319670987
+Test2: p0.5=-0.0007832955319577173
+Test3: p0.5+/-0.341=-0.0008048834002812866
+0.9464732366183093 0.894247123561781 0.99959979989995
+Normalization test:  (1.0000003264928308, 8.186435573992603e-06)
+LFSS vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0009900144761892937
+Test2: p0.5=-0.0009900144761798013
+Test3: p0.5+/-0.341=-0.0011605343601281959
+0.9095547773886945 0.8510255127563782 0.9680840420210106
+Normalization test:  (0.9999994760562738, 5.634389359225966e-06)
+LFSS vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0013481017722904998
+Test2: p0.5=-0.0013481017722810629
+Test3: p0.5+/-0.341=-0.00016189312925174448
+0.9041520760380191 0.8501250625312657 0.9581790895447724
+Normalization test:  (1.000000931154891, 6.235535137442426e-07)
+LFSS vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.002352528939578491
+Test2: p0.5=-0.0023525289395689986
+Test3: p0.5+/-0.341=-0.0019333706854117727
+0.9680840420210106 0.9095547773886945 1.0266133066533267
+Normalization test:  (0.9999992823377135, 8.956060004370898e-06)
+LFSS vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0026639594199283634
+Test2: p0.5=0.0026639594199375782
+Test3: p0.5+/-0.341=0.0004165068911444747
+0.9959979989994998 0.944672336168084 1.048224112056028
+Normalization test:  (0.9999996633233184, 8.539772669062718e-06)
+LFSS vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.003051813843806206
+Test2: p0.5=0.0030518138438154763
+Test3: p0.5+/-0.341=-0.0006058155906422114
+1.0104052026013006 0.9536768384192096 1.068934467233617
+Normalization test:  (0.99999990990384, 5.534288045934047e-06)
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+GSM08 vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0030104598428026264
+Test2: p0.5=0.0030104598428120077
+Test3: p0.5+/-0.341=-0.0005270962175228933
+0.9941970985492747 0.9437718859429716 1.046423211605803
+Normalization test:  (0.9999996209742537, 8.734785359921886e-06)
+GSM08 vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0015144450853161184
+Test2: p0.5=0.0015144450853253888
+Test3: p0.5+/-0.341=-6.0507780532681466e-06
+1.044622311155578 0.9932966483241621 1.0968484242121062
+Normalization test:  (1.0000007200928744, 6.695484282977501e-06)
+GSM08 vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.00028936251963573856
+Test2: p0.5=0.00028936251964506443
+Test3: p0.5+/-0.341=-0.0006255216109987138
+0.9950975487743872 0.9437718859429716 1.0473236618309154
+Normalization test:  (0.9999996281727748, 8.71498094063647e-06)
+GSM08 vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.002257200322691999
+Test2: p0.5=0.0022572003227013804
+Test3: p0.5+/-0.341=0.0013496682342849509
+0.9545772886443222 0.902351175587794 1.0077038519259631
+Normalization test:  (0.9999991864903206, 2.40117748322961e-06)
+GSM08 vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.00042817081904528154
+Test2: p0.5=0.0004281708190545519
+Test3: p0.5+/-0.341=-0.0011393555026476543
+0.9500750375187594 0.8996498249124563 1.001400700350175
+Normalization test:  (0.9999990992415024, 2.4863797018656774e-06)
+GSM08 vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0003213812894785617
+Test2: p0.5=-0.00032138128946940236
+Test3: p0.5+/-0.341=0.0021444433863542223
+1.0167083541770885 0.9644822411205602 1.0698349174587294
+Normalization test:  (1.0000001348560674, 4.8228843200935005e-06)
+GSM08 vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.00264952742172464
+Test2: p0.5=-0.002649527421715314
+Test3: p0.5+/-0.341=-6.172130232573458e-06
+1.046423211605803 0.9896948474237119 1.1040520260130064
+Normalization test:  (0.9999996080916841, 8.339899705942322e-06)
+GSM08 vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0031582225568113076
+Test2: p0.5=-0.003158222556801926
+Test3: p0.5+/-0.341=0.0005006982011835914
+1.0626313156578289 1.0113056528264133 1.1148574287143573
+Normalization test:  (1.0000013700983112, 6.797669813604263e-06)
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+Haslam vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0001678266616669255
+Test2: p0.5=-0.0001678266616574331
+Test3: p0.5+/-0.341=-0.0013022044289922041
+1.032016008004002 0.9770885442721362 1.0878439219609806
+Normalization test:  (0.9999989679484808, 4.478272886396456e-06)
+Haslam vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=1.700272071336606e-05
+Test2: p0.5=-1.7002720704095697e-05
+Test3: p0.5+/-0.341=-0.001328857003872752
+1.0860430215107555 1.0347173586793397 1.1382691345672837
+Normalization test:  (0.9999995725568585, 7.747952095725677e-07)
+Haslam vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0004384293934339145
+Test2: p0.5=0.0004384293934431849
+Test3: p0.5+/-0.341=0.0005915107171264866
+1.032016008004002 0.9752876438219109 1.0896448224112056
+Normalization test:  (0.9999991440610075, 3.896640302314104e-06)
+Haslam vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0028507618762001474
+Test2: p0.5=-0.0028507618761908216
+Test3: p0.5+/-0.341=0.0023828309044603424
+0.9932966483241621 0.9419709854927465 1.044622311155578
+Normalization test:  (0.9999995770376157, 8.867387108797784e-06)
+Haslam vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0023036414067221234
+Test2: p0.5=0.0023036414067315603
+Test3: p0.5+/-0.341=0.0007240122910415758
+0.9869934967483742 0.934767383691846 1.0410205102551275
+Normalization test:  (1.00000090666337, 8.659531281019178e-06)
+Haslam vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0033991688286662547
+Test2: p0.5=0.003399168828675636
+Test3: p0.5+/-0.341=0.0013347937695361578
+1.056328164082041 1.0059029514757378 1.1085542771385692
+Normalization test:  (1.0000008277599013, 6.705609041418548e-06)
+Haslam vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.002054287941039179
+Test2: p0.5=0.0020542879410486714
+Test3: p0.5+/-0.341=0.00044200727508403315
+1.0824412206103051 1.0167083541770885 1.1571785892946473
+Normalization test:  (1.0000001389062552, 5.259515901374302e-06)
+Haslam vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0014670993949902345
+Test2: p0.5=-0.0014670993949807976
+Test3: p0.5+/-0.341=6.220736990270037e-05
+1.1022511255627814 1.0500250125062531 1.1553776888444223
+Normalization test:  (0.9999995456318093, 1.3298149850116806e-07)
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+LFmap vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0013346717252471496
+Test2: p0.5=-0.0013346717252377682
+Test3: p0.5+/-0.341=-0.00019124703658734976
+1.0410205102551275 0.9896948474237119 1.0932466233116558
+Normalization test:  (1.0000005871893873, 6.52214046899141e-06)
+LFmap vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0023605522074534036
+Test2: p0.5=0.002360552207462785
+Test3: p0.5+/-0.341=0.001851104025346384
+1.0941470735367684 1.0437218609304653 1.1463731865932967
+Normalization test:  (0.99999950076478, 2.6762057581680105e-07)
+LFmap vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0006772178250368244
+Test2: p0.5=-0.000677217825027443
+Test3: p0.5+/-0.341=0.0001718715901880552
+1.0410205102551275 0.9887943971985993 1.0941470735367684
+Normalization test:  (1.0000006318897015, 6.698929792442375e-06)
+LFmap vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0010115610776453288
+Test2: p0.5=-0.0010115610776358364
+Test3: p0.5+/-0.341=0.00028207890555476123
+0.99959979989995 0.9482741370685344 1.0518259129564782
+Normalization test:  (0.9999997485200359, 8.23335337492073e-06)
+LFmap vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0006078210993757382
+Test2: p0.5=-0.0006078210993664124
+Test3: p0.5+/-0.341=-0.0018969865284672593
+0.9959979989994998 0.9455727863931966 1.0473236618309154
+Normalization test:  (0.9999996826650178, 8.579063148750484e-06)
+LFmap vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0008422900793942922
+Test2: p0.5=-0.0008422900793849109
+Test3: p0.5+/-0.341=0.002119314871740108
+1.0644322161080542 1.0131065532766383 1.1166583291645824
+Normalization test:  (1.0000014741300853, 6.612580720201897e-06)
+LFmap vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-7.831984017780957e-05
+Test2: p0.5=7.831984018724647e-05
+Test3: p0.5+/-0.341=0.0016580095729843425
+1.0941470735367684 1.0356178089044523 1.1553776888444223
+Normalization test:  (0.9999997788455406, 5.651740894545429e-07)
+LFmap vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.003299232209107772
+Test2: p0.5=-0.0032992322090985016
+Test3: p0.5+/-0.341=0.003506356521046361
+1.1121560780390196 1.0599299649824914 1.1643821910955479
+Normalization test:  (0.999999558253731, 6.814575837362666e-07)
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+SSM vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0005642571456281886
+Test2: p0.5=0.000564257145637459
+Test3: p0.5+/-0.341=0.002113240237834546
+0.9752876438219109 0.9203601800900452 1.0311155577788895
+Normalization test:  (0.9999993701754136, 1.3582755416143016e-06)
+SSM vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0030194568811016675
+Test2: p0.5=0.003019456881111049
+Test3: p0.5+/-0.341=0.0009558244431879803
+1.025712856428214 0.9743871935967985 1.078839419709855
+Normalization test:  (0.9999984069325026, 9.06606485493968e-06)
+SSM vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.00022993596784925963
+Test2: p0.5=-0.00022993596783993375
+Test3: p0.5+/-0.341=-0.0004490853935299466
+0.9752876438219109 0.9194597298649325 1.0329164582291146
+Normalization test:  (0.9999994340149818, 1.2262801082079634e-06)
+SSM vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0007731433732027226
+Test2: p0.5=0.000773143373212104
+Test3: p0.5+/-0.341=-0.003728180700647288
+0.9374687343671837 0.8870435217608805 0.9887943971985993
+Normalization test:  (1.0000002430579065, 2.144774216352839e-06)
+SSM vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0012036091503358493
+Test2: p0.5=0.0012036091503452306
+Test3: p0.5+/-0.341=0.0006041687392343009
+0.9320660330165083 0.87983991995998 0.9860930465232616
+Normalization test:  (1.0000000927976904, 5.9109756295980834e-06)
+SSM vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0026625367396920785
+Test2: p0.5=-0.002662536739682808
+Test3: p0.5+/-0.341=-0.0003704903656821523
+0.9986993496748375 0.9473736868434217 1.0500250125062531
+Normalization test:  (0.9999997392312142, 8.395839457698995e-06)
+SSM vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0024711875811782025
+Test2: p0.5=0.002471187581187584
+Test3: p0.5+/-0.341=0.0006358489234340459
+1.022111055527764 0.9581790895447724 1.0959479739869935
+Normalization test:  (1.000000370716589, 4.990277166852076e-06)
+SSM vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.001702418621385926
+Test2: p0.5=0.0017024186213953074
+Test3: p0.5+/-0.341=0.0012922726444776211
+1.0410205102551275 0.9887943971985993 1.095047523761881
+Normalization test:  (0.9999988526075934, 8.650922364380586e-06)
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+GMOSS vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0020811831323480634
+Test2: p0.5=-0.002081183132338571
+Test3: p0.5+/-0.341=0.00016502454703914982
+0.9968984492246125 0.9455727863931966 1.048224112056028
+Normalization test:  (0.999999687215555, 8.576876312099091e-06)
+GMOSS vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0006443645568397494
+Test2: p0.5=0.0006443645568490197
+Test3: p0.5+/-0.341=-0.002297973895001526
+1.0491245622811407 0.9986993496748375 1.1004502251125563
+Normalization test:  (1.0000002384054014, 3.6461821465103824e-06)
+GMOSS vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0014519705536302219
+Test2: p0.5=-0.0014519705536208405
+Test3: p0.5+/-0.341=-0.000644161400744192
+0.9968984492246125 0.9455727863931966 1.0491245622811407
+Normalization test:  (0.9999996642146133, 8.661174016558572e-06)
+GMOSS vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0004515370580997491
+Test2: p0.5=-0.0004515370580903122
+Test3: p0.5+/-0.341=-0.0010856044839244738
+0.9581790895447724 0.9068534267133568 1.0104052026013006
+Normalization test:  (0.9999990794902526, 2.7369486650487135e-06)
+GMOSS vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0008193828823961913
+Test2: p0.5=0.0008193828824054616
+Test3: p0.5+/-0.341=0.003105661083178668
+0.9527763881940972 0.902351175587794 1.0041020510255128
+Normalization test:  (0.9999989808687726, 2.7345229059532308e-06)
+GMOSS vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0025610937106818055
+Test2: p0.5=-0.0025610937106725906
+Test3: p0.5+/-0.341=-0.0029184336574673564
+1.0203101550775389 0.968984492246123 1.0716358179089545
+Normalization test:  (1.000000184778598, 5.3016122689620645e-06)
+GMOSS vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0010719417598891168
+Test2: p0.5=-0.0010719417598797354
+Test3: p0.5+/-0.341=-0.00012748355815206391
+1.048224112056028 0.991495747873937 1.1058529264632317
+Normalization test:  (0.9999996876153214, 9.981153137981396e-06)
+GMOSS vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.002289047506181918
+Test2: p0.5=0.0022890475061911886
+Test3: p0.5+/-0.341=0.002397571098023854
+1.0653326663331666 1.0149074537268634 1.1175587793896948
+Normalization test:  (1.0000015431545437, 9.458450362863488e-06)
+Index([&#39;Salla_EW_GMOSS&#39;, &#39;Salla_EW_ULSA&#39;, &#39;Salla_EW_GSM08&#39;, &#39;Salla_EW_Haslam&#39;,
+       &#39;Salla_EW_LFmap&#39;, &#39;Salla_EW_SSM&#39;, &#39;Salla_EW_LFSS&#39;, &#39;Salla_EW_GSM16&#39;],
+      dtype=&#39;object&#39;)
+ULSA vs Salla_EW_GMOSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.00046836676394967913
+Test2: p0.5=0.00046836676395911603
+Test3: p0.5+/-0.341=0.0029584498681756166
+0.944672336168084 0.8906453226613307 0.99959979989995
+Normalization test:  (1.0000040425437022, 4.426315643569958e-06)
+ULSA vs Salla_EW_ULSA
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0004750013782550133
+Test2: p0.5=0.0004750013782642837
+Test3: p0.5+/-0.341=-0.00021324699584612805
+0.9941970985492747 0.9428714357178589 1.046423211605803
+Normalization test:  (0.9999996001676568, 8.517734110824403e-06)
+ULSA vs Salla_EW_GSM08
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=0.0018913804429723236
+Test2: p0.5=-0.0018913804429629977
+Test3: p0.5+/-0.341=0.0002496880139086777
+0.944672336168084 0.8897448724362182 1.0005002501250626
+Normalization test:  (1.0000002140184814, 6.256321209467398e-06)
+ULSA vs Salla_EW_Haslam
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0012728252713941623
+Test2: p0.5=0.0012728252714035992
+Test3: p0.5+/-0.341=3.423990409601174e-05
+0.9077538769384692 0.857328664332166 0.959079539769885
+Normalization test:  (1.0000008450992925, 2.068420896483371e-06)
+ULSA vs Salla_EW_LFmap
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0024919276840875693
+Test2: p0.5=0.002491927684096895
+Test3: p0.5+/-0.341=-0.0009299904013448934
+0.902351175587794 0.8510255127563782 0.9554777388694347
+Normalization test:  (1.0000010937472663, 5.982750741890906e-07)
+ULSA vs Salla_EW_SSM
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.001600739816717045
+Test2: p0.5=0.0016007398167263709
+Test3: p0.5+/-0.341=0.0010237553485771267
+0.9662831415707855 0.9158579289644824 1.0185092546273138
+Normalization test:  (0.9999990071231932, 2.8212764207212418e-06)
+ULSA vs Salla_EW_LFSS
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0010821419820173372
+Test2: p0.5=0.0010821419820264966
+Test3: p0.5+/-0.341=0.0011846430443174238
+0.991495747873937 0.9284642321160581 1.0599299649824914
+Normalization test:  (0.9999995294573594, 8.71098639587627e-06)
+ULSA vs Salla_EW_GSM16
+Truncating data to 5, 95 percentils
+Iteration number: 1 out of max 9 iterations
+Test1: p0.5=-0.0002080986248441108
+Test2: p0.5=0.00020809862485327013
+Test3: p0.5+/-0.341=-0.0019203843415077637
+1.0086043021510755 0.95727863931966 1.0617308654327164
+Normalization test:  (1.0000000159264677, 5.774714080926682e-06)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_cal_params_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+        <span class="n">cal_params</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Salla_EW_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">all_cal_params_neg_errs_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+        <span class="n">cal_params_neg_err</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Salla_EW_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">all_cal_params_pos_errs_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+        <span class="n">cal_params_pos_err</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Salla_EW_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Format the DataFrame values for LaTeX</span>
+<span class="n">formatted_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">all_cal_params_df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="o">+</span> <span class="s2">&quot;$^{+&quot;</span>
+    <span class="o">+</span> <span class="n">all_cal_params_pos_errs_df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="o">+</span> <span class="s2">&quot;}_{&quot;</span>
+    <span class="o">+</span> <span class="n">all_cal_params_neg_errs_df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="o">+</span> <span class="s2">&quot;}$&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mean except the diagnoal &quot;true&quot; values</span>
+<span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">all_cal_params_df</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">all_cal_params_df</span><span class="p">)</span>
+<span class="c1"># row-by-row means (add as last column)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_cal_params_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="c1"># column-by-column means (add as last row)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_cal_params_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GMOSS</th>
+      <th>GSM08</th>
+      <th>GSM16</th>
+      <th>Haslam</th>
+      <th>LFSS</th>
+      <th>LFmap</th>
+      <th>SSM</th>
+      <th>ULSA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GMOSS</th>
+      <td>NaN</td>
+      <td>1.00</td>
+      <td>1.07</td>
+      <td>0.96</td>
+      <td>1.05</td>
+      <td>0.95</td>
+      <td>1.02</td>
+      <td>1.05</td>
+    </tr>
+    <tr>
+      <th>GSM08</th>
+      <td>0.99</td>
+      <td>NaN</td>
+      <td>1.06</td>
+      <td>0.95</td>
+      <td>1.05</td>
+      <td>0.95</td>
+      <td>1.02</td>
+      <td>1.04</td>
+    </tr>
+    <tr>
+      <th>GSM16</th>
+      <td>0.93</td>
+      <td>0.93</td>
+      <td>NaN</td>
+      <td>0.89</td>
+      <td>0.98</td>
+      <td>0.89</td>
+      <td>0.95</td>
+      <td>0.98</td>
+    </tr>
+    <tr>
+      <th>Haslam</th>
+      <td>1.03</td>
+      <td>1.03</td>
+      <td>1.10</td>
+      <td>NaN</td>
+      <td>1.08</td>
+      <td>0.99</td>
+      <td>1.06</td>
+      <td>1.09</td>
+    </tr>
+    <tr>
+      <th>LFSS</th>
+      <td>0.95</td>
+      <td>0.95</td>
+      <td>1.01</td>
+      <td>0.91</td>
+      <td>NaN</td>
+      <td>0.90</td>
+      <td>0.97</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>LFmap</th>
+      <td>1.04</td>
+      <td>1.04</td>
+      <td>1.11</td>
+      <td>1.00</td>
+      <td>1.09</td>
+      <td>NaN</td>
+      <td>1.06</td>
+      <td>1.09</td>
+    </tr>
+    <tr>
+      <th>SSM</th>
+      <td>0.98</td>
+      <td>0.98</td>
+      <td>1.04</td>
+      <td>0.94</td>
+      <td>1.02</td>
+      <td>0.93</td>
+      <td>NaN</td>
+      <td>1.03</td>
+    </tr>
+    <tr>
+      <th>ULSA</th>
+      <td>0.94</td>
+      <td>0.94</td>
+      <td>1.01</td>
+      <td>0.91</td>
+      <td>0.99</td>
+      <td>0.90</td>
+      <td>0.97</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GMOSS</th>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>GSM08</th>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>GSM16</th>
+      <td>0.94</td>
+    </tr>
+    <tr>
+      <th>Haslam</th>
+      <td>1.05</td>
+    </tr>
+    <tr>
+      <th>LFSS</th>
+      <td>0.96</td>
+    </tr>
+    <tr>
+      <th>LFmap</th>
+      <td>1.06</td>
+    </tr>
+    <tr>
+      <th>SSM</th>
+      <td>0.99</td>
+    </tr>
+    <tr>
+      <th>ULSA</th>
+      <td>0.95</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GMOSS</th>
+      <th>GSM08</th>
+      <th>GSM16</th>
+      <th>Haslam</th>
+      <th>LFSS</th>
+      <th>LFmap</th>
+      <th>SSM</th>
+      <th>ULSA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>mean</th>
+      <td>0.98</td>
+      <td>0.98</td>
+      <td>1.06</td>
+      <td>0.94</td>
+      <td>1.04</td>
+      <td>0.93</td>
+      <td>1.01</td>
+      <td>1.04</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formatted_df</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_cal_params_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">formatted_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">formatted_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_cal_params_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert the formatted DataFrame to a LaTeX table</span>
+<span class="k">def</span> <span class="nf">highlight_diag</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;U24&#39;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="s1">&#39;background-color: yellow&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">formatted_df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">highlight_diag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">latex_table</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">to_latex</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">latex_table</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+\begin{tabular}{llllllllll}
+ &amp; GMOSS &amp; GSM08 &amp; GSM16 &amp; Haslam &amp; LFSS &amp; LFmap &amp; SSM &amp; ULSA &amp; mean \\
+GMOSS &amp; \background-coloryellow 1.00$^{+0.05}_{-0.05}$ &amp; 1.00$^{+0.05}_{-0.05}$ &amp; 1.07$^{+0.05}_{-0.05}$ &amp; 0.96$^{+0.05}_{-0.05}$ &amp; 1.05$^{+0.06}_{-0.06}$ &amp; 0.95$^{+0.05}_{-0.05}$ &amp; 1.02$^{+0.05}_{-0.05}$ &amp; 1.05$^{+0.05}_{-0.05}$ &amp; 1.01 \\
+GSM08 &amp; 0.99$^{+0.05}_{-0.05}$ &amp; \background-coloryellow 1.00$^{+0.05}_{-0.05}$ &amp; 1.06$^{+0.05}_{-0.05}$ &amp; 0.95$^{+0.05}_{-0.05}$ &amp; 1.05$^{+0.06}_{-0.06}$ &amp; 0.95$^{+0.05}_{-0.05}$ &amp; 1.02$^{+0.05}_{-0.05}$ &amp; 1.04$^{+0.05}_{-0.05}$ &amp; 1.01 \\
+GSM16 &amp; 0.93$^{+0.05}_{-0.05}$ &amp; 0.93$^{+0.05}_{-0.05}$ &amp; \background-coloryellow 0.99$^{+0.05}_{-0.05}$ &amp; 0.89$^{+0.05}_{-0.05}$ &amp; 0.98$^{+0.06}_{-0.06}$ &amp; 0.89$^{+0.05}_{-0.05}$ &amp; 0.95$^{+0.05}_{-0.05}$ &amp; 0.98$^{+0.05}_{-0.05}$ &amp; 0.94 \\
+Haslam &amp; 1.03$^{+0.06}_{-0.05}$ &amp; 1.03$^{+0.06}_{-0.06}$ &amp; 1.10$^{+0.05}_{-0.05}$ &amp; \background-coloryellow 0.99$^{+0.05}_{-0.05}$ &amp; 1.08$^{+0.08}_{-0.07}$ &amp; 0.99$^{+0.05}_{-0.05}$ &amp; 1.06$^{+0.05}_{-0.05}$ &amp; 1.09$^{+0.05}_{-0.05}$ &amp; 1.05 \\
+LFSS &amp; 0.95$^{+0.05}_{-0.05}$ &amp; 0.95$^{+0.05}_{-0.05}$ &amp; 1.01$^{+0.06}_{-0.06}$ &amp; 0.91$^{+0.06}_{-0.06}$ &amp; \background-coloryellow 1.00$^{+0.05}_{-0.05}$ &amp; 0.90$^{+0.05}_{-0.05}$ &amp; 0.97$^{+0.06}_{-0.06}$ &amp; 1.00$^{+0.06}_{-0.06}$ &amp; 0.96 \\
+LFmap &amp; 1.04$^{+0.05}_{-0.05}$ &amp; 1.04$^{+0.05}_{-0.05}$ &amp; 1.11$^{+0.05}_{-0.05}$ &amp; 1.00$^{+0.05}_{-0.05}$ &amp; 1.09$^{+0.06}_{-0.06}$ &amp; \background-coloryellow 1.00$^{+0.05}_{-0.05}$ &amp; 1.06$^{+0.05}_{-0.05}$ &amp; 1.09$^{+0.05}_{-0.05}$ &amp; 1.06 \\
+SSM &amp; 0.98$^{+0.06}_{-0.05}$ &amp; 0.98$^{+0.06}_{-0.06}$ &amp; 1.04$^{+0.05}_{-0.05}$ &amp; 0.94$^{+0.05}_{-0.05}$ &amp; 1.02$^{+0.07}_{-0.06}$ &amp; 0.93$^{+0.05}_{-0.05}$ &amp; \background-coloryellow 1.00$^{+0.05}_{-0.05}$ &amp; 1.03$^{+0.05}_{-0.05}$ &amp; 0.99 \\
+ULSA &amp; 0.94$^{+0.06}_{-0.05}$ &amp; 0.94$^{+0.06}_{-0.05}$ &amp; 1.01$^{+0.05}_{-0.05}$ &amp; 0.91$^{+0.05}_{-0.05}$ &amp; 0.99$^{+0.07}_{-0.06}$ &amp; 0.90$^{+0.05}_{-0.05}$ &amp; 0.97$^{+0.05}_{-0.05}$ &amp; \background-coloryellow 0.99$^{+0.05}_{-0.05}$ &amp; 0.95 \\
+mean &amp; 0.98 &amp; 0.98 &amp; 1.06 &amp; 0.94 &amp; 1.04 &amp; 0.93 &amp; 1.01 &amp; 1.04 &amp; \background-coloryellow nan \\
+\end{tabular}
+
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<style type="text/css">
+#T_c4426_row0_col0, #T_c4426_row1_col1, #T_c4426_row2_col2, #T_c4426_row3_col3, #T_c4426_row4_col4, #T_c4426_row5_col5, #T_c4426_row6_col6, #T_c4426_row7_col7, #T_c4426_row8_col8 {
+  background-color: yellow;
+}
+</style>
+<table id="T_c4426">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_c4426_level0_col0" class="col_heading level0 col0" >GMOSS</th>
+      <th id="T_c4426_level0_col1" class="col_heading level0 col1" >GSM08</th>
+      <th id="T_c4426_level0_col2" class="col_heading level0 col2" >GSM16</th>
+      <th id="T_c4426_level0_col3" class="col_heading level0 col3" >Haslam</th>
+      <th id="T_c4426_level0_col4" class="col_heading level0 col4" >LFSS</th>
+      <th id="T_c4426_level0_col5" class="col_heading level0 col5" >LFmap</th>
+      <th id="T_c4426_level0_col6" class="col_heading level0 col6" >SSM</th>
+      <th id="T_c4426_level0_col7" class="col_heading level0 col7" >ULSA</th>
+      <th id="T_c4426_level0_col8" class="col_heading level0 col8" >mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_c4426_level0_row0" class="row_heading level0 row0" >GMOSS</th>
+      <td id="T_c4426_row0_col0" class="data row0 col0" >1.00$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row0_col1" class="data row0 col1" >1.00$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row0_col2" class="data row0 col2" >1.07$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row0_col3" class="data row0 col3" >0.96$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row0_col4" class="data row0 col4" >1.05$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row0_col5" class="data row0 col5" >0.95$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row0_col6" class="data row0 col6" >1.02$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row0_col7" class="data row0 col7" >1.05$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row0_col8" class="data row0 col8" >1.01</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row1" class="row_heading level0 row1" >GSM08</th>
+      <td id="T_c4426_row1_col0" class="data row1 col0" >0.99$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row1_col1" class="data row1 col1" >1.00$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row1_col2" class="data row1 col2" >1.06$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row1_col3" class="data row1 col3" >0.95$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row1_col4" class="data row1 col4" >1.05$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row1_col5" class="data row1 col5" >0.95$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row1_col6" class="data row1 col6" >1.02$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row1_col7" class="data row1 col7" >1.04$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row1_col8" class="data row1 col8" >1.01</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row2" class="row_heading level0 row2" >GSM16</th>
+      <td id="T_c4426_row2_col0" class="data row2 col0" >0.93$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row2_col1" class="data row2 col1" >0.93$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row2_col2" class="data row2 col2" >0.99$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row2_col3" class="data row2 col3" >0.89$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row2_col4" class="data row2 col4" >0.98$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row2_col5" class="data row2 col5" >0.89$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row2_col6" class="data row2 col6" >0.95$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row2_col7" class="data row2 col7" >0.98$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row2_col8" class="data row2 col8" >0.94</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row3" class="row_heading level0 row3" >Haslam</th>
+      <td id="T_c4426_row3_col0" class="data row3 col0" >1.03$^{+0.06}_{-0.05}$</td>
+      <td id="T_c4426_row3_col1" class="data row3 col1" >1.03$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row3_col2" class="data row3 col2" >1.10$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row3_col3" class="data row3 col3" >0.99$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row3_col4" class="data row3 col4" >1.08$^{+0.08}_{-0.07}$</td>
+      <td id="T_c4426_row3_col5" class="data row3 col5" >0.99$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row3_col6" class="data row3 col6" >1.06$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row3_col7" class="data row3 col7" >1.09$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row3_col8" class="data row3 col8" >1.05</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row4" class="row_heading level0 row4" >LFSS</th>
+      <td id="T_c4426_row4_col0" class="data row4 col0" >0.95$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row4_col1" class="data row4 col1" >0.95$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row4_col2" class="data row4 col2" >1.01$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row4_col3" class="data row4 col3" >0.91$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row4_col4" class="data row4 col4" >1.00$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row4_col5" class="data row4 col5" >0.90$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row4_col6" class="data row4 col6" >0.97$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row4_col7" class="data row4 col7" >1.00$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row4_col8" class="data row4 col8" >0.96</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row5" class="row_heading level0 row5" >LFmap</th>
+      <td id="T_c4426_row5_col0" class="data row5 col0" >1.04$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row5_col1" class="data row5 col1" >1.04$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row5_col2" class="data row5 col2" >1.11$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row5_col3" class="data row5 col3" >1.00$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row5_col4" class="data row5 col4" >1.09$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row5_col5" class="data row5 col5" >1.00$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row5_col6" class="data row5 col6" >1.06$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row5_col7" class="data row5 col7" >1.09$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row5_col8" class="data row5 col8" >1.06</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row6" class="row_heading level0 row6" >SSM</th>
+      <td id="T_c4426_row6_col0" class="data row6 col0" >0.98$^{+0.06}_{-0.05}$</td>
+      <td id="T_c4426_row6_col1" class="data row6 col1" >0.98$^{+0.06}_{-0.06}$</td>
+      <td id="T_c4426_row6_col2" class="data row6 col2" >1.04$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row6_col3" class="data row6 col3" >0.94$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row6_col4" class="data row6 col4" >1.02$^{+0.07}_{-0.06}$</td>
+      <td id="T_c4426_row6_col5" class="data row6 col5" >0.93$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row6_col6" class="data row6 col6" >1.00$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row6_col7" class="data row6 col7" >1.03$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row6_col8" class="data row6 col8" >0.99</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row7" class="row_heading level0 row7" >ULSA</th>
+      <td id="T_c4426_row7_col0" class="data row7 col0" >0.94$^{+0.06}_{-0.05}$</td>
+      <td id="T_c4426_row7_col1" class="data row7 col1" >0.94$^{+0.06}_{-0.05}$</td>
+      <td id="T_c4426_row7_col2" class="data row7 col2" >1.01$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row7_col3" class="data row7 col3" >0.91$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row7_col4" class="data row7 col4" >0.99$^{+0.07}_{-0.06}$</td>
+      <td id="T_c4426_row7_col5" class="data row7 col5" >0.90$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row7_col6" class="data row7 col6" >0.97$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row7_col7" class="data row7 col7" >0.99$^{+0.05}_{-0.05}$</td>
+      <td id="T_c4426_row7_col8" class="data row7 col8" >0.95</td>
+    </tr>
+    <tr>
+      <th id="T_c4426_level0_row8" class="row_heading level0 row8" >mean</th>
+      <td id="T_c4426_row8_col0" class="data row8 col0" >0.98</td>
+      <td id="T_c4426_row8_col1" class="data row8 col1" >0.98</td>
+      <td id="T_c4426_row8_col2" class="data row8 col2" >1.06</td>
+      <td id="T_c4426_row8_col3" class="data row8 col3" >0.94</td>
+      <td id="T_c4426_row8_col4" class="data row8 col4" >1.04</td>
+      <td id="T_c4426_row8_col5" class="data row8 col5" >0.93</td>
+      <td id="T_c4426_row8_col6" class="data row8 col6" >1.01</td>
+      <td id="T_c4426_row8_col7" class="data row8 col7" >1.04</td>
+      <td id="T_c4426_row8_col8" class="data row8 col8" >nan</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_cal_params_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;possible biases&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;voltage calibration parameter&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Entries&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Min and Max observed bias:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">central_stats_DF</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">central_stats_DF</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Min and Max observed bias:
+0.9356678339169586 1.0635317658829415
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_24_1.png" src="../_images/examples_calibration-example_24_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">,)</span>  <span class="c1"># samples must be in a sequence</span>
+
+<span class="n">props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;wheat&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">bvalues</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bvalues</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;boostraped&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$&lt;bias&gt;$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+    <span class="mf">0.05</span><span class="p">,</span>
+    <span class="mf">0.95</span><span class="p">,</span>
+    <span class="s2">&quot;$\mu$=</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bvalues</span><span class="p">)),</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="o">=</span><span class="n">props</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;boostraped&quot;</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">bvalues</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bvalues</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\sigma$ bias&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+    <span class="mf">0.05</span><span class="p">,</span>
+    <span class="mf">0.95</span><span class="p">,</span>
+    <span class="s2">&quot;$\mu$=</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bvalues</span><span class="p">)),</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="o">=</span><span class="n">props</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_calibration-example_25_0.png" src="../_images/examples_calibration-example_25_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mock_power_dataset_testing.html" class="btn btn-neutral float-left" title="Mock power dataset testing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gaussian_error_propagation.html" class="btn btn-neutral float-right" title="Statistical error propagation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tomas Fodran.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

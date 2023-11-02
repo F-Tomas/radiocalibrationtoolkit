@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>radiocalibrationtoolkit.common.helpfunctions &mdash; Radio calibration toolkit 0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/sphinx_rtd_size.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="../../../_static/custom.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Radio calibration toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#documentation-and-tutorial">Documentation and tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#examples-using-measured-data">Examples using measured data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#some-tips-on-installing-the-ulsa">Some tips on installing the ULSA</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Galactic models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#antenna-model">Antenna model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#antenna-galaxy-response">Antenna-galaxy response</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#mocktraces">Mocktraces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#calibration">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.skymapwrappers.html">skymapwrappers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.antennareader.html">antennareader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.mocktracegenerator.html">mocktracegenerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.common.html">common</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Radio calibration toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">radiocalibrationtoolkit.common.helpfunctions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for radiocalibrationtoolkit.common.helpfunctions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module Description</span>
+<span class="sd">------------------</span>
+
+<span class="sd">This module provides some Python helping functions for the package.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">healpy</span> <span class="k">as</span> <span class="nn">hp</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">RegularGridInterpolator</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
+<span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">fft</span><span class="p">,</span> <span class="n">ifft</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KernelDensity</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_agg</span> <span class="kn">import</span> <span class="n">FigureCanvasAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
+<span class="kn">import</span> <span class="nn">matplotlib.axes</span> <span class="k">as</span> <span class="nn">axes</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">healpy.rotator</span> <span class="kn">import</span> <span class="n">Rotator</span>
+<span class="kn">from</span> <span class="nn">healpy.newvisufunc</span> <span class="kn">import</span> <span class="n">projview</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span> <span class="k">as</span> <span class="n">ET</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+
+<div class="viewcode-block" id="compare_maps"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.compare_maps">[docs]</a><span class="k">def</span> <span class="nf">compare_maps</span><span class="p">(</span>
+    <span class="n">map_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">main_title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">rotation_parameters</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">coord</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">],</span>
+    <span class="n">mask</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">projection_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mollweide&quot;</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+    <span class="n">show_plot_comparison</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">),</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compare maps in a dictionary using matplotlib and return an integrated comparison dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    map_dict : dict</span>
+<span class="sd">        A dictionary containing maps to compare.</span>
+
+<span class="sd">    main_title : str, optional (default=&quot;&quot;)</span>
+<span class="sd">        The title for the entire comparison plot.</span>
+
+<span class="sd">    rotation_parameters : list, optional (default=None)</span>
+<span class="sd">        List of longitude and latitude values for rotating the plot.</span>
+
+<span class="sd">    coord : list, optional (default=[&#39;G&#39;])</span>
+<span class="sd">        Coordinate system to be used. Can be one of [&#39;G&#39;, &#39;H&#39;, &#39;C&#39;, &#39;S&#39;].</span>
+
+<span class="sd">    mask : list, optional (default=False)</span>
+<span class="sd">        Whether to apply a mask to the maps.</span>
+
+<span class="sd">    projection_type : str, optional (default=&quot;mollweide&quot;)</span>
+<span class="sd">        The type of projection to use for the plot.</span>
+
+<span class="sd">    cmap : str, optional (default=&quot;jet&quot;)</span>
+<span class="sd">        The color map to use for the plot.</span>
+
+<span class="sd">    show_plot_comparison : bool, optional (default=True)</span>
+<span class="sd">        Whether to display the plot.</span>
+
+<span class="sd">    verbose : bool, optional (default=False)</span>
+<span class="sd">        Whether to print verbose output during the function execution.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        An integrated comparison dictionary.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">map_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">map_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">integrated_comparison_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">show_plot_comparison</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">col</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">map_dict</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="n">row</span><span class="p">]]</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span>
+                <span class="n">norm</span> <span class="o">=</span> <span class="s2">&quot;log&quot;</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+                <span class="n">min_t</span> <span class="o">=</span> <span class="mi">3500</span>
+                <span class="n">max_t</span> <span class="o">=</span> <span class="mi">35000</span>
+                <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">cbar</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">m_row</span> <span class="o">=</span> <span class="n">map_dict</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="n">row</span><span class="p">]]</span>
+                <span class="n">m_col</span> <span class="o">=</span> <span class="n">map_dict</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+                <span class="n">m_row</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span>
+                <span class="n">m_col</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">m_row</span> <span class="o">/</span> <span class="n">m_col</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">norm</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">keys</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                <span class="n">min_t</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span>
+                <span class="n">max_t</span> <span class="o">=</span> <span class="mf">0.5</span>
+                <span class="n">integrated_ratio</span> <span class="o">=</span> <span class="n">integrate_hpmap</span><span class="p">(</span><span class="n">m_row</span><span class="p">)</span> <span class="o">/</span> <span class="n">integrate_hpmap</span><span class="p">(</span><span class="n">m_col</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">integrated_ratio</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">cbar</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="o">&gt;</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">integrated_comparison_dict</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">integrated_ratio</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ylabel</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">show_plot_comparison</span><span class="p">:</span>
+                <span class="n">projview</span><span class="p">(</span>
+                    <span class="n">m</span><span class="p">,</span>
+                    <span class="n">coord</span><span class="o">=</span><span class="n">coord</span><span class="p">,</span>
+                    <span class="n">rot</span><span class="o">=</span><span class="n">rotation_parameters</span><span class="p">,</span>
+                    <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
+                    <span class="n">graticule</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">graticule_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">cb_orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span>
+                    <span class="nb">min</span><span class="o">=</span><span class="n">min_t</span><span class="p">,</span>
+                    <span class="nb">max</span><span class="o">=</span><span class="n">max_t</span><span class="p">,</span>
+                    <span class="c1"># latitude_grid_spacing=30,</span>
+                    <span class="n">projection_type</span><span class="o">=</span><span class="n">projection_type</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                    <span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span>
+                    <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
+                    <span class="n">xtick_label_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                    <span class="n">sub</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">},</span>
+                    <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+                    <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="c1"># cbar=cbar,</span>
+                <span class="p">)</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">cax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span>
+                        <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">]</span>
+                    <span class="p">)</span>  <span class="c1"># [left, bottom, width, height]</span>
+                    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span>
+                        <span class="c1"># label=&quot;Colorbar Label&quot;,</span>
+                        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                        <span class="n">norm</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+                        <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span>
+                        <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+                        <span class="n">extend</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">min_t</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">max_t</span><span class="p">]</span>
+                    <span class="p">)</span>  <span class="c1"># Replace with desired tick values</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">show_plot_comparison</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">main_title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">integrated_comparison_dict</span></div>
+
+
+<div class="viewcode-block" id="create_local_mask"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.create_local_mask">[docs]</a><span class="k">def</span> <span class="nf">create_local_mask</span><span class="p">(</span>
+    <span class="n">nside</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rotation_parameters</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a mask that is True for pixels above the equator and False for those below.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nside : int</span>
+<span class="sd">        The nside parameter for the Healpix map.</span>
+<span class="sd">    rotation_parameters : tuple of float</span>
+<span class="sd">        A tuple containing the Galactic longitude and latitude (in degrees) used to rotate the map.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        A boolean array with True for pixels above the equator and False for those below.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ma</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="n">nside</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">))</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="n">nside</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="n">nside</span><span class="p">)))</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">Rotator</span><span class="p">(</span><span class="n">coord</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">],</span> <span class="n">rot</span><span class="o">=</span><span class="n">rotation_parameters</span><span class="p">)</span>
+    <span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span><span class="p">)</span>
+
+    <span class="n">mask</span><span class="p">[</span><span class="n">pixel_theta</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">mask</span></div>
+
+
+<div class="viewcode-block" id="print_map_properties"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.print_map_properties">[docs]</a><span class="k">def</span> <span class="nf">print_map_properties</span><span class="p">(</span><span class="n">map_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prints properties of a Healpix map.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    map : np.ndarray</span>
+<span class="sd">        A one-dimensional array representing the map.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="n">map_</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+        <span class="n">hp</span><span class="o">.</span><span class="n">get_nside</span><span class="p">(</span><span class="n">map_</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">nside2resol</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">get_nside</span><span class="p">(</span><span class="n">map_</span><span class="p">))),</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_index_on_CDF"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.find_index_on_CDF">[docs]</a><span class="k">def</span> <span class="nf">find_index_on_CDF</span><span class="p">(</span><span class="n">log_dens</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the index of the array `X` such that the cumulative distribution function (CDF) of `log_dens`</span>
+<span class="sd">    evaluated on `X` is closest to `p`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_dens : np.ndarray</span>
+<span class="sd">        Array of log-density values.</span>
+<span class="sd">    X : np.ndarray</span>
+<span class="sd">        The array of values to evaluate the CDF on.</span>
+<span class="sd">    p : float</span>
+<span class="sd">        The probability threshold.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        The index of the array `X` such that the CDF of `log_dens` evaluated on `X` is closest to `p`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_dens</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="create_rotation_parameters"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.create_rotation_parameters">[docs]</a><span class="k">def</span> <span class="nf">create_rotation_parameters</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a tuple of Galactic longitude and latitude (in degrees) from local sidereal time and latitude.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lst : float</span>
+<span class="sd">        The local sidereal time in hours.</span>
+<span class="sd">    latitude : float</span>
+<span class="sd">        The latitude of the observer in degrees.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of float</span>
+<span class="sd">        A tuple containing the Galactic longitude and latitude (in degrees).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">180</span> <span class="o">+</span> <span class="p">(</span><span class="n">lst</span> <span class="o">*</span> <span class="mi">15</span><span class="p">))</span> <span class="o">%</span> <span class="mi">360</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mi">90</span><span class="p">)</span></div>
+
+
+<span class="c1"># def create_rotator(lst, latitude, coord=[&quot;G&quot;], inv=False):</span>
+<div class="viewcode-block" id="create_rotator"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.create_rotator">[docs]</a><span class="k">def</span> <span class="nf">create_rotator</span><span class="p">(</span>
+    <span class="n">lst</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">latitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">coord</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">],</span>
+    <span class="n">inv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rotator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Rotator object for converting between Galactic and celestial (e.g., equatorial) coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lst : float or None</span>
+<span class="sd">        The local sidereal time in hours. If None, defaults to 0.</span>
+<span class="sd">    latitude : float or None</span>
+<span class="sd">        The latitude of the observer in degrees. If None, defaults to 0.</span>
+<span class="sd">    coord : list of str, optional</span>
+<span class="sd">        A list of two strings indicating the input and output coordinate systems. Defaults to [&quot;G&quot;] (Galactic).</span>
+<span class="sd">    inv : bool, optional</span>
+<span class="sd">        Whether to perform an inverse rotation. Defaults to False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Rotator</span>
+<span class="sd">        A Rotator object that can be used to convert between Galactic and celestial coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">lst</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Rotator</span><span class="p">(</span><span class="n">coord</span><span class="o">=</span><span class="n">coord</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Rotator</span><span class="p">(</span>
+            <span class="n">coord</span><span class="o">=</span><span class="n">coord</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="n">create_rotation_parameters</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">latitude</span><span class="p">),</span> <span class="n">inv</span><span class="o">=</span><span class="n">inv</span>
+        <span class="p">)</span></div>
+
+
+<span class="c1"># def rotate_default_hpmap_array_from_galactic2local_coordinates(m, lst, latitude, inv=False, nside_transform = 512):</span>
+<div class="viewcode-block" id="rotate_default_hpmap_array_from_galactic2local_coordinates"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.rotate_default_hpmap_array_from_galactic2local_coordinates">[docs]</a><span class="k">def</span> <span class="nf">rotate_default_hpmap_array_from_galactic2local_coordinates</span><span class="p">(</span>
+    <span class="n">m</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">lst</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">latitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">inv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">nside_transform</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rotates a Healpix map from Galactic to local coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m : np.ndarray</span>
+<span class="sd">        A one-dimensional array representing the map.</span>
+<span class="sd">    lst : float or None</span>
+<span class="sd">        The local sidereal time in hours. If None, defaults to 0.</span>
+<span class="sd">    latitude : float or None</span>
+<span class="sd">        The latitude of the observer in degrees. If None, defaults to 0.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nside_original</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">npix2nside</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ma</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nside_transform</span><span class="p">))</span>
+    <span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span>
+        <span class="n">nside_transform</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="n">nside_transform</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">rotator</span> <span class="o">=</span> <span class="n">create_rotator</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">],</span> <span class="n">inv</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inv</span><span class="p">))</span>
+    <span class="n">pixel_rot_theta</span><span class="p">,</span> <span class="n">pixel_rot_phi</span> <span class="o">=</span> <span class="n">rotator</span><span class="p">(</span><span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span><span class="p">)</span>
+    <span class="n">new_pix_order</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="n">nside_transform</span><span class="p">,</span> <span class="n">pixel_rot_theta</span><span class="p">,</span> <span class="n">pixel_rot_phi</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">new_pix_order</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ma</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nside_original</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">m</span></div>
+
+
+<div class="viewcode-block" id="my_modulo"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.my_modulo">[docs]</a><span class="k">def</span> <span class="nf">my_modulo</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">modulo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the modulo of each element in an array, except for elements that are equal to the modulo.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : array_like</span>
+<span class="sd">        The input array.</span>
+<span class="sd">    modulo : scalar</span>
+<span class="sd">        The modulo value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The output array with the same shape as the input array.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; my_modulo([1, 2, 3, 4, 5, 6, 7], 3)</span>
+<span class="sd">    array([1, 2, 0, 1, 2, 0, 1])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">modulo</span> <span class="k">else</span> <span class="n">x</span> <span class="o">%</span> <span class="n">modulo</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="mkdir"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.mkdir">[docs]</a><span class="k">def</span> <span class="nf">mkdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a directory if it doesn&#39;t already exist.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    directory : str</span>
+<span class="sd">        Directory path to be created.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    - This function checks if the directory already exists.</span>
+<span class="sd">    - If the directory doesn&#39;t exist, it creates a new directory.</span>
+<span class="sd">    - If the directory already exists, it prints a message indicating that the directory already exists.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    # Example usage</span>
+<span class="sd">    mkdir(&quot;path/to/directory&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Directory created successfully&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Directory already exists&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Data2hpmap"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap">[docs]</a><span class="k">class</span> <span class="nc">Data2hpmap</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolates a pandas DataFrame onto a healpix map.</span>
+<span class="sd">    Supports half-sky and full-sky DataFrames, and includes options to shift and flip the data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas DataFrame or 2D array</span>
+<span class="sd">        The input data. If a pandas DataFrame is provided, the index and column names will be used</span>
+<span class="sd">        as the phi and theta values, respectively. If a 2D array is provided, `phi` and `theta`</span>
+<span class="sd">        must be specified.</span>
+<span class="sd">    phi : array_like, optional</span>
+<span class="sd">        The phi values corresponding to the columns of the input data. Ignored if `data` is a</span>
+<span class="sd">        pandas DataFrame. Default is None.</span>
+<span class="sd">    theta : array_like, optional</span>
+<span class="sd">        The theta values corresponding to the rows of the input data. Ignored if `data` is a</span>
+<span class="sd">        pandas DataFrame. Default is None.</span>
+<span class="sd">    shift_phi : float, optional</span>
+<span class="sd">        The amount to shift the phi values by (in radians). Default is 0.</span>
+<span class="sd">    flip_theta : bool, optional</span>
+<span class="sd">        Whether to flip the theta values. Default is False.</span>
+<span class="sd">    flip_phi : bool, optional</span>
+<span class="sd">        Whether to flip the phi values. Default is False.</span>
+<span class="sd">    in_degrees : bool, optional</span>
+<span class="sd">        Whether the input phi and theta values are in degrees. Default is False.</span>
+<span class="sd">    add_invisible_sky : bool, optional</span>
+<span class="sd">        Whether to add an invisible sky below the input data (for half-sky maps). Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the input data is not a pandas DataFrame and `phi` and `theta` are not provided.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class uses the `scipy.interpolate.RegularGridInterpolator` function to interpolate the data onto</span>
+<span class="sd">    a healpix map. The interpolated map can be obtained using the `get_map` method.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; data = np.random.randn(10, 20)</span>
+<span class="sd">    &gt;&gt;&gt; phi = np.linspace(0, 2*np.pi, 20, endpoint=False)</span>
+<span class="sd">    &gt;&gt;&gt; theta = np.linspace(0, np.pi/2, 10)</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(data, index=theta, columns=phi)</span>
+<span class="sd">    &gt;&gt;&gt; hp_map = Data2hpmap(df, shift_phi=np.pi/4).get_map(nside=64)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">phi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">theta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">shift_phi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">flip_theta</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">flip_phi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">in_degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_invisible_sky</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">update_antenna_coordinates</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">in_degrees</span><span class="p">:</span>
+            <span class="n">phi_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">phi_g</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">theta_g</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="c1"># adjust to conventions</span>
+        <span class="k">if</span> <span class="n">phi_g</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>  <span class="c1"># if phi range is 0,2pi change it to -/+pi</span>
+            <span class="n">phi_g</span> <span class="o">=</span> <span class="n">phi_g</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">if</span> <span class="n">theta_g</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># if theta is -/+pi/2 change it to 0,pi</span>
+            <span class="n">theta_g</span> <span class="o">=</span> <span class="n">theta_g</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="c1"># internally healpy has different ordering, the &#39;theta&#39; is in descending order, starting with pi, flipping it here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_interp2d_func</span> <span class="o">=</span> <span class="n">RegularGridInterpolator</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">phi_g</span><span class="p">,</span> <span class="n">theta_g</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
+
+<div class="viewcode-block" id="Data2hpmap.get_grid_df"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_grid_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_grid_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the input data as a pandas DataFrame, with the rows corresponding to the `phi` values and</span>
+<span class="sd">        the columns corresponding to the `theta` values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            The input data as a pandas DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span></div>
+
+<div class="viewcode-block" id="Data2hpmap.get_map"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_map">[docs]</a>    <span class="k">def</span> <span class="nf">get_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nside</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">rotator</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">Rotator</span><span class="p">)</span> <span class="o">=</span> <span class="n">Rotator</span><span class="p">(</span><span class="n">rot</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interpolate the input data onto a full-sky map with the specified `nside` and `rotator`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nside : int, optional</span>
+<span class="sd">            The resolution parameter for the HEALPix map. Defaults to 64.</span>
+<span class="sd">        rotator : type(Rotator), optional</span>
+<span class="sd">            The rotator to use to rotate the interpolated map. Defaults to Rotator(rot=[0, 0]).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The interpolated HEALPix map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># find theta and phi that need to be interpolated</span>
+        <span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="n">nside</span><span class="p">)))</span>
+        <span class="n">pixel_rot_theta</span><span class="p">,</span> <span class="n">pixel_rot_phi</span> <span class="o">=</span> <span class="n">rotator</span><span class="p">(</span><span class="n">pixel_theta</span><span class="p">,</span> <span class="n">pixel_phi</span><span class="p">)</span>
+        <span class="c1"># print(np.min(pixel_rot_theta), np.max(pixel_rot_theta), np.min(pixel_rot_phi), np.max(pixel_rot_phi) )</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interp2d_func</span><span class="p">((</span><span class="n">pixel_rot_phi</span><span class="p">,</span> <span class="n">pixel_rot_theta</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;[ERROR] Is the input map for the whole sky? If it is only for half, use &#39;add_invisible_sky=True&#39;&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Data2hpmap.get_interp_func"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.Data2hpmap.get_interp_func">[docs]</a>    <span class="k">def</span> <span class="nf">get_interp_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the interpolation function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        callable</span>
+<span class="sd">            The interpolation function.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The interpolation function is a `RegularGridInterpolator` object that can be used to interpolate the data onto a</span>
+<span class="sd">        regular grid. The function takes a tuple (phi, theta) as input, where `phi` and `theta` are arrays of the same shape,</span>
+<span class="sd">        and returns the interpolated values at the corresponding (phi, theta) positions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interp2d_func</span></div></div>
+
+
+<div class="viewcode-block" id="update_antenna_coordinates"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.update_antenna_coordinates">[docs]</a><span class="k">def</span> <span class="nf">update_antenna_coordinates</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">phi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">theta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">flip_theta</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">flip_phi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">shift_phi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">add_invisible_sky</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">in_degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the antenna coordinates represented by a DataFrame.</span>
+
+<span class="sd">    This function modifies the input DataFrame representing antenna coordinates based</span>
+<span class="sd">    on the provided parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or numpy.ndarray</span>
+<span class="sd">        Input data representing antenna coordinates. If a DataFrame is provided, it is</span>
+<span class="sd">        deep-copied to ensure data integrity. If a numpy ndarray is provided, the &#39;phi&#39;</span>
+<span class="sd">        and &#39;theta&#39; parameters must also be provided to create a DataFrame.</span>
+<span class="sd">    phi : list, numpy.ndarray, optional</span>
+<span class="sd">        List or array representing phi values (azimuth angles). Required when &#39;data&#39;</span>
+<span class="sd">        is an ndarray.</span>
+<span class="sd">    theta : list, numpy.ndarray, optional</span>
+<span class="sd">        List or array representing theta values (zenith angles). Required when &#39;data&#39;</span>
+<span class="sd">        is an ndarray.</span>
+<span class="sd">    flip_theta : bool, optional</span>
+<span class="sd">        If True, flip the theta values. Default is False.</span>
+<span class="sd">    flip_phi : bool, optional</span>
+<span class="sd">        If True, flip the phi values. Default is False.</span>
+<span class="sd">    shift_phi : float, optional</span>
+<span class="sd">        Shift the phi values by the specified angle (in radians). Default is 0.</span>
+<span class="sd">    add_invisible_sky : bool, optional</span>
+<span class="sd">        If True, add an invisible sky sector by mirroring the existing data. Default is</span>
+<span class="sd">        False.</span>
+<span class="sd">    in_degrees : bool, optional</span>
+<span class="sd">        If True, treat the input angles in degrees, otherwise, radians. Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        A modified DataFrame containing the updated antenna coordinates.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function updates the input data to match the specified coordinate adjustments.</span>
+<span class="sd">    It handles flipping, shifting, and periodicity of the input data based on the given</span>
+<span class="sd">    parameters.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised if the input data is not a pandas DataFrame and &#39;phi&#39; or &#39;theta&#39; are not</span>
+<span class="sd">        provided.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # Create a DataFrame with antenna coordinates</span>
+<span class="sd">    data = pd.DataFrame([[1, 2], [3, 4]], index=[0.0, 0.5], columns=[0.0, 1.0])</span>
+
+<span class="sd">    # Update the antenna coordinates</span>
+<span class="sd">    updated_data = update_antenna_coordinates(data, flip_phi=True)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">theta</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Data are not a pandas dataframe. Define theta= and phi=&quot;</span><span class="p">)</span>
+
+    <span class="c1"># save index and column names, if any</span>
+    <span class="n">index_name</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">columns_name</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="c1"># just in case...</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">in_degrees</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">shift_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">shift_phi</span><span class="p">)</span>
+
+    <span class="c1"># reorder to ascending order if needed</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">if</span> <span class="n">add_invisible_sky</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">flip_theta</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># in case that theta goes from pi/2 to pi</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Theta for the half sky cannot be negative.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">invisible_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">columns</span><span class="o">=-</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">df_complete</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">invisible_DF</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df_complete</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="k">if</span> <span class="n">flip_theta</span><span class="p">:</span>
+            <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># if the dataframe is periodic (it should be!) then temporary delete this periodicity</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="o">==</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">size</span>
+    <span class="p">):</span>
+        <span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">index_value</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">df_complete</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">periodic</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">phi_g</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">theta_g</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># adjust to conventions</span>
+    <span class="k">if</span> <span class="n">phi_g</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>  <span class="c1"># if phi range is 0,2pi change it to -/+pi</span>
+        <span class="n">phi_g</span> <span class="o">=</span> <span class="n">phi_g</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="k">if</span> <span class="n">theta_g</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># if theta is -/+pi/2 change it to 0,pi</span>
+        <span class="n">theta_g</span> <span class="o">=</span> <span class="n">theta_g</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># shifting in azimuth</span>
+    <span class="k">if</span> <span class="n">shift_phi</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">shifted</span> <span class="o">=</span> <span class="n">my_modulo</span><span class="p">((</span><span class="n">phi_g</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">shift_phi</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+        <span class="n">new_row_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">shifted</span><span class="p">))</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">new_row_order</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">if</span> <span class="n">flip_phi</span><span class="p">:</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># add back updated periodic boundary</span>
+    <span class="k">if</span> <span class="n">periodic</span><span class="p">:</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_value</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;[WARN] The data where not periodic, i.e., the first and last column were not the same!&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[WARN] Trying to recover this but copying first row to a new last row.&quot;</span><span class="p">)</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">df_complete</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># convert back if it was in degrees</span>
+    <span class="k">if</span> <span class="n">in_degrees</span><span class="p">:</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="c1"># put back index and column names</span>
+    <span class="n">df_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">index_name</span>
+    <span class="n">df_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">columns_name</span>
+
+    <span class="k">return</span> <span class="n">df_complete</span></div>
+
+
+<div class="viewcode-block" id="fig_to_image"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.fig_to_image">[docs]</a><span class="k">def</span> <span class="nf">fig_to_image</span><span class="p">(</span><span class="n">fig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a Matplotlib figure object to a NumPy array of RGB values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig : matplotlib.figure.Figure object</span>
+<span class="sd">        Matplotlib figure object to be converted.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    image_from_plot : ndarray</span>
+<span class="sd">        3D NumPy array of RGB values representing the image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvas</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>  <span class="c1"># draw the canvas, cache the renderer</span>
+
+    <span class="n">image_from_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">tostring_rgb</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">image_from_plot</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">get_width_height</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span></div>
+
+
+<div class="viewcode-block" id="convert_xml_string_to_floats"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.convert_xml_string_to_floats">[docs]</a><span class="k">def</span> <span class="nf">convert_xml_string_to_floats</span><span class="p">(</span><span class="n">xml_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts an XML string containing whitespace-separated float values to a NumPy array of float values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xml_string : str</span>
+<span class="sd">        XML string containing whitespace-separated float values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    floats : ndarray</span>
+<span class="sd">        NumPy array of float values extracted from the XML string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">xml_string</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">temp</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetXMLRoot"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.GetXMLRoot">[docs]</a><span class="k">def</span> <span class="nf">GetXMLRoot</span><span class="p">(</span><span class="n">XMLFile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads an XML file and returns the root element of the parsed XML tree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    XMLFile : str</span>
+<span class="sd">        Path to the XML file to be read.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    root : xml.etree.ElementTree.Element</span>
+<span class="sd">        Root element of the parsed XML tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fstring</span> <span class="o">=</span> <span class="p">[</span><span class="n">fstring</span> <span class="k">for</span> <span class="n">fstring</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">XMLFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">fstring</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+    <span class="n">fstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fstring</span><span class="p">)</span>
+
+    <span class="c1"># to create proper root</span>
+    <span class="n">fstring</span> <span class="o">=</span> <span class="s2">&quot;&lt;rp&gt;&quot;</span> <span class="o">+</span> <span class="n">fstring</span> <span class="o">+</span> <span class="s2">&quot;&lt;/rp&gt;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">(</span><span class="n">remove_blank_text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">remove_comments</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">recover</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">fstring</span><span class="p">,</span> <span class="n">parser</span><span class="p">)</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">tag</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">attrib</span>
+
+    <span class="k">return</span> <span class="n">root</span></div>
+
+
+<div class="viewcode-block" id="read_hw_file"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.read_hw_file">[docs]</a><span class="k">def</span> <span class="nf">read_hw_file</span><span class="p">(</span>
+    <span class="n">hw_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">return_tabulated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_interp_func</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">interp_args</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads an XML file containing hierarchical data, extracts data into a nested dictionary of NumPy arrays and/or interpolation functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hw_file_path : str</span>
+<span class="sd">        Path to the XML file to be read.</span>
+<span class="sd">    return_tabulated : bool, optional</span>
+<span class="sd">        If True, returns data in a nested dictionary of NumPy arrays, else returns data in a nested dictionary of interpolation functions.</span>
+<span class="sd">        Default is False.</span>
+<span class="sd">    return_interp_func : bool, optional</span>
+<span class="sd">        If True, returns data in a nested dictionary of interpolation functions, else returns data in a nested dictionary of NumPy arrays.</span>
+<span class="sd">        Default is True.</span>
+<span class="sd">    interp_args : dict, optional</span>
+<span class="sd">        Dictionary of optional arguments to be passed to the `interp1d` function of NumPy.</span>
+<span class="sd">        Default is an empty dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xml_dict : dict</span>
+<span class="sd">        A nested dictionary containing the extracted data. If `return_tabulated` is True, values in the dictionary are NumPy arrays.</span>
+<span class="sd">        Else, values are interpolation functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">return_tabulated</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">return_interp_func</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">nested_dict</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">)</span>
+    <span class="n">xml_dict</span> <span class="o">=</span> <span class="n">nested_dict</span><span class="p">()</span>
+    <span class="n">root_</span> <span class="o">=</span> <span class="n">GetXMLRoot</span><span class="p">(</span><span class="n">hw_file_path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">top_branch</span> <span class="ow">in</span> <span class="n">root_</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">top_branch</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sub_branch</span> <span class="ow">in</span> <span class="n">top_branch</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ssub_branch</span> <span class="ow">in</span> <span class="n">sub_branch</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">return_interp_func</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">convert_xml_string_to_floats</span><span class="p">(</span><span class="n">ssub_branch</span><span class="o">.</span><span class="n">getchildren</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">convert_xml_string_to_floats</span><span class="p">(</span><span class="n">ssub_branch</span><span class="o">.</span><span class="n">getchildren</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="n">xml_dict</span><span class="p">[</span><span class="n">sub_branch</span><span class="o">.</span><span class="n">tag</span><span class="p">][</span><span class="n">sub_branch</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span>
+                        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">interp_args</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">return_tabulated</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">sssub_branch</span> <span class="ow">in</span> <span class="n">ssub_branch</span><span class="p">:</span>
+                        <span class="n">xml_dict</span><span class="p">[</span><span class="n">sub_branch</span><span class="o">.</span><span class="n">tag</span><span class="p">][</span><span class="n">sub_branch</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]][</span>
+                            <span class="n">sssub_branch</span><span class="o">.</span><span class="n">tag</span>
+                        <span class="p">]</span> <span class="o">=</span> <span class="n">convert_xml_string_to_floats</span><span class="p">(</span><span class="n">sssub_branch</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xml_dict</span></div>
+
+
+<div class="viewcode-block" id="hpmap2grid"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.hpmap2grid">[docs]</a><span class="k">def</span> <span class="nf">hpmap2grid</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">xsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolate a HEALPix map onto a regular grid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m : List</span>
+<span class="sd">        HEALPix map array.</span>
+<span class="sd">    xsize : int, optional (default=1000)</span>
+<span class="sd">        The size of the x-axis of the interpolated map.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    PHI : numpy.ndarray</span>
+<span class="sd">        2D array of azimuthal angles (longitude).</span>
+<span class="sd">    THETA : numpy.ndarray</span>
+<span class="sd">        2D array of polar angles (colatitude).</span>
+<span class="sd">    grid_map : numpy.ndarray</span>
+<span class="sd">        Interpolated map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ysize</span> <span class="o">=</span> <span class="n">xsize</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ysize</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">xsize</span><span class="p">)</span>
+
+    <span class="n">PHI</span><span class="p">,</span> <span class="n">THETA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+
+    <span class="c1"># THETA, PHI = r(THETA.flatten(), PHI.flatten())</span>
+    <span class="n">THETA</span> <span class="o">=</span> <span class="n">THETA</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ysize</span><span class="p">,</span> <span class="n">xsize</span><span class="p">)</span>
+    <span class="n">PHI</span> <span class="o">=</span> <span class="n">PHI</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ysize</span><span class="p">,</span> <span class="n">xsize</span><span class="p">)</span>
+
+    <span class="n">nside</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">npix2nside</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+    <span class="n">grid_pix</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">THETA</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">nest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">grid_map</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">grid_pix</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">THETA</span><span class="p">,</span> <span class="n">grid_map</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="integrate_hpmap"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.integrate_hpmap">[docs]</a><span class="k">def</span> <span class="nf">integrate_hpmap</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Integrate the HEALPix map over the sky.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m : List</span>
+<span class="sd">        HEALPix map array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    flux : float</span>
+<span class="sd">        The integrated flux of the map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">PHI</span><span class="p">,</span> <span class="n">THETA</span><span class="p">,</span> <span class="n">grid_map</span> <span class="o">=</span> <span class="n">hpmap2grid</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">phi_delta</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">PHI</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">phi_theta</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">THETA</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">phi_delta</span> <span class="o">*</span> <span class="n">phi_theta</span> <span class="o">*</span> <span class="n">grid_map</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">THETA</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="del_keys"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.del_keys">[docs]</a><span class="k">def</span> <span class="nf">del_keys</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove one or more keys from a dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    d : dict</span>
+<span class="sd">        The dictionary to modify.</span>
+<span class="sd">    keys : str or List[str]</span>
+<span class="sd">        The key(s) to remove from the dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">keys</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="add_deviation"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.add_deviation">[docs]</a><span class="k">def</span> <span class="nf">add_deviation</span><span class="p">(</span><span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a random deviation to a value based on a fractional error.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mu : float</span>
+<span class="sd">        The mean value.</span>
+<span class="sd">    error : float</span>
+<span class="sd">        The fractional error of the value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    new_mu : float</span>
+<span class="sd">        The new mean value with the deviation added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">error</span> <span class="o">*</span> <span class="n">mu</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="one_sided_2_two_sided"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.one_sided_2_two_sided">[docs]</a><span class="k">def</span> <span class="nf">one_sided_2_two_sided</span><span class="p">(</span><span class="n">spectrum</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sign</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a one-sided power spectrum into a two-sided power spectrum.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spectrum : numpy.ndarray</span>
+<span class="sd">        One-sided power spectrum.</span>
+<span class="sd">    sign : int, optional (default=1)</span>
+<span class="sd">        The sign to use when computing the negative frequencies in the two-sided spectrum.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    two_sided_spectrum : numpy.ndarray</span>
+<span class="sd">        Two-sided power spectrum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">spectrum</span><span class="p">,</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">spectrum</span><span class="p">[</span><span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+
+<div class="viewcode-block" id="generate_one_sided_random_phase"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.generate_one_sided_random_phase">[docs]</a><span class="k">def</span> <span class="nf">generate_one_sided_random_phase</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate one-sided random phase for a given size.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    size : int</span>
+<span class="sd">        Size of the phase array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        One-sided random phase array.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">random_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">high</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+    <span class="c1">#  phase_ramp = np.linspace(np.pi, -np.pi, size)</span>
+    <span class="n">phase_ramp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="n">random_ramped_phase</span> <span class="o">=</span> <span class="n">random_phase</span> <span class="o">+</span> <span class="n">phase_ramp</span> <span class="o">*</span> <span class="mi">0</span>
+    <span class="n">random_ramped_phase_wrapped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">random_ramped_phase</span><span class="p">)</span>
+    <span class="n">random_ramped_phase_wrapped</span> <span class="o">-=</span> <span class="p">(</span>
+        <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">random_ramped_phase_wrapped</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">random_ramped_phase_wrapped</span></div>
+
+
+<div class="viewcode-block" id="one_sided_2_complex_two_sided"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.one_sided_2_complex_two_sided">[docs]</a><span class="k">def</span> <span class="nf">one_sided_2_complex_two_sided</span><span class="p">(</span>
+    <span class="n">one_sided_abs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">one_sided_phase</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert one-sided amplitude and phase to complex two-sided array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    one_sided_abs : np.ndarray</span>
+<span class="sd">        One-sided amplitude array.</span>
+<span class="sd">    one_sided_phase : np.ndarray or None, optional</span>
+<span class="sd">        One-sided phase array. If None, random phase will be generated, by default None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Complex two-sided array.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">one_sided_phase</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">one_sided_phase</span> <span class="o">=</span> <span class="n">generate_one_sided_random_phase</span><span class="p">(</span><span class="n">one_sided_abs</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">double_sided_abs</span> <span class="o">=</span> <span class="n">one_sided_2_two_sided</span><span class="p">(</span><span class="n">one_sided_abs</span><span class="p">)</span>
+    <span class="n">double_sided_phase</span> <span class="o">=</span> <span class="n">one_sided_2_two_sided</span><span class="p">(</span><span class="n">one_sided_phase</span><span class="p">,</span> <span class="n">sign</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">double_sided_abs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">double_sided_phase</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_closest_index"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.find_closest_index">[docs]</a><span class="k">def</span> <span class="nf">find_closest_index</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the index of the closest value in an array to a given value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : np.ndarray</span>
+<span class="sd">        Input array.</span>
+<span class="sd">    value : float</span>
+<span class="sd">        Target value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Index of the closest value.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="bin_df_rows"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.bin_df_rows">[docs]</a><span class="k">def</span> <span class="nf">bin_df_rows</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">binning_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bins</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bin DataFrame rows based on a given column.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pd.DataFrame</span>
+<span class="sd">        Input DataFrame.</span>
+<span class="sd">    binning_column : str</span>
+<span class="sd">        Column to bin on.</span>
+<span class="sd">    bins : list or np.ndarray</span>
+<span class="sd">        Bins to use for binning.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        Binned DataFrame.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;bins&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">binning_column</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;bins&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="abs_fft"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.abs_fft">[docs]</a><span class="k">def</span> <span class="nf">abs_fft</span><span class="p">(</span>
+    <span class="n">timeTrace</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">],</span> <span class="n">fs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">250.0</span><span class="p">,</span> <span class="n">window</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute one-sided Fourier transform of a time series.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    timeTrace : np.ndarray or pd.Series</span>
+<span class="sd">        Time series to transform.</span>
+<span class="sd">    fs : float, optional</span>
+<span class="sd">        Sampling frequency, by default 250.0.</span>
+<span class="sd">    window : float, optional</span>
+<span class="sd">        Window to apply to the time series before transforming, by default 1.0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        One-sided Fourier transform.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If input time series is not a numpy array or pandas Series.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">timeTrace</span> <span class="o">=</span> <span class="n">timeTrace</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft</span><span class="p">(</span><span class="n">timeTrace</span><span class="p">))</span>
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">timeTrace</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeTrace</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">timeTrace</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">fs</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">spectrum</span></div>
+
+
+<div class="viewcode-block" id="AppendOnlyIfMore"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.AppendOnlyIfMore">[docs]</a><span class="k">class</span> <span class="nc">AppendOnlyIfMore</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom action class for argparse that appends values to a list only if more than one value is provided.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parser : argparse.ArgumentParser</span>
+<span class="sd">        The argument parser object.</span>
+<span class="sd">    namespace : argparse.Namespace</span>
+<span class="sd">        The namespace object where the parsed values are stored.</span>
+<span class="sd">    values : List[str]</span>
+<span class="sd">        The list of values provided for the option.</span>
+<span class="sd">    option_string : str, optional</span>
+<span class="sd">        The option string.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    - This action class is designed to be used with the argparse module.</span>
+<span class="sd">    - It appends values to the list attribute specified by &#39;dest&#39; only if more than one value is provided.</span>
+<span class="sd">    - If only one value is provided, it replaces the list attribute with that single value.</span>
+<span class="sd">    - It is intended for use with options that can accept multiple values.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # Example usage</span>
+<span class="sd">    parser = argparse.ArgumentParser()</span>
+<span class="sd">    parser.add_argument(&quot;--values&quot;, action=AppendOnlyIfMore, default=[], dest=&quot;values&quot;, nargs=&quot;+&quot;)</span>
+<span class="sd">    args = parser.parse_args()</span>
+<span class="sd">    print(args.values)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">option_string</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dest</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">+=</span> <span class="n">values</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dest</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="distort_array"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.distort_array">[docs]</a><span class="k">def</span> <span class="nf">distort_array</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rstd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Distort the values of a NumPy array by adding Gaussian noise.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : np.ndarray</span>
+<span class="sd">        The input NumPy array.</span>
+<span class="sd">    rstd : float, optional</span>
+<span class="sd">        The relative standard deviation of the Gaussian noise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        The distorted array.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    - This function adds Gaussian noise to the values of the input array.</span>
+<span class="sd">    - The amount of noise is controlled by the relative standard deviation (rstd).</span>
+<span class="sd">    - A higher rstd value results in more distortion.</span>
+<span class="sd">    - The function handles both masked and unmasked arrays.</span>
+<span class="sd">    - For masked arrays, the distortion is only applied to unmasked values.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    # Example usage</span>
+<span class="sd">    arr = np.array([1, 2, 3, 4, 5])</span>
+<span class="sd">    distorted_arr = distort_array(arr, rstd=0.5)</span>
+<span class="sd">    print(distorted_arr)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">rstd</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">arr</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">MaskedArray</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">mask</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">masked</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">masked</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">distorted_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">rstd</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mu</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">mu</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">masked</span><span class="p">:</span>
+        <span class="n">distorted_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distorted_arr</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">distorted_arr</span></div>
+
+
+<div class="viewcode-block" id="autoscale_y"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.autoscale_y">[docs]</a><span class="k">def</span> <span class="nf">autoscale_y</span><span class="p">(</span><span class="n">ax</span><span class="p">:</span> <span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># modified: https://stackoverflow.com/questions/29461608/matplotlib-fixing-x-axis-scale-and-autoscale-y-axis</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rescales the y-axis based on the visible data given the current xlim of the axis. Credit: Dan Hickstein</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        ax (matplotlib.axes.Axes): The matplotlib axes object.</span>
+<span class="sd">        margin (float): The fraction of the total height of the y-data to pad the upper and lower ylims.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_bottom_top</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the bottom and top values of the y-data displayed within the x-limits.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            line (np.ndarray): The y-data for a line.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[float, float]: The bottom and top values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xd</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
+        <span class="n">yd</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+        <span class="n">xd</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xd</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">yd</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yd</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="n">y_displayed</span> <span class="o">=</span> <span class="n">yd</span><span class="p">[((</span><span class="n">xd</span> <span class="o">&gt;</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">xd</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">))]</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_displayed</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y_displayed</span><span class="p">)</span>
+        <span class="n">bot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y_displayed</span><span class="p">)</span> <span class="o">-</span> <span class="n">margin</span> <span class="o">*</span> <span class="n">h</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_displayed</span><span class="p">)</span> <span class="o">+</span> <span class="n">margin</span> <span class="o">*</span> <span class="n">h</span>
+        <span class="k">return</span> <span class="n">bot</span><span class="p">,</span> <span class="n">top</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()</span>
+    <span class="n">bot</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">new_bot</span><span class="p">,</span> <span class="n">new_top</span> <span class="o">=</span> <span class="n">get_bottom_top</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_bot</span> <span class="o">&lt;</span> <span class="n">bot</span><span class="p">:</span>
+            <span class="n">bot</span> <span class="o">=</span> <span class="n">new_bot</span>
+        <span class="k">if</span> <span class="n">new_top</span> <span class="o">&gt;</span> <span class="n">top</span><span class="p">:</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">new_top</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bot</span><span class="p">,</span> <span class="n">top</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="concatenate_simulated_dfs"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.concatenate_simulated_dfs">[docs]</a><span class="k">def</span> <span class="nf">concatenate_simulated_dfs</span><span class="p">(</span><span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec_substring</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Concatenate simulated DataFrames from CSV files.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir_path : str</span>
+<span class="sd">        Directory path containing the CSV files.</span>
+<span class="sd">    spec_substring : str, optional</span>
+<span class="sd">        Substring to filter specific CSV files (default is an empty string).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        Concatenated DataFrame containing the simulated data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_files</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">spec_substring</span> <span class="ow">in</span> <span class="n">i</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="n">power_sim_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">df_files</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># power_sim_DF.iloc[:, :] = power_sim_DF.values</span>
+    <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">power_sim_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">df_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># except_this = &#39;Salla_GSM16&#39;</span>
+    <span class="n">except_this</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">df_files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">except_this</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">df_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">df_names</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="dropnans"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.common.html#radiocalibrationtoolkit.common.helpfunctions.dropnans">[docs]</a><span class="k">def</span> <span class="nf">dropnans</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Drop NaN values from the array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : array-like</span>
+<span class="sd">        Input array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        Array with NaN values removed.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">arr</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr</span><span class="p">)]</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tomas Fodran.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

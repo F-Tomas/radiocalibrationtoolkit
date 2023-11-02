@@ -1,0 +1,534 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Calibration example"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import pickle\n",
+    "import matplotlib as mpl\n",
+    "import matplotlib.pyplot as plt\n",
+    "from pathlib import Path\n",
+    "from scipy.stats import bootstrap\n",
+    "from radiocalibrationtoolkit import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# This ensures Plotly output works in multiple places:\n",
+    "# plotly_mimetype: VS Code notebook UI\n",
+    "# notebook: \"Jupyter: Export to HTML\" command in VS Code\n",
+    "# See https://plotly.com/python/renderers/#multiple-renderers\n",
+    "import plotly.io as pio\n",
+    "pio.renderers.default = \"plotly_mimetype+notebook\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# some global plot settings\n",
+    "plt.rcParams[\"axes.labelweight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.weight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.size\"] = 16\n",
+    "plt.rcParams[\"legend.fontsize\"] = 14\n",
+    "\n",
+    "plt.rcParams[\"xtick.major.width\"] = 2\n",
+    "plt.rcParams[\"ytick.major.width\"] = 2\n",
+    "\n",
+    "plt.rcParams[\"xtick.major.size\"] = 5\n",
+    "plt.rcParams[\"ytick.major.size\"] = 5\n",
+    "\n",
+    "plt.rcParams[\"xtick.labelsize\"] = 14\n",
+    "plt.rcParams[\"ytick.labelsize\"] = 14"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# for this example you need to create a mock power dataframe and simulated sidereal power dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Calibrate with \"true\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# in this case the recorded is the mock dataset\n",
+    "sky_map_model = \"LFmap\"\n",
+    "\n",
+    "power_rec_DF = pd.read_csv(\n",
+    "    \"./mock_power_datasets/mock_power_dataset-Salla_EW_\"\n",
+    "    + sky_map_model\n",
+    "    + \"_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv\",\n",
+    "    index_col=0,\n",
+    ")\n",
+    "\n",
+    "power_rec_DF.columns = power_rec_DF.columns.astype(float)\n",
+    "\n",
+    "dir_path = \"./simulated_power_datasets/\"\n",
+    "df_files = [\n",
+    "    os.path.join(dir_path, i)\n",
+    "    for i in os.listdir(dir_path)\n",
+    "    if (i.endswith(\".csv\") & i.startswith(\"Salla_EW\"))\n",
+    "]\n",
+    "file_path_2_true = [i for i in df_files if sky_map_model in i][0]\n",
+    "power_sim_DF = pd.read_csv(file_path_2_true, index_col=0)\n",
+    "power_sim_DF.columns = power_sim_DF.columns.astype(float)\n",
+    "\n",
+    "antenna_type = \"Salla_EW\"\n",
+    "dir_path = \"./simulated_power_datasets/\"\n",
+    "\n",
+    "concatenated_sim_df = concatenate_simulated_dfs(dir_path, antenna_type)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# fit each band and make a plot overview\n",
+    "cmapT = plt.get_cmap(\"jet\")\n",
+    "bounds = np.arange(30, 83, 2)\n",
+    "norm = mpl.colors.BoundaryNorm(bounds, cmapT.N)\n",
+    "\n",
+    "fig, ax = plt.subplots(figsize=(8, 6))\n",
+    "\n",
+    "frequencies_MHz = power_sim_DF.columns.values\n",
+    "slopes = []\n",
+    "intercepts = []\n",
+    "for i, freq in enumerate(power_sim_DF.columns):\n",
+    "    c = [freq] * power_rec_DF.index.size\n",
+    "    x_arr = power_sim_DF.loc[:, freq].values\n",
+    "    y_arr = power_rec_DF.loc[:, freq].values\n",
+    "    cs = ax.scatter(x_arr, y_arr, s=10, c=c, norm=norm, cmap=\"jet\")\n",
+    "\n",
+    "    intercept, slope = robust_regression(x_arr, y_arr)\n",
+    "    intercepts.append(intercept)\n",
+    "    slopes.append(slope)\n",
+    "    x_new = np.linspace(np.min(x_arr), np.max(x_arr), 100)\n",
+    "    ax.plot(\n",
+    "        x_new,\n",
+    "        x_new * slope + intercept,\n",
+    "        color=cmapT((freq - np.min(bounds)) * (bounds[1] - bounds[0]) / 100),\n",
+    "    )\n",
+    "\n",
+    "intercepts = np.asarray(intercepts) ** (1 / 2)\n",
+    "slopes = np.asarray(slopes) ** (1 / 2)\n",
+    "\n",
+    "cbar = fig.colorbar(cs, ticks=np.arange(30, 81, 4), ax=ax)\n",
+    "cbar.set_label(\"Frequency [MHz]\")\n",
+    "ax.set_xlabel(\"simulated power [pW]\")\n",
+    "ax.set_ylabel(\"measured (mock) power [pW]\")\n",
+    "fig.subplots_adjust(left=0.15, bottom=0.2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig_data = pickle.dumps(fig)\n",
+    "fig2 = pickle.loads(fig_data)\n",
+    "\n",
+    "# modify the axis limits of the copied figure\n",
+    "ax2 = fig2.axes\n",
+    "ax2[0].set_ylim(2, 18)\n",
+    "fig2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "slopes_DF, intercepts_DF = get_fitted_voltage_calibration_params_and_noise_offsets(power_sim_DF, power_rec_DF)\n",
+    "get_and_plot_calibration_results(slopes_DF, intercepts_DF, title=sky_map_model, labels=None)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Calibrate with all 'not true' simulated datasets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_list = []\n",
+    "df_names = []\n",
+    "except_this = \"Salla_EW_\"+sky_map_model\n",
+    "for f in df_files:\n",
+    "    if except_this not in f:\n",
+    "        df = pd.read_csv(f, index_col=0)\n",
+    "        df.columns = df.columns.astype(float)\n",
+    "        df_list.append(df)\n",
+    "        df_names.append(Path(f).stem)\n",
+    "\n",
+    "concatenated_sim_df = pd.concat(df_list, keys=df_names)\n",
+    "# check keys\n",
+    "[key for key in concatenated_sim_df.index.levels[0]]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "(\n",
+    "    slopes_DF,\n",
+    "    intercepts_DF,\n",
+    ") = get_fitted_voltage_cal_params_and_noise_offsets_from_concat_sim_dfs(\n",
+    "    concatenated_sim_df, power_rec_DF\n",
+    ")\n",
+    "get_and_plot_calibration_results(slopes_DF, intercepts_DF, title=except_this)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Iteratively apply the previous procedure to all simulated datasets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# for this example you need to create a mock power dataframe and simulated sidereal power dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "galactic_models = [\n",
+    "    \"GSM16\",\n",
+    "    \"LFSS\",\n",
+    "    \"GSM08\",\n",
+    "    \"Haslam\",\n",
+    "    \"LFmap\",\n",
+    "    \"SSM\",\n",
+    "    \"GMOSS\",\n",
+    "    \"ULSA\",\n",
+    "]\n",
+    "\n",
+    "all_freq_dep_cal_params_dict = {}\n",
+    "all_freq_dep_noise_dict = {}\n",
+    "central_stats_dict = {}\n",
+    "for gmodel in galactic_models:\n",
+    "    print(\"************************\")\n",
+    "    print(gmodel)\n",
+    "    df_list = []\n",
+    "    df_names = []\n",
+    "    measured_label = \"Salla_EW_\" + gmodel\n",
+    "    for f in df_files:\n",
+    "        # if measured_label not in f:\n",
+    "        df = pd.read_csv(f, index_col=0)\n",
+    "        df.columns = df.columns.astype(float)\n",
+    "        df_list.append(df)\n",
+    "        df_names.append(Path(f).stem)\n",
+    "\n",
+    "    print(df_names)\n",
+    "    concatenated_sim_df = pd.concat(df_list, keys=df_names)\n",
+    "    power_rec_DF = pd.read_csv(\n",
+    "        \"./mock_power_datasets/mock_power_dataset-\"\n",
+    "        + measured_label\n",
+    "        + \"_N10000_temp-10_50C_0.0additionalnoise_rounding-True.csv\",\n",
+    "        index_col=0,\n",
+    "    )\n",
+    "    power_rec_DF.columns = power_rec_DF.columns.astype(float)\n",
+    "    (\n",
+    "        slopes_DF,\n",
+    "        intercepts_DF,\n",
+    "    ) = get_fitted_voltage_cal_params_and_noise_offsets_from_concat_sim_dfs(\n",
+    "        concatenated_sim_df, power_rec_DF\n",
+    "    )\n",
+    "    all_freq_dep_cal_params_dict[gmodel], all_freq_dep_noise_dict[gmodel] = (\n",
+    "        slopes_DF,\n",
+    "        intercepts_DF,\n",
+    "    )\n",
+    "    # central_stats_dict[gmodel] = get_and_plot_calibration_results(\n",
+    "    #     slopes_DF, intercepts_DF, title=gmodel\n",
+    "    # )\n",
+    "    # exclude the \"true\" from the KDE calculations and plots\n",
+    "    mask = slopes_DF.index != measured_label\n",
+    "    print(slopes_DF[mask].index.values)\n",
+    "    central_stats_dict[gmodel] = get_and_plot_calibration_results(\n",
+    "        slopes_DF[mask], intercepts_DF[mask], title=gmodel\n",
+    "    )\n",
+    "    print(\"************************\")\n",
+    "    # fig = plt.gcf()\n",
+    "    # fig.savefig('with_not_true_{}.png'.format(gmodel), bbox_inches = 'tight')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "all_slopes_df = pd.concat(all_freq_dep_cal_params_dict)\n",
+    "all_intercepts_df = pd.concat(all_freq_dep_noise_dict)\n",
+    "central_stats_DF = pd.DataFrame(central_stats_dict, index=[\"mu\", \"err_low\", \"err_high\"]).T"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "get_and_plot_calibration_results(all_slopes_df, all_intercepts_df, title=\"\", labels=None)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# calculate calibration parameters for each scenario\n",
+    "cal_params = {}\n",
+    "cal_params_neg_err = {}\n",
+    "cal_params_pos_err = {}\n",
+    "\n",
+    "for k in all_freq_dep_cal_params_dict.keys():\n",
+    "    temp_df = all_freq_dep_cal_params_dict[k]\n",
+    "    cal_params[k] = []\n",
+    "    cal_params_neg_err[k] = []\n",
+    "    cal_params_pos_err[k] = []\n",
+    "    print(temp_df.index)\n",
+    "    for row in temp_df.index:\n",
+    "        print('{} vs {}'.format(k, row))\n",
+    "        left, right, center = get_frequency_independent_calibration_param(temp_df.loc[row,:])\n",
+    "        cal_params[k].append(center)\n",
+    "        cal_params_neg_err[k].append(left - center)\n",
+    "        cal_params_pos_err[k].append(right - center)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "all_cal_params_df = (\n",
+    "    pd.DataFrame.from_dict(\n",
+    "        cal_params, orient=\"index\", columns=[i.replace(\"Salla_EW_\", \"\") for i in temp_df.index]\n",
+    "    )\n",
+    "    .sort_index()\n",
+    "    .sort_index(axis=1)\n",
+    ").round(2)\n",
+    "all_cal_params_neg_errs_df = (\n",
+    "    pd.DataFrame.from_dict(\n",
+    "        cal_params_neg_err, orient=\"index\", columns=[i.replace(\"Salla_EW_\", \"\") for i in temp_df.index]\n",
+    "    )\n",
+    "    .sort_index()\n",
+    "    .sort_index(axis=1)\n",
+    ").round(2)\n",
+    "all_cal_params_pos_errs_df = (\n",
+    "    pd.DataFrame.from_dict(\n",
+    "        cal_params_pos_err, orient=\"index\", columns=[i.replace(\"Salla_EW_\", \"\") for i in temp_df.index]\n",
+    "    )\n",
+    "    .sort_index()\n",
+    "    .sort_index(axis=1)\n",
+    ").round(2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Format the DataFrame values for LaTeX\n",
+    "formatted_df = (\n",
+    "    all_cal_params_df.applymap(lambda x: f\"{x:.2f}\")\n",
+    "    + \"$^{+\"\n",
+    "    + all_cal_params_pos_errs_df.astype(str)\n",
+    "    + \"}_{\"\n",
+    "    + all_cal_params_neg_errs_df.astype(str)\n",
+    "    + \"}$\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# mean except the diagnoal \"true\" values\n",
+    "np.fill_diagonal(all_cal_params_df.values, np.nan)\n",
+    "display(all_cal_params_df)\n",
+    "# row-by-row means (add as last column)\n",
+    "display(pd.DataFrame(all_cal_params_df.mean(axis=1), columns=['mean']).round(2))\n",
+    "# column-by-column means (add as last row)\n",
+    "display(pd.DataFrame(all_cal_params_df.mean(axis=0), columns=['mean']).T.round(2))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "formatted_df['mean'] = pd.DataFrame(all_cal_params_df.mean(axis=1)).round(2).astype(str)\n",
+    "formatted_df = pd.concat([formatted_df, pd.DataFrame(all_cal_params_df.mean(axis=0), columns=['mean']).T.round(2).astype(str)], ignore_index=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Convert the formatted DataFrame to a LaTeX table\n",
+    "def highlight_diag(df):\n",
+    "    a = np.full(df.shape, '', dtype='<U24')\n",
+    "    np.fill_diagonal(a, 'background-color: yellow')\n",
+    "    return pd.DataFrame(a, index=df.index, columns=df.columns)\n",
+    "\n",
+    "s = formatted_df.style.apply(highlight_diag, axis=None)\n",
+    "latex_table = s.to_latex()\n",
+    "print(latex_table)\n",
+    "display(s)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots()\n",
+    "data = pd.DataFrame(all_cal_params_df.mean(axis=1)).values.flatten() - 1\n",
+    "ax.set_title(\"possible biases\")\n",
+    "ax.hist(data)\n",
+    "ax.set_xlabel(\"voltage calibration parameter\")\n",
+    "ax.set_ylabel(\"Entries\")\n",
+    "\n",
+    "print(\"Min and Max observed bias:\")\n",
+    "print(np.min(central_stats_DF.mu.values), np.max(central_stats_DF.mu.values))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = (data,)  # samples must be in a sequence\n",
+    "\n",
+    "props = dict(boxstyle=\"round\", facecolor=\"wheat\", alpha=0.5)\n",
+    "fig, ax = plt.subplots(1, 2, figsize=(12, 4))\n",
+    "res = bootstrap(data, np.mean, confidence_level=0.9)\n",
+    "bvalues = res.bootstrap_distribution\n",
+    "ax[0].hist(bvalues, bins=25)\n",
+    "ax[0].set_title(\"boostraped\")\n",
+    "ax[0].set_xlabel(r\"$<bias>$\")\n",
+    "ax[0].text(\n",
+    "    0.05,\n",
+    "    0.95,\n",
+    "    \"$\\mu$={:.2f}\".format(np.mean(bvalues)),\n",
+    "    transform=ax[0].transAxes,\n",
+    "    fontsize=14,\n",
+    "    verticalalignment=\"top\",\n",
+    "    bbox=props,\n",
+    ")\n",
+    "ax[0].set_ylabel(\"entries\")\n",
+    "\n",
+    "ax[1].set_title(\"boostraped\")\n",
+    "res = bootstrap(data, np.std, confidence_level=0.9)\n",
+    "bvalues = res.bootstrap_distribution\n",
+    "ax[1].hist(bvalues, bins=25)\n",
+    "ax[1].set_xlabel(\"$\\sigma$ bias\")\n",
+    "ax[1].text(\n",
+    "    0.05,\n",
+    "    0.95,\n",
+    "    \"$\\mu$={:.2f}\".format(np.mean(bvalues)),\n",
+    "    transform=ax[1].transAxes,\n",
+    "    fontsize=14,\n",
+    "    verticalalignment=\"top\",\n",
+    "    bbox=props,\n",
+    ")\n",
+    "ax[1].set_ylabel(\"entries\")\n",
+    "fig.subplots_adjust(wspace=0.3)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.12"
+  },
+  "toc": {
+   "base_numbering": 1,
+   "nav_menu": {},
+   "number_sections": true,
+   "sideBar": true,
+   "skip_h1_title": false,
+   "title_cell": "Table of Contents",
+   "title_sidebar": "Contents",
+   "toc_cell": false,
+   "toc_position": {},
+   "toc_section_display": true,
+   "toc_window_display": false
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

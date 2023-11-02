@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>radiocalibrationtoolkit.skymapwrappers.modelwrapper &mdash; Radio calibration toolkit 0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/sphinx_rtd_size.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="../../../_static/custom.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Radio calibration toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#documentation-and-tutorial">Documentation and tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#examples-using-measured-data">Examples using measured data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#some-tips-on-installing-the-ulsa">Some tips on installing the ULSA</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Galactic models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#antenna-model">Antenna model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#antenna-galaxy-response">Antenna-galaxy response</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#mocktraces">Mocktraces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#calibration">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.skymapwrappers.html">skymapwrappers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.antennareader.html">antennareader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.mocktracegenerator.html">mocktracegenerator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../radiocalibrationtoolkit.common.html">common</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Radio calibration toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">radiocalibrationtoolkit.skymapwrappers.modelwrapper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for radiocalibrationtoolkit.skymapwrappers.modelwrapper</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module Description</span>
+<span class="sd">------------------</span>
+
+<span class="sd">This module contains three classes: GMOSS, ULSA, and SSM.</span>
+
+<span class="sd">GMOSS - Generates the Galactic and extragalactic sky brightness temperature at frequencies ranging from 30 MHz to 80 MHz based on a table of precomputed values.</span>
+
+<span class="sd">ULSA - Generates the ultra-large scale structure (ULSS) component of the sky brightness temperature at frequencies ranging from 30 MHz to 80 MHz based on a table of precomputed values.</span>
+
+<span class="sd">SSM - Generates the sky temperature due to the Sunyaev-Zeldovich effect at a specified frequency and HEALPix resolution.</span>
+
+<span class="sd">Dependencies: pandas, numpy, healpy, os, and functions from the common.py module.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">Instantiate a class and call its &quot;generate&quot; method with a frequency in MHz as an argument. The &quot;generate&quot; method will return an array of brightness temperature values.</span>
+
+<span class="sd">Note: These classes assume that the user has the necessary data files and functions installed on their system.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># some classes, I will move this later to a separate py file</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">healpy</span> <span class="k">as</span> <span class="nn">hp</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pygdsm</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GlobalSkyModel2016</span><span class="p">,</span>
+    <span class="n">GlobalSkyModel</span><span class="p">,</span>
+    <span class="n">LowFrequencySkyModel</span><span class="p">,</span>
+    <span class="n">HaslamSkyModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pylfmap</span> <span class="kn">import</span> <span class="n">LFmap</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">CMB_temp</span> <span class="o">=</span> <span class="mf">2.7255</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">SSM.SSM</span> <span class="k">as</span> <span class="nn">ssm_func</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] SSM is not installed!&quot;</span><span class="p">)</span>
+    <span class="k">pass</span>
+
+
+<span class="n">_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="GMOSS"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS">[docs]</a><span class="k">class</span> <span class="nc">GMOSS</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to generate the Galactic diffuse emission map from GMRT observations</span>
+<span class="sd">    between 30-80 MHz based on the tabulated data.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gmoss_map_DF : pandas.DataFrame</span>
+<span class="sd">        Dataframe containing the GMRT observed spectra for Galactic diffuse emission</span>
+<span class="sd">        between 30-80 MHz.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_hdf</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_path</span><span class="p">,</span> <span class="s2">&quot;tabulated/gmoss_spectra_1-400MHz.h5&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">hp</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">n2r</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<div class="viewcode-block" id="GMOSS.generate"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.GMOSS.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequency_MHz</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the Galactic diffuse emission map for the given frequency.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frequency_MHz : float</span>
+<span class="sd">            The frequency value in MHz for which the Galactic diffuse emission map needs</span>
+<span class="sd">            to be generated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The generated Galactic diffuse emission map for the given frequency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">frequency_MHz</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmoss_map_DF</span><span class="p">[</span><span class="n">frequency_MHz</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">CMB_temp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;[ERROR] Frequency </span><span class="si">{}</span><span class="s2"> was not tabulated! Run first GMOSS, update the table, and then call.&quot;</span>
+            <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ULSA"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.ULSA">[docs]</a><span class="k">class</span> <span class="nc">ULSA</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to generate the UTR-2 Low-Frequency Sky Atlas maps from the tabulated data</span>
+<span class="sd">    based on the specified index type.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ulsa_map_DF : pandas.DataFrame</span>
+<span class="sd">        Dataframe containing the UTR-2 Low-Frequency Sky Atlas maps between 30-80 MHz.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_type</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span> <span class="o">=</span> <span class="s2">&quot;freq_dependent_index&quot;</span><span class="p">):</span>
+        <span class="n">index_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;freq_dependent_index&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;constant_index&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;direction_dependent_index&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_path</span><span class="p">,</span> <span class="s2">&quot;tabulated/ulsa_</span><span class="si">{}</span><span class="s2">.h5&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index_type</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ulsa_map_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_hdf</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;[ERROR] File </span><span class="si">{}</span><span class="s2"> not found. Did you use correct index type? Possible index types: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">path</span><span class="p">,</span> <span class="n">index_types</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ulsa_map_DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ulsa_map_DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ULSA.generate"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.ULSA.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequency_MHz</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frequency_MHz : float</span>
+<span class="sd">            The frequency value in MHz for which the UTR-2 Low-Frequency Sky Atlas map</span>
+<span class="sd">            needs to be generated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The generated UTR-2 Low-Frequency Sky Atlas map for the given frequency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">frequency_MHz</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ulsa_map_DF</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ulsa_map_DF</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">frequency_MHz</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;[ERROR] Frequency </span><span class="si">{}</span><span class="s2"> was not tabulated! Run first ULSA, update the table, and then call.&quot;</span>
+            <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SSM"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM">[docs]</a><span class="k">class</span> <span class="nc">SSM</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to generate the simulated sky maps from the Global Sky Model (GSM) based on</span>
+<span class="sd">    the specified frequency and nside.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="SSM.generate"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.SSM.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frequency_MHz : float</span>
+<span class="sd">            The frequency value in MHz for which the simulated sky map needs to be</span>
+<span class="sd">            generated.</span>
+
+<span class="sd">        nside : int, optional</span>
+<span class="sd">            The value of nside to use for the generation of simulated sky map. The default</span>
+<span class="sd">            value is 64.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The generated simulated sky map from the Global Sky Model (GSM) for the given</span>
+<span class="sd">            frequency and nside.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ssm_func</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="n">frequency_MHz</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;del&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;del.hdf5&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="add_CMB_decorator"><a class="viewcode-back" href="../../../radiocalibrationtoolkit.skymapwrappers.html#radiocalibrationtoolkit.skymapwrappers.modelwrapper.add_CMB_decorator">[docs]</a><span class="k">def</span> <span class="nf">add_CMB_decorator</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator function to add the Cosmic Microwave Background (CMB) temperature to the output of a class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cls : class</span>
+<span class="sd">        The original class to be decorated.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    class</span>
+<span class="sd">        The decorated class that adds the CMB temperature to the output.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The CMB temperature (2.7255 K) is added to the output generated by the decorated class.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    @add_CMB_decorator</span>
+<span class="sd">    OriginalClass</span>
+
+<span class="sd">    # Decorate the class</span>
+<span class="sd">    ModifiedClass = add_CMB_decorator(OriginalClass)</span>
+
+<span class="sd">    # Create an instance of the modified class</span>
+<span class="sd">    modified = ModifiedClass()</span>
+
+<span class="sd">    # Generate the output with added CMB temperature</span>
+<span class="sd">    result = modified.generate(freq)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">AddCMB</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="o">+</span> <span class="n">CMB_temp</span>
+
+    <span class="k">return</span> <span class="n">AddCMB</span></div>
+
+
+<span class="n">GlobalSkyModel</span> <span class="o">=</span> <span class="n">add_CMB_decorator</span><span class="p">(</span><span class="n">GlobalSkyModel</span><span class="p">)</span>
+<span class="n">HaslamSkyModel</span> <span class="o">=</span> <span class="n">add_CMB_decorator</span><span class="p">(</span><span class="n">HaslamSkyModel</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tomas Fodran.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

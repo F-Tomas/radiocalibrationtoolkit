@@ -1,0 +1,287 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Permanent hpmap array rotation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# sky map\n",
+    "import matplotlib.pyplot as plt\n",
+    "import os\n",
+    "import sys\n",
+    "from radiocalibrationtoolkit import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "################################################################################################################\n",
+    "# THIS IS NOT RECOMMENED APPROACH, THE HP MAP ARRAYs SHOULD BE ALWAYS BY DEFAULT IN GALACTIC COORDINATE SYSTEM #\n",
+    "################################################################################################################"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# some global plot settings\n",
+    "plt.rcParams[\"axes.labelweight\"] = \"bold\"\n",
+    "plt.rcParams[\"font.weight\"] = \"bold\"\n",
+    "plt.rcParams['font.size'] = 20\n",
+    "plt.rcParams['legend.fontsize']= 14\n",
+    "\n",
+    "plt.rcParams['xtick.minor.width']= 2\n",
+    "plt.rcParams['ytick.minor.width']= 2\n",
+    "\n",
+    "plt.rcParams['xtick.major.size']= 5\n",
+    "plt.rcParams['ytick.major.size']= 5\n",
+    "\n",
+    "plt.rcParams['xtick.labelsize']= 18\n",
+    "plt.rcParams['ytick.labelsize']= 18"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# create instance of galactic map\n",
+    "frequency_MHz = 45\n",
+    "\n",
+    "gsm2016 = GlobalSkyModel2016(freq_unit=\"MHz\")\n",
+    "gsm2016_map = gsm2016.generate(frequency_MHz)\n",
+    "\n",
+    "# convert it to custom NSIDE, THE CONVERSION IS NOT NEEDED\n",
+    "new_nside = 128\n",
+    "gsm2016_map_N = hp.ma(hp.pixelfunc.ud_grade(gsm2016_map, new_nside))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# set lst, latitude and create rotation parameters for projview function\n",
+    "lst = 18\n",
+    "latitude = -35.206667\n",
+    "rotation_parameters = create_rotation_parameters(lst, latitude)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# just pass the example map to \"m\" variable\n",
+    "m = gsm2016_map_N\n",
+    "# reindexing array to local coordinates\n",
+    "m_rotated = rotate_default_hpmap_array_from_galactic2local_coordinates(m, lst, latitude)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# inverse operation, reindexing rotated array back to the Galactic coordinates\n",
+    "m_rotated_and_reverse_rotate = rotate_default_hpmap_array_from_galactic2local_coordinates(m_rotated, lst, latitude, inv=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "projview(\n",
+    "    m,\n",
+    "    norm='log',\n",
+    "    cmap='jet',\n",
+    "    graticule=True,\n",
+    "    return_only_data=False,\n",
+    "    # coord=[\"G\",'C'],\n",
+    "    # rot=rotation_parameters,\n",
+    "    # invRot=True,\n",
+    "    min=3500,\n",
+    "    max=35000,\n",
+    "    projection_type='cart',\n",
+    "    title='Default hp array, no projview rotation, \"Galactic coordinates\"'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "projview(\n",
+    "    m,\n",
+    "    norm='log',\n",
+    "    cmap='jet',\n",
+    "    graticule=True,\n",
+    "    return_only_data=False,\n",
+    "    coord=[\"G\",'C'],\n",
+    "    rot=rotation_parameters,\n",
+    "    invRot=True,\n",
+    "    min=3500,\n",
+    "    max=35000,\n",
+    "    projection_type='cart',\n",
+    "    title='Default hp array, true projview rotation, \"Local coordinates\"'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "projview(\n",
+    "    m_rotated,\n",
+    "    norm='log',\n",
+    "    cmap='jet',\n",
+    "    graticule=True,\n",
+    "    return_only_data=False,\n",
+    "    # coord=[\"G\",'C'],\n",
+    "    # rot=rotation_parameters,\n",
+    "    # invRot=True,\n",
+    "    min=3500,\n",
+    "    max=35000,\n",
+    "    projection_type='cart',\n",
+    "    title='Rotated hp array, no projview rotation, \"Local coordinates\"'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "projview(\n",
+    "    m_rotated,\n",
+    "    norm='log',\n",
+    "    cmap='jet',\n",
+    "    graticule=True,\n",
+    "    return_only_data=False,\n",
+    "    coord=[\"G\",'C'],\n",
+    "    rot=rotation_parameters,\n",
+    "    invRot=False,\n",
+    "    min=3500,\n",
+    "    max=35000,\n",
+    "    projection_type='cart',\n",
+    "    title='Rotated hp array, false projview rotation, \"Galactic coordinates\"'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "projview(\n",
+    "    m_rotated_and_reverse_rotate,\n",
+    "    norm='log',\n",
+    "    cmap='jet',\n",
+    "    graticule=True,\n",
+    "    return_only_data=False,\n",
+    "    # coord=[\"G\",'C'],\n",
+    "    # rot=rotation_parameters,\n",
+    "    # invRot=True,\n",
+    "    min=3500,\n",
+    "    max=35000,\n",
+    "    projection_type='cart',\n",
+    "    title='Reversed rotated hp array back to Galactic coordinates'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# numerical check after the rotation, the differences should be very small, e.g., of order \n",
+    "# convert it to custom NSIDE, THE CONVERSION IS NOT NEEDED\n",
+    "new_nside = 64\n",
+    "gsm2016_map_N = hp.ma(hp.pixelfunc.ud_grade(gsm2016_map, new_nside))\n",
+    "m = gsm2016_map_N\n",
+    "sums = []\n",
+    "for lst in range(24):\n",
+    "    sums.append(np.sum(rotate_default_hpmap_array_from_galactic2local_coordinates(m, lst, latitude)))\n",
+    "sums = np.asarray(sums)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots()\n",
+    "ax.plot(sums/sums[0] - 1)\n",
+    "ax.set_xlabel('LST')\n",
+    "ax.set_ylabel(r'$\\frac{\\Sigma \\: \\mathrm{pixel\\; values}}{\\Sigma \\: \\mathrm{pixel\\; values\\; at\\; LST=0}} - 1$', fontsize=25)\n",
+    "ax.xaxis.set_major_locator(MultipleLocator(4))"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.0"
+  },
+  "toc": {
+   "base_numbering": 1,
+   "nav_menu": {},
+   "number_sections": true,
+   "sideBar": true,
+   "skip_h1_title": false,
+   "title_cell": "Table of Contents",
+   "title_sidebar": "Contents",
+   "toc_cell": false,
+   "toc_position": {},
+   "toc_section_display": true,
+   "toc_window_display": false
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "e7370f93d1d0cde622a1f8e1c04877d8463912d04d973331ad4851f04de6915a"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

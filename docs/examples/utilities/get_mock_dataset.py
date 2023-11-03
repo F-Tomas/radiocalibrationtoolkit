@@ -73,6 +73,15 @@ def main():
         # nbi_err=0.3,
         rounding=not args["turn_off_rounding"],
     )
+    if args['raw']:
+        filename = "mock_time_traces_dataset-{}_N{}_temp{}C_{}additionalnoise_rounding-{}.csv".format(
+            Path(args["voltagedensity2file"]).stem.replace("voltage2_density_", ""),
+            args["numberoftraces"],
+            to_string(args["temperature"]),
+            args["additionalnoise"],
+            not args["turn_off_rounding"],
+        )
+        mock_traces_DF.to_csv(os.path.join(args["outputpath"], filename))
 
     # system parameters
     sampling_frequency_MHz = 250
@@ -120,7 +129,7 @@ def main():
         )
 
     ((mock_power_DF / piko).round(3)).to_csv(os.path.join(args["outputpath"], filename))
-
+    return None
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -198,7 +207,12 @@ if __name__ == "__main__":
         default=None,
         help="Overrides filename.",
     )
-
+    optional.add_argument(
+        "-r",
+        "--raw",
+        action="store_true",
+        help="Save also dataset of raw time traces.",
+    )
     args = vars(ap.parse_args())
     mkdir(args["outputpath"])
 

@@ -3,6 +3,33 @@
 #
 #  convertSParameterFile2XML.py
 
+"""
+convertSParameterFile2XML.py
+
+This script converts S-parameter data from a file into an XML format. It calculates complex voltage amplification, magnitude in dB, and phase in degrees or radians and saves the results in an XML file.
+
+Parameters
+----------
+- sfile (str): Path to the S-parameter file.
+- output_name (str, optional): File name of the produced XML file and the name of the HW response. By default, the filename of the S-parameter file will be used.
+- output_dir (str, optional): Output directory. Default is the current directory.
+- unwrap (bool, optional): If True, phase values are unwrapped; otherwise, they are left wrapped. Default is True.
+- method (str, optional): The amplification method, either 'withS11' (S21/(S11+1)) or 'withoutS11' (S21). Default is 'withS11'.
+- rounding (int, optional): Rounding of saved numbers. Default is 4. Use None for no rounding.
+
+Returns
+-------
+int: Return code, 0 on success.
+
+Note
+----
+This script requires the `pandas`, `numpy`, `matplotlib`, `scipy`, and `scikit-rf` (skrf) libraries.
+
+Example Usage
+-------------
+$ python convertSParameterFile2XML.py -s input.s2p -o output.xml -d /output/directory -u True -m withS11 -r 3
+"""
+
 import argparse
 import re
 import io
@@ -12,6 +39,7 @@ import matplotlib.pyplot as plt
 import skrf as rf
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
+
 
 
 def main(args):

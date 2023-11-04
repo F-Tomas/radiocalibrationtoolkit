@@ -30,7 +30,7 @@ def main():
     hw_reponse_1 = hw_dict["RResponse"]["LNA"]
     hw_reponse_2 = hw_dict["RResponse"]["digitizer"]
     hw_reponse_3 = hw_dict["RResponse"]["cable_fromLNA2digitizer"]
-    hw_reponse_4 = hw_dict["RResponse"]["impedance_matching_EW"]
+    hw_reponse_4 = hw_dict["RResponse"]["impedance_matching_{}".format(orientation)]
 
     # merge all hw responses to one function
     def hw_response_func(x):
@@ -39,7 +39,7 @@ def main():
         )
 
     # impedance function
-    impedance_func = hw_dict["IImpedance"]["antenna_EW"]
+    impedance_func = hw_dict["IImpedance"]["antenna_{}".format(orientation)]
 
     # read sidereal voltage square spectral density
     sidereal_voltage2_density_DF = pd.read_csv(
@@ -209,12 +209,20 @@ if __name__ == "__main__":
     )
     optional.add_argument(
         "-r",
+        "--orientation",
+        nargs="?",
+        default="EW",
+        help="This will read HW response with suffix either EW or NS. Default: EW",
+    )
+    optional.add_argument(
+        "-c",
         "--raw",
         action="store_true",
         help="Save also dataset of raw time traces.",
     )
     args = vars(ap.parse_args())
     mkdir(args["outputpath"])
-
+    orientation = args["orientation"]
+    
     print(args)
     sys.exit(main())

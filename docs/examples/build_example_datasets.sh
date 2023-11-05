@@ -18,6 +18,7 @@ for GMAP in $GMAPS; do
     echo =================================================================
 done
 
+# NS loop
 #for GMAP in $GMAPS; do
 #    echo $GMAP;
 #    python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/SALLA_NS.xml -w ${base}/#antenna_setup_files/HardwareProfileList_realistic.xml -s Salla_NS -o ${base}/simulated_power_datasets/ -r NS -z -180
@@ -32,7 +33,7 @@ for GMAP in $GMAPS; do
 done
 
 
-### simulated voltage square density
+### simulated voltage square density, use flag -c to save the raw time traces datasets, not only the finaly calculated power dataset
 echo **************** simulated voltage square density ****************
 # realistic
 for GMAP in $GMAPS; do
@@ -40,6 +41,13 @@ for GMAP in $GMAPS; do
     python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/SALLA_EW.xml -w -s Salla_EW -o ${base}/voltage2_density/ -t voltage2 -f 10 125;
     echo =================================================================
 done
+
+# NS
+# for GMAP in $GMAPS; do
+#     echo $GMAP;
+#     python ${base}/utilities/get_power_dataset.py -g $GMAP -a ${base}/antenna_setup_files/SALLA_NS.xml -w -s Salla_NS -o ${base}/voltage2_density/ -t voltage2 -f 10 125 -z -180 # -r NS;
+#     echo =================================================================
+# done
 
 #idealistic    
 for GMAP in $GMAPS; do
